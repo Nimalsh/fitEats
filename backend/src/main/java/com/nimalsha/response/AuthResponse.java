@@ -11,4 +11,3 @@ public class AuthResponse {
 
     private USER_ROLE role;
 }
-
