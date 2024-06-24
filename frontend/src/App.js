@@ -5,6 +5,7 @@ import { Navbar } from './component/Navbar/Navbar';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { darkTheme } from './Theme/DarkTheme';
 import Home from './component/Home/Home';
+import { Auth } from './component/Auth/Auth';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Navbar/>
       <Home/>
     </ThemeProvider>
+  
       
   
   );
