@@ -7,7 +7,7 @@ import "./Navbar.css"
 
 export const Navbar=() => {
   return (
-    <div className='px-5 z-50 py-[.8rem] bg-[#909e59] lg:px-20 flex justify-between'>
+    <div className='px-5 z-50 py-[.8rem] bg-[#777525] lg:px-20 flex justify-between'>
 
       
         <div className='lg:mr-10 cursor-pointer flex item-center space-x-4'>
