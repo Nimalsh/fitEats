@@ -22,7 +22,7 @@ public class AdminRestaurantController {
 
     @PostMapping()
     private ResponseEntity<Restaurant> createRestaurant(
-            @RequestBody CreateRestaurantRequest req,
+            @ RequestBody CreateRestaurantRequest req,
             @RequestHeader("Authorization") String jwt
             )throws Exception{
         User user=userService.findUserByJwtToken(jwt);
