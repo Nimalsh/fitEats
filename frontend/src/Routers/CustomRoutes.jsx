@@ -5,6 +5,7 @@ import Home from '../component/Home/Home';
 import Profile from '../component/Profile/Profile';
 import RestaurantDetails from '../component/Restaurant/RestaurantDetails';
 import Cart from '../component/Cart/Cart';
+import { Auth } from '../component/Auth/Auth';
 
 function CustomRoutes() {
   return (
@@ -17,6 +18,7 @@ function CustomRoutes() {
         <Route path='/cart' element={<Cart />} />
         <Route path='/my-profile/*' element={<Profile />} />
       </Routes>
+      <Auth/>
     </div>
   );
 }
