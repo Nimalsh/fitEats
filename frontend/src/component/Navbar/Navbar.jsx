@@ -1,4 +1,4 @@
-import { Avatar, Badge, IconButton } from '@mui/material'
+import { Avatar, Badge, Box, IconButton } from '@mui/material'
 import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import { pink } from '@mui/material/colors';
@@ -7,7 +7,7 @@ import "./Navbar.css"
 
 export const Navbar=() => {
   return (
-    <div className='px-5 z-50 py-[.8rem] bg-[#777525] lg:px-20 flex justify-between'>
+    <Box className='px-5 sticky top-0 z-50 py-[.8rem] bg-[#777525] lg:px-20 flex justify-between'>
 
       
         <div className='lg:mr-10 cursor-pointer flex item-center space-x-4'>
@@ -37,7 +37,7 @@ export const Navbar=() => {
         </div>
       </div>
 
-    </div>
+    </Box>
   )
 }
 
