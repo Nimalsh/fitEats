@@ -5,9 +5,12 @@ import { Navbar } from './component/Navbar/Navbar';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { darkTheme } from './Theme/DarkTheme';
 import Home from './component/Home/Home';
+import Profile from './component/Profile/Profile';
+
 
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
+import CustomRoutes from './Routers/CustomRoutes';
 
 
 
@@ -16,9 +19,10 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
       <Navbar/>
-      <Home/>
+      {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
+      <CustomRoutes/>
     </ThemeProvider>
   
       
