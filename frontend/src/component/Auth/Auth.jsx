@@ -5,6 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 export const Auth = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const handleOnClose=()=>{
+      navigate("/")
+    }
   return (
     <>
     <Modal open= {
@@ -12,9 +15,7 @@ export const Auth = () => {
         || location.pathname === "/acccount/login"
 
     }>
-        <Box sx={style}>
-
-        </Box>
+  
     </Modal>
     
     
@@ -22,3 +23,5 @@ export const Auth = () => {
     </>
   )
 }
+
+ 
