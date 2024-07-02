@@ -20,42 +20,8 @@ export const RegisterForm = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
-    console.log(values);
+    console.log('Form values:', values);
     // Handle registration logic here (e.g., API calls, state updates)
-  };
-
-  const validate = (values) => {
-    const errors = {};
-
-    if (!values.firstName) {
-      errors.firstName = 'Required';
-    }
-    if (!values.lastName) {
-      errors.lastName = 'Required';
-    }
-    if (!values.email) {
-      errors.email = 'Required';
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = 'Invalid email address';
-    }
-    if (!values.password) {
-      errors.password = 'Required';
-    }
-    if (!values.passwordConfirmation) {
-      errors.passwordConfirmation = 'Required';
-    } else if (values.passwordConfirmation !== values.password) {
-      errors.passwordConfirmation = 'Passwords do not match';
-    }
-    if (!values.address) {
-      errors.address = 'Required';
-    }
-    if (!values.mobileNumber) {
-      errors.mobileNumber = 'Required';
-    } else if (!/^\d+$/.test(values.mobileNumber)) {
-      errors.mobileNumber = 'Invalid mobile number';
-    }
-
-    return errors;
   };
 
   return (
@@ -78,7 +44,6 @@ export const RegisterForm = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validate={validate}
         >
           {({ values, errors, touched }) => (
             <Form>
@@ -227,11 +192,11 @@ export const RegisterForm = () => {
                         }
                       }}
                     >
-                      <MenuItem value={"ROLE_CUSTOMER"}>CUSTOMER</MenuItem>
-                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>RESTAURANT_OWNER</MenuItem>
-                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>DELIVERY_DRIVER</MenuItem>
-                      <MenuItem value={"ROLE_NUTRITION"}>NUTRITION</MenuItem>
-                      <MenuItem value={"ROLE_ADMIN"}>ADMIN</MenuItem>
+                      <MenuItem value={"ROLE_CUSTOMER"}>Customer</MenuItem>
+                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Rstaurnat Owner</MenuItem>
+                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>Delivery driver</MenuItem>
+                      <MenuItem value={"ROLE_NUTRITION"}>Nutrition</MenuItem>
+                      <MenuItem value={"ROLE_ADMIN"}>Admin</MenuItem>
                     </Field>
                   </FormControl>
                 </Grid>
