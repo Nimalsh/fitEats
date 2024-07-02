@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar } from '@mui/material';
+import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,8 @@ const initialValues = {
   password: "",
   address: "",
   mobileNumber: "",
-  passwordConfirmation: ""
+  passwordConfirmation: "",
+  role:"ROLE_CUSTOMER"
 };
 
 export const RegisterForm = () => {
@@ -97,7 +98,7 @@ export const RegisterForm = () => {
                       style: { color: '#fff' },
                     }}
                     InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
                 </Grid>
@@ -116,7 +117,7 @@ export const RegisterForm = () => {
                       style: { color: '#fff' },
                     }}
                     InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
                 </Grid>
@@ -136,7 +137,7 @@ export const RegisterForm = () => {
                       style: { color: '#fff' },
                     }}
                     InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
                 </Grid>
@@ -156,7 +157,7 @@ export const RegisterForm = () => {
                       style: { color: '#fff' },
                     }}
                     InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
                 </Grid>
@@ -177,7 +178,7 @@ export const RegisterForm = () => {
                       style: { color: '#fff' },
                     }}
                     InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
                 </Grid>
@@ -197,29 +198,42 @@ export const RegisterForm = () => {
                       style: { color: '#fff' },
                     }}
                     InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field
-                    as={TextField}
-                    name="address"
-                    label="Address"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    autoComplete="address-line1"
-                    required
-                    error={touched.address && Boolean(errors.address)}
-                    helperText={touched.address && errors.address}
-                    InputLabelProps={{
-                      style: { color: '#fff' },
-                    }}
-                    InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
-                    }}
-                  />
+                  <FormControl fullWidth>
+                    <InputLabel sx={{ color: '#fff' }} id="role-label">Role</InputLabel>
+                    <Field
+                      as={Select}
+                      name="role"
+                      labelId="role-label"
+                      id="role"
+                      label="Role"
+                      error={touched.role && Boolean(errors.role)}
+                      helperText={touched.role && errors.role}
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        color: 'white',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#fff',
+                        },
+                        '& .MuiSvgIcon-root': {
+                          color: '#fff',
+                        },
+                        '& .MuiInputBase-input': {
+                          height: '40px', // Reduced height for the role field
+                        }
+                      }}
+                    >
+                      <MenuItem value={"ROLE_CUSTOMER"}>CUSTOMER</MenuItem>
+                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>RESTAURANT_OWNER</MenuItem>
+                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>DELIVERY_DRIVER</MenuItem>
+                      <MenuItem value={"ROLE_NUTRITION"}>NUTRITION</MenuItem>
+                      <MenuItem value={"ROLE_ADMIN"}>ADMIN</MenuItem>
+                    </Field>
+                  </FormControl>
                 </Grid>
               </Grid>
               <Button
@@ -250,4 +264,3 @@ export const RegisterForm = () => {
     </Container>
   );
 };
-
