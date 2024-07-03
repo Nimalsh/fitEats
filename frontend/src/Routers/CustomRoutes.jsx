@@ -6,7 +6,7 @@ import Profile from '../component/Profile/Profile';
 import RestaurantDetails from '../component/Restaurant/RestaurantDetails';
 import Cart from '../component/Cart/Cart';
 
-function CustomRoutes() {
+export default function CustomRoutes() {
   return (
     <div>
       
@@ -21,4 +21,4 @@ function CustomRoutes() {
   );
 }
 
-export default CustomRoutes;
+
