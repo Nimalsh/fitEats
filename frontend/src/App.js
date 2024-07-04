@@ -39,7 +39,7 @@ function App() {
       {/*<Cart/>*/}
       {/* <CustomRoutes/>  */}
       
-      <Routers/>
+       <Routers/>
     </ThemeProvider>
   
       
