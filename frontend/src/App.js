@@ -36,6 +36,9 @@ function App() {
       {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
+      
+     
+      <Routers/>
     </ThemeProvider>
   
       
