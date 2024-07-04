@@ -6,7 +6,6 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { darkTheme } from './Theme/DarkTheme';
 import Home from './component/Home/Home';
 import Profile from './component/Profile/Profile';
-
 import Nutricontent from './component/Profile/Nutricontent';
 
 
