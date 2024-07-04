@@ -15,7 +15,7 @@ import CustomRoutes from './Routers/CustomRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
-import CustomRoutes from './Routers/CustomRoutes'; 
+
 import Routers from './Routers/Routers';
 
 
@@ -36,8 +36,8 @@ function App() {
       {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
+      {/* <CustomRoutes/>  */}
       
-     
       <Routers/>
     </ThemeProvider>
   
