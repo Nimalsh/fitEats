@@ -10,7 +10,8 @@ import Profile from './component/Profile/Profile';
 
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
-import CustomRoutes from './Routers/CustomRoutes';
+import CustomRoutes from './Routers/CustomRoutes'; 
+import Routers from './Routers/Routers';
 
 
 
@@ -22,7 +23,8 @@ function App() {
       {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
-      <CustomRoutes/>
+      {/* <CustomRoutes/>  */}
+      <Routers/>
     </ThemeProvider>
   
       
