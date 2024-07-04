@@ -3,6 +3,8 @@ import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avata
 import { Field, Form, Formik } from 'formik';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../State/Authentication/Action';
+import { useDispatch } from 'react-redux';
 
 const initialValues = {
   email: "",
@@ -11,8 +13,9 @@ const initialValues = {
 
 export const LoginForm = () => {
   const navigate=useNavigate()
+  const dispatch=useDispatch()
   const handleSubmit = (values) => {
-    console.log(values);
+    dispatch(loginUser({userData:values,navigate}))
   };
 
   return (
