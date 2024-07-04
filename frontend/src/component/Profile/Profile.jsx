@@ -7,6 +7,7 @@ import {Events} from './Events';
 import Favorites from './Favorites';
 import Orders from './Orders';
 import Food from './Food';
+import Nutrigoals from './Nutrigoals';
 
 
 const Profile = () => {
@@ -21,7 +22,7 @@ const Profile = () => {
         <Routes>
           <Route path="/" element={<Food />} />
           <Route path="/orders" element={<Orders />} />
-         
+          <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/events" element={<Events />} />
           
