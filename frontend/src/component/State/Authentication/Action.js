@@ -42,7 +42,7 @@ export const loginUser=(reqData)=>async(dispatch)=>{
 export const getUser=(jwt)=>async(dispatch)=>{
   dispatch({type:GET_USER_REQUEST})
   try{
-    const {data} =await  axios.get(`/auth/signin`,{
+    const {data} =await  axios.get(`/api/users/profile`,{
       header:{
         Authorization:`Bearer ${jwt}`
       }
