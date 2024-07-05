@@ -11,7 +11,6 @@ import Profile from './component/Profile/Profile';
 
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
-import CustomRoutes from './Routers/CustomRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';

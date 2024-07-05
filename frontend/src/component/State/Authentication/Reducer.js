@@ -5,9 +5,11 @@ import {
   ADD_TO_FAVOURITE_SUCCESS,
   GET_USER_FAILURE,
   GET_USER_REQUEST,
+  GET_USER_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  LOGOUT,
   REGISTER_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -19,6 +21,7 @@ const initialState = {
   jwt: null,
   favorite: [],
   success: null,
+  user: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -37,7 +40,12 @@ export const authReducer = (state = initialState, action) => {
         jwt: action.payload,
         success: "Register Success",
       };
-
+      case GET_USER_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          user: action.payload,
+        };
     case ADD_TO_FAVOURITE_SUCCESS:
       return {
         ...state,
@@ -48,6 +56,9 @@ export const authReducer = (state = initialState, action) => {
           : [action.payload, ...state.favorite],
       };
 
+    case LOGOUT:
+      return initialState;
+      
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
     case GET_USER_FAILURE:
