@@ -1,6 +1,6 @@
 {
-    "name": "fiteatsmobile",
-    "short_name": "fiteatsmobile",
+    "name": "delivery",
+    "short_name": "delivery",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
