@@ -16,8 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
-import Routers from './Routers/Routers';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import Routers from './Routers/Routers'; 
 
 
 
