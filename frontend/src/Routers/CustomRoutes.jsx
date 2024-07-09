@@ -10,7 +10,7 @@ import { Auth } from '../component/Auth/Auth';
 function CustomRoutes() {
   return (
     <div>
-      
+      <Navbar/>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/account/:register' element={<Home />} />

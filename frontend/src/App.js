@@ -12,6 +12,8 @@ import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
 import CustomRoutes from './Routers/CustomRoutes'; 
 import Routers from './Routers/Routers';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+
 
 
 
@@ -19,7 +21,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
-      <Navbar/>
+     
       {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
