@@ -17,6 +17,8 @@ import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
 import Routers from './Routers/Routers';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+
 
 
 
@@ -32,7 +34,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
-      <Navbar/>
+     
       {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
