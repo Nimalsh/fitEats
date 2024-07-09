@@ -7,7 +7,7 @@ import RestaurantDetails from '../component/Restaurant/RestaurantDetails';
 import Cart from '../component/Cart/Cart';
 import { Auth } from '../component/Auth/Auth';
 
-function CustomRoutes() {
+export default function CustomRoutes() {
   return (
     <div>
       <Navbar/>
@@ -23,4 +23,4 @@ function CustomRoutes() {
   );
 }
 
-export default CustomRoutes;
+

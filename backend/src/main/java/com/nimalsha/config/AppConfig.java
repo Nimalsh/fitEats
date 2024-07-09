@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,24 +38,20 @@ public class AppConfig {
     }
 
     private CorsConfigurationSource corsConfigrationSource() {
-        return new CorsConfigurationSource(){
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request){
-                    CorsConfiguration cfg =new CorsConfiguration();
-                            cfg.setAllowedOrigins(Arrays.asList(
-                                    "https:/sri-Lankan-Food.vercel.app",
-                                    "https:/localhost:3000"
-                            ));
-                            cfg.setAllowedMethods(Collections.singletonList("*"));
-                            cfg.setAllowCredentials(true);
-                            cfg.setAllowedHeaders(Collections.singletonList("*"));
-                            cfg.setExposedHeaders(Arrays.asList("Authorization"));
-                            cfg.setMaxAge(3600L);
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setMaxAge(3600L);
 
-                return cfg;
-            }
-        };
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
+
+
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

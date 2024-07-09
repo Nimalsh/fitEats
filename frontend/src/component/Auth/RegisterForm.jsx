@@ -4,23 +4,26 @@ import { Field, Form, Formik } from 'formik';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Replace with a more fitting icon
+import { registerUser } from '../State/Authentication/Action';
+import { useDispatch } from 'react-redux';
 
 const initialValues = {
-  firstName: "",
-  lastName: "",
+  fullName: "",
   email: "",
   password: "",
-  address: "",
-  mobileNumber: "",
-  passwordConfirmation: "",
+  // address: "",
+  // mobileNumber: "",
+  // passwordConfirmation: "",
   role:"ROLE_CUSTOMER"
 };
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
+  
+  const dispatch=useDispatch()
 
   const handleSubmit = (values) => {
-    console.log('Form values:', values);
+   dispatch(registerUser({userData:values,navigate}))
     // Handle registration logic here (e.g., API calls, state updates)
   };
 
@@ -48,36 +51,17 @@ export const RegisterForm = () => {
           {({ values, errors, touched }) => (
             <Form>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     as={TextField}
-                    name="firstName"
-                    label="First Name"
+                    name="fullName"
+                    label="Full Name"
                     fullWidth
                     variant="outlined"
                     margin="normal"
                     autoComplete="given-name"
-                    error={touched.firstName && Boolean(errors.firstName)}
-                    helperText={touched.firstName && errors.firstName}
-                    InputLabelProps={{
-                      style: { color: '#fff' },
-                    }}
-                    InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    as={TextField}
-                    name="lastName"
-                    label="Last Name"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    autoComplete="family-name"
-                    error={touched.lastName && Boolean(errors.lastName)}
-                    helperText={touched.lastName && errors.lastName}
+                    error={touched.fullName && Boolean(errors.fullName)}
+                    helperText={touched.fullName && errors.fullName}
                     InputLabelProps={{
                       style: { color: '#fff' },
                     }}
@@ -107,7 +91,7 @@ export const RegisterForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Field
+                  {/* <Field
                     as={TextField}
                     name="mobileNumber"
                     label="Mobile Number"
@@ -124,7 +108,7 @@ export const RegisterForm = () => {
                     InputProps={{
                       style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
-                  />
+                  /> */}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -148,7 +132,7 @@ export const RegisterForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Field
+                  {/* <Field
                     as={TextField}
                     name="passwordConfirmation"
                     label="Confirm Password"
@@ -165,7 +149,7 @@ export const RegisterForm = () => {
                     InputProps={{
                       style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
-                  />
+                  /> */}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
