@@ -26,13 +26,14 @@ class _ProfilePageState extends State<ProfilePage> {
         );
         break;
       case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
-        );
+      
         break;
       case 2:
         // Handle another page navigation
+          Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
+        );
         break;
       case 3:
         // Handle current page or default action
