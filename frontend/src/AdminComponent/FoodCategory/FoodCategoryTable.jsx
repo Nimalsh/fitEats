@@ -9,7 +9,7 @@ import BreakfastImage from './Breakfast.jpeg';
 import SeaImage from './Sea.jpeg';
 import BakeryImage from './Bakery.jpeg';
 import DrinkImage from './Drink.jpeg';
-import BackgroundImage from './Background_image.png';
+import BackgroundImage from '../../assets/images/Background_image.png';  // Updated path
 
 // Dummy data for demonstration purposes
 const orders = [
@@ -69,7 +69,7 @@ export const FoodCategoryTable = () => {
               variant="contained" 
               color="primary" 
               startIcon={<AddIcon />} 
-              sx={{ backgroundColor: '#FDDA0D', color: 'black', fontWeight: 'bold' }}
+              sx={{ backgroundColor: '#FDDA0D', color: 'black', fontWeight: 'bold', borderRadius:'1000' }}
             >
               Add Category
             </Button>
