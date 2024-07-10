@@ -7,8 +7,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import backgroundImage from '../../assets/images/Background_image.png';   
 import RestaurantImage from '../../assets/images/Restaurant.jpeg'; 
-import Rectangle from '../../assets/images/rect.png'; 
-import Plate from '../../assets/images/veg.png'; 
+import Rectangle from '../../assets/images/rect.png';  
 import Map from '../../assets/images/map.png'; 
 
 export const RestuarantDetails = () => {
@@ -113,7 +112,7 @@ export const RestuarantDetails = () => {
         padding: 2,
         alignContent: 'left',
         backgroundImage: `url(${Rectangle})`,
-        backgroundSize: '30% auto', // 20% width, auto height
+        backgroundSize: '30% auto',  
         backgroundPosition: 'left', 
         backgroundRepeat: 'no-repeat',
       }}
@@ -187,7 +186,7 @@ export const RestuarantDetails = () => {
         padding: 2,
         alignContent: 'left',
         backgroundImage: `url(${Map})`,
-        backgroundSize: '45% 70%', // 20% width, auto height
+        backgroundSize: '45% 70%',  
         backgroundPosition: 'left', 
         backgroundRepeat: 'no-repeat',
       }}>
@@ -213,7 +212,7 @@ export const RestuarantDetails = () => {
                     <a href='/'><InstagramIcon sx={{fontSize:"3rem"}} /></a>
                     <a href='/'><TwitterIcon sx={{fontSize:"3rem"}} /></a>
                     <a href='/'><FacebookIcon sx={{fontSize:"3rem"}} /></a>
-                    <a href='/'><LinkedInIcon sx={{fontSize:"3rem"}} /></a>
+                    <a href='/'><LinkedInIcon sx={{fontSize:"3rem"}} /></a> 
                   </div>
                 </div>
               </div>

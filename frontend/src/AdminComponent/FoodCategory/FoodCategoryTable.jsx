@@ -1,7 +1,4 @@
-import { Delete } from '@mui/icons-material';
-import CreateIcon from '@mui/icons-material/Create';
-import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Card, CardHeader, IconButton, Paper, TableContainer, Typography } from '@mui/material';
+import { Box, Button, Card, CardHeader,  Typography } from '@mui/material';
 import React from 'react';
 import PizzaImage from './Pizza.jpeg';
 import BurgerImage from './Burger.jpeg';
@@ -10,6 +7,12 @@ import SeaImage from './Sea.jpeg';
 import BakeryImage from './Bakery.jpeg';
 import DrinkImage from './Drink.jpeg';
 import BackgroundImage from '../../assets/images/Background_image.png';  // Updated path
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import UpdateIcon from '@mui/icons-material/BorderColor';
+import ViewIcon from '@mui/icons-material/CalendarViewDay';
+
+
 
 // Dummy data for demonstration purposes
 const orders = [
@@ -25,8 +28,8 @@ const FoodCategoryTile = ({ category }) => {
   return (
     <Box
       sx={{
-        width: 280,  // Increased width
-        height: 250, // Increased height
+        width: 300,  // Increased width
+        height: 350, // Increased height
         margin: 2,
         borderRadius: 10,
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
@@ -47,6 +50,12 @@ const FoodCategoryTile = ({ category }) => {
       <Typography variant="h6" sx={{ marginTop: 1 }}>
         {category.name}
       </Typography>
+
+      <div class="button-container mt-5">
+      <button class="button view-button" onclick="/"><ViewIcon />View</button>
+      <button type="button" class="button delete-button" onclick=""><DeleteIcon /> Delete</button> 
+      </div> 
+
     </Box>
   );
 };
@@ -65,14 +74,7 @@ export const FoodCategoryTable = () => {
       <div>
         <CardHeader
           action={
-            <Button 
-              variant="contained" 
-              color="primary" 
-              startIcon={<AddIcon />} 
-              sx={{ backgroundColor: '#FDDA0D', color: 'black', fontWeight: 'bold', borderRadius:'1000' }}
-            >
-              Add Category
-            </Button>
+          <button class="button add-button" onclick="/"><AddIcon/>Add Category</button>
           }
           title={"Food Category"}
           sx={{ pt: 2, alignItems: "center" }}
