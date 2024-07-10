@@ -9,7 +9,6 @@ import Profile from './component/Profile/Profile';
 import Nutricontent from './component/Profile/Nutricontent';
 import BMI from './component/Profile/BMI';
 
-
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
 import { useDispatch, useSelector } from 'react-redux';
