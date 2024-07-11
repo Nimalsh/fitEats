@@ -104,7 +104,7 @@ body {
   padding: 20px;
 }
 
-label {
+/* label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
@@ -124,7 +124,7 @@ textarea {
   border: 1px solid var(--border-color);
   border-radius: 5px;
   outline: none;
-}
+} */
 
 .clear {
   clear: both;
@@ -208,9 +208,9 @@ fieldset {
   margin-bottom: 15px;
 }
 
-legend {
+/* legend {
   font-weight: bold;
-}
+} */
 
 /* table {
   width: 100%;
