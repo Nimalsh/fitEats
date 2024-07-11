@@ -10,15 +10,14 @@ import Nutricontent from './component/Profile/Nutricontent';
 import BMI from './component/Profile/BMI';
 import Meallog from './component/Profile/Meallog';
 
-
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
-import CustomRoutes from './Routers/CustomRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
-import Routers from './Routers/Routers';
+import Routers from './Routers/Routers'; 
+
 
 
 
@@ -34,7 +33,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
-      <Navbar/>
+     
       {/* <Home/> */}
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
