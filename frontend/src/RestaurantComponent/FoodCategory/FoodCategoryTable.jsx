@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardHeader,  Typography } from '@mui/material';
+import { Box, CardHeader, Typography } from '@mui/material';
 import React from 'react';
 import PizzaImage from './Pizza.jpeg';
 import BurgerImage from './Burger.jpeg';
@@ -6,13 +6,11 @@ import BreakfastImage from './Breakfast.jpeg';
 import SeaImage from './Sea.jpeg';
 import BakeryImage from './Bakery.jpeg';
 import DrinkImage from './Drink.jpeg';
-import BackgroundImage from '../../assets/images/Background_image.png';  // Updated path
+import BackgroundImage from '../../assets/images/Background_image.png';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import UpdateIcon from '@mui/icons-material/BorderColor';
 import ViewIcon from '@mui/icons-material/CalendarViewDay';
-
-
+import { Link } from 'react-router-dom';
 
 // Dummy data for demonstration purposes
 const orders = [
@@ -28,12 +26,12 @@ const FoodCategoryTile = ({ category }) => {
   return (
     <Box
       sx={{
-        width: 300,  // Increased width
-        height: 350, // Increased height
+        width: 300,
+        height: 350,
         margin: 2,
         borderRadius: 10,
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        backgroundColor: 'rgba(64, 64, 64, 0.8)', // Updated background color
+        backgroundColor: 'rgba(64, 64, 64, 0.8)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -45,17 +43,20 @@ const FoodCategoryTile = ({ category }) => {
       <img
         src={category.image}
         alt={category.name}
-        style={{ width: 150, height: 150, borderRadius: '50%' }} // Increased size of image
+        style={{ width: 150, height: 150, borderRadius: '50%' }}
       />
       <Typography variant="h6" sx={{ marginTop: 1 }}>
         {category.name}
       </Typography>
 
-      <div class="button-container mt-5">
-      <button class="button view-button" onclick="/"><ViewIcon />View</button>
-      <button type="button" class="button delete-button" onclick=""><DeleteIcon /> Delete</button> 
-      </div> 
-
+      <div className="button-container mt-5">
+        <Link to="/admin/restaurants/category/add" className="button view-button">
+          <ViewIcon /> View
+        </Link>
+        <button type="button" className="button delete-button">
+          <DeleteIcon /> Delete
+        </button>
+      </div>
     </Box>
   );
 };
@@ -74,9 +75,13 @@ export const FoodCategoryTable = () => {
       <div>
         <CardHeader
           action={
-          <button class="button add-button" onclick="/"><AddIcon/>Add Category</button>
+            <Link to='../category/add'>
+              <button className="button add-button">
+                <AddIcon /> Add Category
+              </button>
+            </Link>
           }
-          title={"Food Category"}
+          title="Food Category"
           sx={{ pt: 2, alignItems: "center" }}
         />
 
