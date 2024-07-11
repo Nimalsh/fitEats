@@ -50,7 +50,7 @@ const FoodCategoryTile = ({ category }) => {
       </Typography>
 
       <div className="button-container mt-5">
-        <Link to="/admin/restaurants/category/add" className="button view-button">
+      <Link to={`../food-category/${category.id}`} className="button view-button">
           <ViewIcon /> View
         </Link>
         <button type="button" className="button delete-button">
@@ -97,7 +97,7 @@ export const FoodCategoryTable = () => {
             {orders.map((category) => (
               <FoodCategoryTile key={category.id} category={category} />
             ))}
-          </Box>
+           </Box>
         </div>
       </div>
     </Box>
