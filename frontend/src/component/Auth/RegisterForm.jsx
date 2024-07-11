@@ -70,7 +70,7 @@ export const RegisterForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} >
                   <Field
                     as={TextField}
                     name="email"
@@ -90,8 +90,26 @@ export const RegisterForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* <Field
+                <Grid item xs={12} >
+                  {<Field
+                    as={TextField}
+                    name="password"
+                    label="Password"
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    type="password"
+                    required
+                    autoComplete="new-password"
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    InputLabelProps={{
+                      style: { color: '#fff' },
+                    }}
+                    InputProps={{
+                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
+                    }}
+                  />/* <Field
                     as={TextField}
                     name="mobileNumber"
                     label="Mobile Number"
@@ -111,7 +129,7 @@ export const RegisterForm = () => {
                   /> */}
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Field
+                  {/* <Field
                     as={TextField}
                     name="password"
                     label="Password"
@@ -129,7 +147,7 @@ export const RegisterForm = () => {
                     InputProps={{
                       style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
-                  />
+                  /> */}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   {/* <Field

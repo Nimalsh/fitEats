@@ -34,8 +34,8 @@ function App() {
       <CssBaseline/>
       <Navbar/>
       {/* <Home/> */}
-      {/*<RestaurantDetails/>*/}
-      {/*<Cart/>*/}
+      {/* <RestaurantDetails/> */}
+      {/* <Cart/> */}
       {/* <CustomRoutes/>  */}
       
        <Routers/>
