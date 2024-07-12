@@ -36,6 +36,7 @@ function App() {
       <CssBaseline/>
      
       {/* <Home/> */}
+<<<<<<< HEAD
       {/*<RestaurantDetails/>*/}
       {/*<Cart/>*/}
       {/* <Meallog/>*/} 
@@ -43,6 +44,15 @@ function App() {
      {/* <Nutricontent/> */}
     {/* <BMI/>*/}
     <Mealprogress/> 
+=======
+
+      {/* <RestaurantDetails/> */}
+      {/* <Cart/> */}
+      {/* <CustomRoutes/>  */}
+      
+       <Routers/>
+
+>>>>>>> f7382afa39d75bf2ce3b1538c2564f6048bab543
     </ThemeProvider>
   
       
