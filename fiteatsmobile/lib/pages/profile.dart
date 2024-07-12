@@ -12,6 +12,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 3;
+  bool _isEditingPersonalDetails = false;
+  bool _isEditingVehicleDetails = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -26,11 +28,10 @@ class _ProfilePageState extends State<ProfilePage> {
         );
         break;
       case 1:
-      
+        // Handle another page navigation
         break;
       case 2:
-        // Handle another page navigation
-          Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
         );
@@ -81,6 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.all(20.0),
                 color: Colors.white.withOpacity(0.9),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
                       child: Column(
@@ -127,14 +129,35 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: Colors.grey,
                             ),
                           ),
-                         
                         ],
                       ),
                     ),
                     const SizedBox(height: 20),
                     const Divider(thickness: 1),
                     const SizedBox(height: 20),
-                    _buildPersonalDetailsSection(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Personal Details',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(_isEditingPersonalDetails ? Icons.check : Icons.edit),
+                          onPressed: () {
+                            setState(() {
+                              _isEditingPersonalDetails = !_isEditingPersonalDetails;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    _isEditingPersonalDetails ? _buildEditablePersonalDetailsSection() : _buildPersonalDetailsSection(),
                     const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerRight,
@@ -158,7 +181,29 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 20),
                     const Divider(thickness: 1),
                     const SizedBox(height: 20),
-                    _buildVehicleDetailsSection(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Vehicle Details',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(_isEditingVehicleDetails ? Icons.check : Icons.edit),
+                          onPressed: () {
+                            setState(() {
+                              _isEditingVehicleDetails = !_isEditingVehicleDetails;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    _isEditingVehicleDetails ? _buildEditableVehicleDetailsSection() : _buildVehicleDetailsSection(),
                   ],
                 ),
               ),
@@ -168,6 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
+        currentIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
       ),
     );
@@ -177,21 +223,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Personal Details',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        _buildEditableDetailRow('First Name', 'John', false),
-        _buildEditableDetailRow('Last Name', 'Doe', false),
-        _buildEditableDetailRow('Address', '123 Main St', true),
-        _buildEditableDetailRow('NIC', '123456789V', false),
-        _buildEditableDetailRow('Phone Number', '123-456-7890', true),
-        _buildEditableDetailRow('Phone Number 2', '098-765-4321', true),
+        _buildDetailRow('First Name', 'John'),
+        _buildDetailRow('Last Name', 'Doe'),
+        _buildDetailRow('Address', '123 Main St'),
+        _buildDetailRow('NIC', '123456789V'),
+        _buildDetailRow('Phone Number', '123-456-7890'),
+        _buildDetailRow('Phone Number 2', '098-765-4321'),
       ],
     );
   }
@@ -200,23 +237,39 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Vehicle Details',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        _buildEditableDetailRow('Vehicle Name', 'Toyota Prius', true),
-        _buildEditableDetailRow('Model', '2015', true),
-        _buildEditableDetailRow('Plate Number', 'ABC-1234', true),
+        _buildDetailRow('Vehicle Name', 'Toyota Prius'),
+        _buildDetailRow('Model', '2015'),
+        _buildDetailRow('Plate Number', 'ABC-1234'),
       ],
     );
   }
 
-  Widget _buildEditableDetailRow(String label, String value, bool isEditable) {
+  Widget _buildEditablePersonalDetailsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildDetailRow('First Name', 'John'),
+        _buildDetailRow('Last Name', 'Doe'),
+        _buildEditableDetailRow('Address', '123 Main St'),
+        _buildDetailRow('NIC', '123456789V'),
+        _buildEditableDetailRow('Phone Number', '123-456-7890'),
+        _buildEditableDetailRow('Phone Number 2', '098-765-4321'),
+      ],
+    );
+  }
+
+  Widget _buildEditableVehicleDetailsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildEditableDetailRow('Vehicle Name', 'Toyota Prius'),
+        _buildEditableDetailRow('Model', '2015'),
+        _buildEditableDetailRow('Plate Number', 'ABC-1234'),
+      ],
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
@@ -229,23 +282,43 @@ class _ProfilePageState extends State<ProfilePage> {
               fontSize: 16,
             ),
           ),
-          Row(
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
+          Text(
+            value,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEditableDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+            ),
+          ),
+          SizedBox(
+            width: 200,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: value,
+                hintStyle: const TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 16,
                 ),
+                border: const UnderlineInputBorder(),
               ),
-              if (isEditable)
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    // Add your edit button logic here
-                  },
-                ),
-            ],
+            ),
           ),
         ],
       ),
