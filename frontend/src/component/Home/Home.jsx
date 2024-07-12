@@ -2,8 +2,12 @@ import React from 'react';
 import "./Home.css"
 import MultiItemCarousel from './MultiItemCarousel';
 import RestaurantCard from '../Restaurant/RestaurantCard';
+import RegistrationCard from './RegistrationCard';
+import AboutUs from './AboutUs';
+import ContactUs from './ContactUs';
 
-const Restaurant=[1,1,1,1,1,1,1]
+
+const Restaurant=[1]
 const Home = () => {
   
   return (
@@ -33,17 +37,30 @@ const Home = () => {
         <MultiItemCarousel/>
       </section>
 
+      <section className='p-10 lg:py-10 lg:px-20'>
+        <p className='text-2xl font-semibold text-gray-400 py-3 pb-10'>
+          About US
+        </p>
+        <AboutUs/>
+      </section>
+
 
       <section className='px-5 lg:px-20'>
         <h1 className='text-2xl font-semibold text-gray-400 py-3'>
-          Order From Our Handpicked Favorites
+        Join with Our Platform
         </h1>
         <div className='flex flex-wrap item-center justify-around grap-5'>
           {
-            Restaurant.map((item)=><RestaurantCard/>)
+            Restaurant.map((item)=><RegistrationCard/>)
           }
         </div>
       </section>
+
+      <section className='p-10 lg:py-10 lg:px-20'>
+        
+        <ContactUs/>
+      </section>
+
     </div>
   );
 }
