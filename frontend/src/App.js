@@ -22,6 +22,7 @@ import Routers from './Routers/Routers';
 
 
 
+
 function App() {
   const dispatch=useDispatch()
   const jwt=localStorage.getItem("jwt"  )
@@ -41,7 +42,7 @@ function App() {
     
      {/* <Nutricontent/> */}
     {/* <BMI/>*/}
-    {/* <Meallog/> */}
+    <Meallog/> 
     </ThemeProvider>
   
       
