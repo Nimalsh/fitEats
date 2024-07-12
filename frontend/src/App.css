@@ -149,7 +149,8 @@ textarea {
   font-weight: bold;
   display: flex;              /* Make the button a flex container */
   justify-content: center;    /* Center content horizontally */
-  align-items: center;        /* Center content vertically */
+  align-items: center;  
+  height: '40px'      /* Center content vertically */
 }
 
 .add-button {
@@ -165,6 +166,20 @@ textarea {
 .delete-button {
   background-color: var(--delete-color);
   color: var(--text-color);
+}
+
+.details-button {
+  width: 70%;
+  height: 50px;
+  color: #000000;
+  background-color: #95CD41; 
+  border-radius: 15px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight:bold; 
+  margin-top: 10px;
+  padding: 10px 20px;
 }
 
 .view-button {

@@ -7,7 +7,7 @@ import SeaImage from './Sea.jpeg';
 import BakeryImage from './Bakery.jpeg';
 import DrinkImage from './Drink.jpeg';
 import BackgroundImage from '../../assets/images/Background_image.png';
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ViewIcon from '@mui/icons-material/CalendarViewDay';
 import { Link } from 'react-router-dom';
@@ -43,7 +43,7 @@ const FoodCategoryTile = ({ category }) => {
       <img
         src={category.image}
         alt={category.name}
-        style={{ width: 150, height: 150, borderRadius: '50%' }}
+        style={{ width: 150, height: 150, borderRadius: '50%',boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)' }}
       />
       <Typography variant="h6" sx={{ marginTop: 1 }}>
         {category.name}
