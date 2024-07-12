@@ -60,9 +60,7 @@
 
 body {
   background-color: var(--background-color);
-  margin-left: 250px;
-  padding-left: 20px;
-  padding-right: 10px;
+  margin-left: 250px; 
   font-family: Arial, Helvetica, sans-serif !important;
 }
 
@@ -106,7 +104,7 @@ body {
   padding: 20px;
 }
 
-label {
+/* label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
@@ -126,7 +124,7 @@ textarea {
   border: 1px solid var(--border-color);
   border-radius: 5px;
   outline: none;
-}
+} */
 
 .clear {
   clear: both;
@@ -151,7 +149,8 @@ textarea {
   font-weight: bold;
   display: flex;              /* Make the button a flex container */
   justify-content: center;    /* Center content horizontally */
-  align-items: center;        /* Center content vertically */
+  align-items: center;  
+  height: '40px'      /* Center content vertically */
 }
 
 .add-button {
@@ -167,6 +166,20 @@ textarea {
 .delete-button {
   background-color: var(--delete-color);
   color: var(--text-color);
+}
+
+.details-button {
+  width: 70%;
+  height: 50px;
+  color: #000000;
+  background-color: #95CD41; 
+  border-radius: 15px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight:bold; 
+  margin-top: 10px;
+  padding: 10px 20px;
 }
 
 .view-button {
@@ -210,9 +223,9 @@ fieldset {
   margin-bottom: 15px;
 }
 
-legend {
+/* legend {
   font-weight: bold;
-}
+} */
 
 /* table {
   width: 100%;

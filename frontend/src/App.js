@@ -36,13 +36,13 @@ function App() {
       <CssBaseline/>
      
       {/* <Home/> */}
-      {/*<RestaurantDetails/>*/}
-      {/*<Cart/>*/}
-      {/* <Meallog/>*/} 
-    
-     {/* <Nutricontent/> */}
-    {/* <BMI/>*/}
-    <Meallog/> 
+
+      {/* <RestaurantDetails/> */}
+      {/* <Cart/> */}
+      {/* <CustomRoutes/>  */}
+      
+       <Routers/>
+
     </ThemeProvider>
   
       
