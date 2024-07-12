@@ -34,8 +34,8 @@ function App() {
       <CssBaseline/>
      
       {/* <Home/> */}
-      {/*<RestaurantDetails/>*/}
-      {/*<Cart/>*/}
+      {/* <RestaurantDetails/> */}
+      {/* <Cart/> */}
       {/* <CustomRoutes/>  */}
       
        <Routers/>
