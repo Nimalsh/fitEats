@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
 import Routers from './Routers/Routers'; 
-
+import Mealprogress from './component/Profile/Mealprogress';
 
 
 
@@ -42,7 +42,7 @@ function App() {
     
      {/* <Nutricontent/> */}
     {/* <BMI/>*/}
-    <Meallog/> 
+    <Mealprogress/> 
     </ThemeProvider>
   
       
