@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'calories_count.dart';
+import 'cartDetails.dart';
+import 'diet_plan.dart';
+import 'feedback.dart';
 import 'menu.dart';
-import 'view_plan.dart';
+import 'status.dart';
+
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -12,20 +16,27 @@ class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0;
   PageController _pageController = PageController();
 
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     Center(child: ProfileContent()),
     DailyCaloriesPage(),
-    ViewPlanPage(),
-    Center(child: Text('Ordering')),
-    Center(child: Text('Feedbacks')),
+    StatusPage(),
+    DietPlanPage(),
+    FeedbackPage(),
+    // CartItem(foodItem: null, customizations: []),
+    // Center(child: Text('Feedbacks')),
   ];
+  
+
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
     _pageController.jumpToPage(index);
+    
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
       drawer: MenuDrawer(),
       body: PageView(
         controller: _pageController,
+        
         children: _widgetOptions,
         onPageChanged: (index) {
           setState(() {
@@ -69,8 +81,8 @@ class _ProfilePageState extends State<ProfilePage> {
             label: 'Status',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            icon: Icon(Icons.food_bank),
+            label: 'diet plan',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.feedback),
@@ -134,7 +146,8 @@ class ProfileContent extends StatelessWidget {
             style: TextStyle(fontSize: 18),
           ),
           SizedBox(height: 20),
-          Expanded(child: Container()), // Filler to push bottom nav bar down
+          Expanded(child: Container()),
+           // Filler to push bottom nav bar down
         ],
       ),
     );
