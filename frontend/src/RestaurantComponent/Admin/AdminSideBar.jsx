@@ -67,7 +67,7 @@ export const AdminSideBar = ({ handleClose }) => {
                   color: 'white', /* Font color is set to white */
                   borderRadius: '10px',
                   margin: '5px',
-                  backgroundColor: hoverIndex === i ? '#296e0a' : 'rgba(22, 84, 17, 1)', /* Hover color */
+                  backgroundColor: hoverIndex === i ? ' #A9A9A9,' : 'rgba(22, 84, 17, 1)', /* Hover color */
                   transition: 'background-color 0.3s',
                 }}
                 className={`sidebar-item ${i === menu.length - 1 ? 'active' : ''}`}
