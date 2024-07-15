@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, CardHeader, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+ import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Box, CardHeader, TextField, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import BackgroundImage from '../../assets/images/hodai.jpg';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const ingredientCategories = ["Vegetables", "Fruits", "Meats", "Dairy", "Spices"];
 
@@ -15,16 +16,30 @@ const ingredientItemsMap = {
   Spices: ["Salt", "Pepper", "Cumin", "Turmeric", "Paprika"]
 };
 
-export const AddFoodItem = () => {
-  const { categoryId } = useParams();
+export const UpdateFoodItem = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-
   const [ingredientData, setIngredientData] = useState(
     Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] }))
   );
+
+  useEffect(() => {
+    // Fetch the food item details using the id and populate the state
+    // For example:
+    // fetch(`/api/food-items/${id}`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     setFoodName(data.name);
+    //     setPrice(data.price);
+    //     setDescription(data.description);
+    //     setImage(data.image);
+    //     setIngredientData(data.ingredients);
+    //   });
+  }, [id]);
 
   const handleFoodNameChange = (event) => {
     setFoodName(event.target.value);
@@ -57,25 +72,11 @@ export const AddFoodItem = () => {
     setIngredientData(newData);
   };
 
-  const categoryNames = {
-    1: 'Pizza',
-    2: 'Bakery',
-    3: 'Burgers',
-    4: 'Drinks',
-    5: 'Sea Food',
-    6: 'Breakfast'
-  };
-
-  const categoryName = categoryNames[categoryId];
-
-  const handleAddFoodItem = () => {
-    // Add food item logic
-    console.log('Food Item Added:', foodName, price, description, image, categoryId, ingredientData);
-    setFoodName('');
-    setPrice('');
-    setDescription('');
-    setImage(null);
-    setIngredientData(Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] })));
+  const handleUpdateFoodItem = () => {
+    // Update food item logic
+    console.log('Food Item Updated:', foodName, price, description, image, ingredientData);
+    // Redirect to food items page after update
+    navigate('/food-items');
   };
 
   const handleClearForm = () => {
@@ -114,7 +115,7 @@ export const AddFoodItem = () => {
           }}
         >
           <CardHeader
-            title={`Add New ${categoryName}`}
+            title="Update Food Item"
             sx={{ pt: 2, alignItems: 'center', color: 'white' }}
           />
 
@@ -307,9 +308,9 @@ export const AddFoodItem = () => {
             <Box>
               <div className="button-container mt-5 mr-2">
                 <button type='button' className='button add-button'
-                  onClick={handleAddFoodItem}
+                  onClick={handleUpdateFoodItem}
                 >
-                  <AddIcon /> Add
+                  <BorderColorIcon /> Update
                 </button>
                 <button type='button' className='button delete-button'
                   onClick={handleClearForm}
