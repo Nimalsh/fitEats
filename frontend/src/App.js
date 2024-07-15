@@ -18,6 +18,7 @@ import { getUser } from './component/State/Authentication/Action';
 
 import Routers from './Routers/Routers'; 
 import Mealprogress from './component/Profile/Mealprogress';
+import Setgoal from './component/Profile/Setgoal';
 
 
 
@@ -36,24 +37,14 @@ function App() {
       <CssBaseline/>
      
       {/* <Home/> */}
-<<<<<<< HEAD
-      {/*<RestaurantDetails/>*/}
-      {/*<Cart/>*/}
-      {/* <Meallog/>*/} 
-    
-     {/* <Nutricontent/> */}
-    {/* <BMI/>*/}
-    <Mealprogress/> 
-=======
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
       {/* <CustomRoutes/>  */}
       
-       <Routers/>
+       <Setgoal/>
 
->>>>>>> f7382afa39d75bf2ce3b1538c2564f6048bab543
-    </ThemeProvider>
+     </ThemeProvider>
   
       
   
