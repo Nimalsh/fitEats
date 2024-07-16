@@ -17,7 +17,11 @@ import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
 import Routers from './Routers/Routers'; 
+import Mealprogress from './component/Profile/Mealprogress';
+import Setgoal from './component/Profile/Setgoal';
 
+import Weightloss from './component/Nutritionist/Weightloss';
+import Weightgain from './component/Nutritionist/Weightgain';
 
 
 
@@ -39,12 +43,12 @@ function App() {
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
+
       {/* <CustomRoutes/>  */}
     
-      
-       <Routers/>
 
-    </ThemeProvider>
+
+     </ThemeProvider>
   
       
   
