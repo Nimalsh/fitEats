@@ -91,11 +91,11 @@ export const OrderDetails = () => {
           <Typography variant="h7" style={{ color: 'white', marginTop: '16px' }}>Order Time : {order.time}</Typography>
           <Typography variant="h7" style={{ color: 'white', marginTop: '16px' }}>Status : {order.status}</Typography>
 
-          {order.status === "Pending" && (
+          {/* {order.status === "Pending" && (
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '2%' }}>
               <div className="details-button" style={{ marginLeft: '10px',marginBottom:'30px'  }}><BorderColorIcon sx={{marginRight: '8px'}}/>Assign a Driver</div>
             </div>
-          )}
+          )} */}
         </div>
 
         <div

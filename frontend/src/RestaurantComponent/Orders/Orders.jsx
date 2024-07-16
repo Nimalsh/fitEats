@@ -80,31 +80,14 @@ export const Orders = () => {
           </div>
           <div>
             <Typography variant="h6" sx={{ color: "white" }}>Orders Number</Typography>
-            <button className="details-button">Orders Button</button>
+            <button className="details-button">11</button>
           </div>
           <div>
             <Typography variant="h6" sx={{ color: "white" }}>Income</Typography>
-            <button className="details-button">Income Button</button>
+            <button className="details-button">LKR 28 750.00</button>
           </div>
         </div>
 
-        <div 
-          style={{
-            backgroundColor: 'black',
-            borderRadius: '10px',
-            padding: '20px',
-            marginBottom: '20px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-            display: 'flex',
-            justifyContent: 'center',
-            width:'30%',
-            marginLeft:'100px'
-          }}
-        >
-          <div> 
-            <button className="details-button">Incoming Orders</button>
-          </div>
-        </div>
         </div>
         <div 
           style={{
