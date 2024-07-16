@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { Card, CardContent, Typography, Box, TextField } from '@mui/material';
+import { Card, CardContent, Typography, Box, TextField,Button } from '@mui/material';
 import correctbmi from './BMIimage.jpg';
 
 const Dashboard = () => {
@@ -259,6 +259,12 @@ const Dashboard = () => {
               <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '10px' }}>
                 Target Weight loss or gain: {targetWeight} kg
               </Typography>
+              <Box sx={{ marginLeft: '600px', marginTop: '20px' }}>
+          <Button variant="contained"  style={{ whiteSpace: 'nowrap' }}>
+  Lets Proceed
+</Button>
+        </Box>
+
             </>
           )}
         </CardContent>

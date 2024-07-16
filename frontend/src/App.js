@@ -8,6 +8,7 @@ import Home from './component/Home/Home';
 import Profile from './component/Profile/Profile';
 import Nutricontent from './component/Profile/Nutricontent';
 import BMI from './component/Profile/BMI';
+import Meallog from './component/Profile/Meallog';
 
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/Cart/Cart';
@@ -16,6 +17,11 @@ import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
 import Routers from './Routers/Routers'; 
+import Mealprogress from './component/Profile/Mealprogress';
+import Setgoal from './component/Profile/Setgoal';
+
+import Weightloss from './component/Nutritionist/Weightloss';
+import Weightgain from './component/Nutritionist/Weightgain';
 
 
 
@@ -34,12 +40,15 @@ function App() {
       <CssBaseline/>
      
       {/* <Home/> */}
+
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
+
       {/* <CustomRoutes/>  */}
-      
-       <Routers/>
-    </ThemeProvider>
+    
+
+
+     </ThemeProvider>
   
       
   
