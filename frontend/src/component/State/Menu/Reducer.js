@@ -1,23 +1,81 @@
-export const CREATE_MENU_REQUEST = "CREATE_MENU_REQUEST";
-export const CREATE_MENU_SUCCESS = "CREATE_MENU_SUCCESS";
-export const CREATE_MENU_FAILURE = "CREATE_MENU_FAILURE";
+import * as actionTypes from "./ActionType";
 
-export const GET_ALL_MENUS_REQUEST = "GET_ALL_MENUS_REQUEST";
-export const GET_ALL_MENUS_SUCCESS = "GET_ALL_MENUS_SUCCESS";
-export const GET_ALL_MENUS_FAILURE = "GET_ALL_MENUS_FAILURE";
+const initialState = {
+  menuItems: [],
+  loading: false,
+  error: null,
+  search: [],
+  message: null,
+};
 
-export const DELETE_MENU_REQUEST = "DELETE_MENU_REQUEST";
-export const DELETE_MENU_SUCCESS = "DELETE_MENU_SUCCESS";
-export const DELETE_MENU_FAILURE = "DELETE_MENU_FAILURE";
+const menuItemReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case actionTypes.CREATE_MENU_ITEM_REQUEST:
+    case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST:
+    case actionTypes.DELETE_MENU_ITEM_REQUEST:
+    case actionTypes.SEARCH_MENU_ITEM_REQUEST:
+    case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        message:null
+      };
 
-export const UPDATE_MENU_REQUEST = "UPDATE_MENU_REQUEST";
-export const UPDATE_MENU_SUCCESS = "UPDATE_MENU_SUCCESS";
-export const UPDATE_MENU_FAILURE = "UPDATE_MENU_FAILURE";
+    case actionTypes.CREATE_MENU_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        menuItems: [...state.menuItems, action.payload],
+        message:"food created successfully"
+      };
 
-export const GET_MENU_BY_ID_REQUEST = "GET_MENU_BY_ID_REQUEST";
-export const GET_MENU_BY_ID_SUCCESS = "GET_MENU_BY_ID_SUCCESS";
-export const GET_MENU_BY_ID_FAILURE = "GET_MENU_BY_ID_FAILURE";
+    case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        menuItems: action.payload,
+      };
 
-export const GET_MENUS_BY_RESTAURANT_ID_REQUEST = "GET_MENUS_BY_RESTAURANT_ID_REQUEST";
-export const GET_MENUS_BY_RESTAURANT_ID_SUCCESS = "GET_MENUS_BY_RESTAURANT_ID_SUCCESS";
-export const GET_MENUS_BY_RESTAURANT_ID_FAILURE = "GET_MENUS_BY_RESTAURANT_ID_FAILURE";
+    case actionTypes.DELETE_MENU_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        menuItems: state.menuItems.filter((menuItem) => menuItem.id !== action.payload),
+      };
+
+    case actionTypes.SEARCH_MENU_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        searchResults: action.payload,
+      };
+
+    case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_SUCCESS:
+      console.log("update item id ",action.payload.id)
+      return {
+        ...state,
+        loading: false,
+        menuItems: state.menuItems.map((menuItem) =>
+          menuItem.id === action.payload.id ? action.payload : menuItem
+        ),
+      };
+
+    case actionTypes.CREATE_MENU_ITEM_FAILURE:
+    case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE:
+    case actionTypes.DELETE_MENU_ITEM_FAILURE:
+    case actionTypes.SEARCH_MENU_ITEM_FAILURE:
+    case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        message:null
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default menuItemReducer;
