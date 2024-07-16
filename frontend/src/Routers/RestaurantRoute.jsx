@@ -7,7 +7,10 @@ import { FoodItemsByCategory } from '../RestaurantComponent/FoodCategory/FoodIte
 import { AddFoodItem } from '../RestaurantComponent/FoodCategory/AddFoodItem';
 import { FoodItemDetails } from '../RestaurantComponent/FoodCategory/FoodItemDetails'
 import { UpdateFoodItem } from '../RestaurantComponent/FoodCategory/UpdateFoodItem'
-import { OrderDetails } from '../RestaurantComponent/Orders/OrderDetails'
+import { OrderDetails } from '../RestaurantComponent/Orders/OrderDetails' 
+import { UpdateEvent } from '../RestaurantComponent/Events/UpdateEvent'
+import { AddEvent } from '../RestaurantComponent/Events/AddEvent'
+import { EventDetails } from '../RestaurantComponent/Events/EventDetails'
 
 
 export const RestaurantRoute = () => {
@@ -20,7 +23,10 @@ export const RestaurantRoute = () => {
             <Route path="/food-item/add/:categoryId" element={<AddFoodItem/>} />
             <Route path="/food-item/:foodItemId" element={<FoodItemDetails />} />
             <Route path="/food-item/update/:foodItemId" element={<UpdateFoodItem />} />
-            <Route path="/order/:orderId" element={<OrderDetails />} /> 
+            <Route path="/order/:orderId" element={<OrderDetails />} />  
+            <Route path="/event/update/:eventId" element={<UpdateEvent />} />
+            <Route path="/event/add" element={<AddEvent />} /> 
+            <Route path="/event/:eventId" element={<EventDetails />} /> 
         </Routes>
     </div>
   )
