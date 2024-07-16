@@ -20,6 +20,8 @@ import Routers from './Routers/Routers';
 import Mealprogress from './component/Profile/Mealprogress';
 import Setgoal from './component/Profile/Setgoal';
 
+import Weightloss from './component/Nutritionist/Weightloss';
+
 
 
 
@@ -40,7 +42,7 @@ function App() {
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
-     <Routers/> 
+     <Weightloss/> 
       
       
 
