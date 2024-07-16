@@ -22,6 +22,7 @@ import Setgoal from './component/Profile/Setgoal';
 
 import Weightloss from './component/Nutritionist/Weightloss';
 import Weightgain from './component/Nutritionist/Weightgain';
+import CustomRoutes from './Routers/CustomRoutes';
 
 
 
@@ -44,7 +45,7 @@ function App() {
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
 
-      {/* <CustomRoutes/>  */}
+      <CustomRoutes/> 
     
 
 
