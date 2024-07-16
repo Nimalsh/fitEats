@@ -22,6 +22,8 @@ import Setgoal from './component/Profile/Setgoal';
 
 import Weightloss from './component/Nutritionist/Weightloss';
 import Weightgain from './component/Nutritionist/Weightgain';
+import Othergoal from './component/Nutritionist/Othergoal';
+
 
 
 
@@ -46,7 +48,7 @@ function App() {
 
       {/* <CustomRoutes/>  */}
     
-
+      <Othergoal/>
 
      </ThemeProvider>
   
