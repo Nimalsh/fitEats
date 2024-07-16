@@ -8,6 +8,7 @@ import Favorites from './Favorites';
 import Orders from './Orders';
 import Food from './Food';
 import Nutrigoals from './Nutrigoals';
+import RestaurantDetails from '../Restaurant/RestaurantDetails';
 
 
 const Profile = () => {

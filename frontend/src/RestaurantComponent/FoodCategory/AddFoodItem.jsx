@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, CardHeader, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel, Grid } from '@mui/material';
+import { Box, CardHeader, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import BackgroundImage from '../../assets/images/hodai.jpg';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const ingredientCategories = ["Category1", "Category2", "Category3"]; // Replace with actual categories
-const ingredientItems = ["Item1", "Item2", "Item3"]; // Replace with actual items
+const ingredientCategories = ["Vegetables", "Fruits", "Meats", "Dairy", "Spices"];
+
+const ingredientItemsMap = {
+  Vegetables: ["Tomato", "Onion", "Pepper", "Carrot", "Broccoli"],
+  Fruits: ["Apple", "Banana", "Orange", "Strawberry", "Grapes"],
+  Meats: ["Chicken", "Beef", "Pork", "Lamb", "Turkey"],
+  Dairy: ["Milk", "Cheese", "Butter", "Yogurt", "Cream"],
+  Spices: ["Salt", "Pepper", "Cumin", "Turmeric", "Paprika"]
+};
 
 export const AddFoodItem = () => {
   const { categoryId } = useParams();
@@ -16,7 +23,7 @@ export const AddFoodItem = () => {
   const [image, setImage] = useState(null);
 
   const [ingredientData, setIngredientData] = useState(
-    Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '' }))
+    Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] }))
   );
 
   const handleFoodNameChange = (event) => {
@@ -40,8 +47,26 @@ export const AddFoodItem = () => {
   const handleIngredientChange = (index, field, value) => {
     const newData = [...ingredientData];
     newData[index][field] = value;
+    
+    // Update ingredientItems when category changes
+    if (field === 'category') {
+      newData[index].items = ingredientItemsMap[value] || [];
+      newData[index].item = ''; // Reset item when category changes
+    }
+
     setIngredientData(newData);
   };
+
+  const categoryNames = {
+    1: 'Pizza',
+    2: 'Bakery',
+    3: 'Burgers',
+    4: 'Drinks',
+    5: 'Sea Food',
+    6: 'Breakfast'
+  };
+
+  const categoryName = categoryNames[categoryId];
 
   const handleAddFoodItem = () => {
     // Add food item logic
@@ -50,7 +75,7 @@ export const AddFoodItem = () => {
     setPrice('');
     setDescription('');
     setImage(null);
-    setIngredientData(Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '' })));
+    setIngredientData(Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] })));
   };
 
   const handleClearForm = () => {
@@ -58,7 +83,7 @@ export const AddFoodItem = () => {
     setPrice('');
     setDescription('');
     setImage(null);
-    setIngredientData(Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '' })));
+    setIngredientData(Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] })));
   };
 
   return (
@@ -70,236 +95,232 @@ export const AddFoodItem = () => {
         minHeight: '100vh',
         padding: 2,
         display: 'flex',
-        flexDirection: 'column', // Use column direction
-        alignItems: 'center',
-        gap: '10px', // Add gap between grid items
+        flexDirection: 'column',
+        gap: '10px',
+        paddingLeft: '10%'
       }}
     >
-      <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
-       <Grid item xs={12} md={4}>
-          <Box
+      <div style={{ width: '40%', justifyContent: 'left', marginLeft: '10px' }}>
+        <Box
+          sx={{
+            backgroundColor: 'rgba(64, 64, 64, 0.8)',
+            borderRadius: 10,
+            padding: 4,
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            marginTop: '30px',
+            marginBottom: '10px',
+          }}
+        >
+          <CardHeader
+            title={`Add New ${categoryName}`}
+            sx={{ pt: 2, alignItems: 'center', color: 'white' }}
+          />
+
+          <TextField
+            id="food_name"
+            label="Food Item Name"
+            value={foodName}
+            onChange={handleFoodNameChange}
             sx={{
-              backgroundColor: 'rgba(64, 64, 64, 0.8)',
-              borderRadius: 10,
-              padding: 4,
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+              alignContent: 'left',
+              width: '60%',
+              marginBottom: '20px',
+              marginTop: '30px',
+              backgroundColor: '#000000',
+              borderRadius: 1,
+              'label': { color: '#fff' },
+              '& label.Mui-focused': { color: '#fff' },
+            }}
+          />
+
+          <TextField
+            id="price"
+            label="Price"
+            value={price}
+            onChange={handlePriceChange}
+            sx={{
+              width: '60%',
+              marginBottom: '20px',
+              backgroundColor: '#000000',
+              borderRadius: 1,
+              'label': { color: '#fff' },
+              '& label.Mui-focused': { color: '#fff' },
+            }}
+            fullWidth
+          />
+
+          <TextField
+            id="description"
+            label="Description"
+            value={description}
+            onChange={handleDescriptionChange}
+            multiline
+            rows={4}
+            sx={{
+              marginBottom: '20px',
+              backgroundColor: '#000000',
+              borderRadius: 1,
+              'label': { color: '#fff' },
+              '& label.Mui-focused': { color: '#fff' },
+            }}
+            fullWidth
+          />
+
+          <Button
+            type="button"
+            variant="contained"
+            component="label"
+            sx={{
+              align: 'center',
+              width: '50%',
+              backgroundColor: '#95CD41',
+              borderRadius: '20px',
+              height: '70%',
               display: 'flex',
-              flexDirection: 'column',
-              marginTop: '40px',
-              marginBottom: '10px', // Adjust margin bottom for gap
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontWeight: 'bold',
+              marginBottom: '30px',
             }}
           >
-            <CardHeader
-              title="Add Food Item"
-              sx={{ pt: 2, alignItems: 'center', color: 'white' }}
+            Upload Image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageChange}
             />
-
-            <TextField
-              id="food_name"
-              label="Food Item Name"
-              value={foodName}
-              onChange={handleFoodNameChange}
+          </Button>
+          {image && (
+            <Box
               sx={{
-                alignContent: 'left',
-                width: '100%',
-                marginBottom: '20px',
-                marginTop: '50px',
-                backgroundColor: '#000000',
-                borderRadius: 1,
-                'label': { color: '#fff' },
-                '& label.Mui-focused': { color: '#fff' },
-              }}
-              fullWidth
-            />
-
-            <TextField
-              id="price"
-              label="Price"
-              value={price}
-              onChange={handlePriceChange}
-              sx={{
-                width: '100%',
-                marginBottom: '20px',
-                backgroundColor: '#000000',
-                borderRadius: 1,
-                'label': { color: '#fff' },
-                '& label.Mui-focused': { color: '#fff' },
-              }}
-              fullWidth
-            />
-
-            <TextField
-              id="description"
-              label="Description"
-              value={description}
-              onChange={handleDescriptionChange}
-              multiline
-              rows={4}
-              sx={{
-                marginBottom: '20px',
-                backgroundColor: '#000000',
-                borderRadius: 1,
-                'label': { color: '#fff' },
-                '& label.Mui-focused': { color: '#fff' },
-              }}
-              fullWidth
-            />
-
-            <Button
-              type="button"
-              variant="contained"
-              component="label"
-              sx={{
-                alignContent: 'center',
-                width: '100%',
-                backgroundColor: '#95CD41',
-                borderRadius: '20px',
-                height: '70%',
+                marginBottom: 2,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                fontWeight: 'bold',
-                marginBottom: '50px',
               }}
             >
-              Upload Image
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleImageChange}
+              <img
+                src={image}
+                alt="Food Item"
+                style={{ width: 150, height: 150, borderRadius: '50%' }}
               />
-            </Button>
-            {image && (
-              <Box
-                sx={{
-                  marginBottom: 2,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  src={image}
-                  alt="Food Item"
-                  style={{ width: 150, height: 150, borderRadius: '50%' }}
-                />
-              </Box>
-            )}
+            </Box>
+          )}
+        </Box>
+      </div>
 
-          </Box>
-        </Grid>
+      <div style={{ width: '66.67%' }}>
+        <Box
+          sx={{
+            backgroundColor: 'rgba(64, 64, 64, 0.8)',
+            borderRadius: 10,
+            padding: 4,
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            alignItems: 'center',
+          }}
+        >
+          <CardHeader
+            title="Ingredients of the Food Item"
+            sx={{ pt: 2, alignItems: 'center', color: 'white' }}
+          />
 
-        <Grid item xs={12} md={8} sx={{ mt: 2, marginTop: '10px' }}>
-          <Box
-            sx={{
-              backgroundColor: 'rgba(64, 64, 64, 0.8)',
-              borderRadius: 10,
-              padding: 4,
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-              marginTop: '65%',
-              alignItems :'center'
-            }}
-          >
-
-            <CardHeader
-              title="Ingredients of the Food Item"
-              sx={{ pt: 2, alignItems: 'center', color: 'white' }}
-            />
-
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
-              {ingredientData.map((ingredient, index) => (
-                <React.Fragment key={index}>
-                  <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: '#000', color: '#fff', borderRadius: 1 }}>
-                    <InputLabel sx={{ color: '#fff' }}>Category</InputLabel>
-                    <Select
-                      value={ingredient.category}
-                      onChange={(e) => handleIngredientChange(index, 'category', e.target.value)}
-                      sx={{
-                        color: '#fff',
-                        '.MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#fff',
-                        },
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#fff',
-                        },
-                        '.MuiSvgIcon-root': {
-                          color: '#fff',
-                        },
-                        '.MuiSelect-icon': {
-                          color: '#fff',
-                        },
-                      }}
-                    >
-                      {ingredientCategories.map((category) => (
-                        <MenuItem key={category} value={category}>
-                          {category}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: '#000', color: '#fff', borderRadius: 1 }}>
-                    <InputLabel sx={{ color: '#fff' }}>Item</InputLabel>
-                    <Select
-                      value={ingredient.item}
-                      onChange={(e) => handleIngredientChange(index, 'item', e.target.value)}
-                      sx={{
-                        color: '#fff',
-                        '.MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#fff',
-                        },
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#fff',
-                        },
-                        '.MuiSvgIcon-root': {
-                          color: '#fff',
-                        },
-                        '.MuiSelect-icon': {
-                          color: '#fff',
-                        },
-                      }}
-                    >
-                      {ingredientItems.map((item) => (
-                        <MenuItem key={item} value={item}>
-                          {item}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    label="Amount (grams)"
-                    value={ingredient.amount}
-                    onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
-                    type="number"
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
+            {ingredientData.map((ingredient, index) => (
+              <React.Fragment key={index}>
+                <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: '#000', color: '#fff', borderRadius: 1 }}>
+                  <InputLabel sx={{ color: '#fff' }}>Category</InputLabel>
+                  <Select
+                    value={ingredient.category}
+                    onChange={(e) => handleIngredientChange(index, 'category', e.target.value)}
                     sx={{
-                      m: 1,
-                      backgroundColor: '#000000',
-                      borderRadius: 1,
-                      'label': { color: '#fff' },
-                      '& label.Mui-focused': { color: '#fff' },
-                      '& .MuiInputBase-input': { color: '#fff' },
+                      color: '#fff',
+                      '.MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#fff',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#fff',
+                      },
+                      '.MuiSvgIcon-root': {
+                        color: '#fff',
+                      },
+                      '.MuiSelect-icon': {
+                        color: '#fff',
+                      },
                     }}
-                  />
-                </React.Fragment>
-              ))}
-              <Box>
-                <div className="button-container mt-5">
-                  <button type='button' className='button add-button'
-                    onClick={handleAddFoodItem}
                   >
-                    <AddIcon /> Add
-                  </button>
-                  <button type='button' className='button delete-button'
-                    onClick={handleClearForm}
+                    {ingredientCategories.map((category) => (
+                      <MenuItem key={category} value={category}>
+                        {category}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 120, backgroundColor: '#000', color: '#fff', borderRadius: 1 }}>
+                  <InputLabel sx={{ color: '#fff' }}>Item</InputLabel>
+                  <Select
+                    value={ingredient.item}
+                    onChange={(e) => handleIngredientChange(index, 'item', e.target.value)}
+                    disabled={!ingredient.category}
+                    sx={{
+                      color: '#fff',
+                      '.MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#fff',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#fff',
+                      },
+                      '.MuiSvgIcon-root': {
+                        color: '#fff',
+                      },
+                      '.MuiSelect-icon': {
+                        color: '#fff',
+                      },
+                    }}
                   >
-                    <ClearIcon /> Clear
-                  </button>
-                </div>
-              </Box>
+                    {ingredient.items.map((item) => (
+                      <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <TextField
+                  label="Amount (grams)"
+                  value={ingredient.amount}
+                  onChange={(e) => handleIngredientChange(index, 'amount', e.target.value)}
+                  disabled={!ingredient.item}
+                  type="number"
+                  sx={{
+                    m: 1,
+                    backgroundColor: '#000000',
+                    borderRadius: 1,
+                    'label': { color: '#fff' },
+                    '& label.Mui-focused': { color: '#fff' },
+                    '& .MuiInputBase-input': { color: '#fff' },
+                  }}
+                />
+              </React.Fragment>
+            ))}
+            <Box>
+              <div className="button-container mt-5 mr-2">
+                <button type='button' className='button add-button'
+                  onClick={handleAddFoodItem}
+                >
+                  <AddIcon /> Add
+                </button>
+                <button type='button' className='button delete-button'
+                  onClick={handleClearForm}
+                >
+                  <ClearIcon /> Clear
+                </button>
+              </div>
             </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </div>
     </Box>
   );
 };

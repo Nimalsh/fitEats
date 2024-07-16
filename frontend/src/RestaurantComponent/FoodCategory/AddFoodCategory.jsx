@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, CardHeader, TextField, Button, Typography } from '@mui/material';
-import BackgroundImage from '../../assets/images/Background_image.png';
+import BackgroundImage from '../../assets/images/Add.jpg';
 import CatImage from '../../assets/images/category.png';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -51,7 +51,7 @@ export const AddFoodCategory = () => {
           backgroundColor: 'rgba(64, 64, 64, 0.8)',
           borderRadius: 10,
           padding: 4,
-          marginLeft:'100px',
+          marginLeft:'30%',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
           display: 'flex',
           flexDirection: 'column',
@@ -138,12 +138,7 @@ export const AddFoodCategory = () => {
           justifyContent: 'flex-end', // Align image to the right
           alignItems: 'center',
         }}
-      >
-        <img
-          src={CatImage}
-          alt="Category"
-          style={{ maxHeight: '100vh', width: 'auto', borderRadius: '10px', marginTop:'2px' }} // Adjust maxHeight as needed
-        />
+      > 
       </Box>
     </Box>
   );
