@@ -158,7 +158,7 @@ const Mealprogress = () => {
       </Box>
 
       {/* Lower Part */}
-      <Grid container spacing={1}>
+      <Grid container spacing={-2}>
         {/* Left Hand Side Tile */}
         <Grid item xs={12} md={8}>
           <Card sx={{ width: '700px', height: '500px' }}>
@@ -188,7 +188,7 @@ const Mealprogress = () => {
         </Grid>
 
         {/* Right Hand Side Tile */}
-        <Grid item xs={12} md={4} sx={{ paddingRight: '50px' }}>
+        <Grid item xs={12 } md={4} sx={{ paddingRight: '50px' }}>
           <Card sx={{ width: '100%', height: '100%' }}>
             <CardContent>
               <Typography variant="h6">Your Progress</Typography>
