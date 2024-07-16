@@ -40,9 +40,9 @@ function App() {
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
-      {/* <CustomRoutes/>  */}
+     <Routers/> 
       
-       <Setgoal/>
+      
 
      </ThemeProvider>
   
