@@ -13,6 +13,7 @@ import plateImage from './logo.png'; // Ensure this path is correct
 const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/" },
   { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
+  { title: "Incoming Orders", icon: <ShoppingBag />, path: "/incomingorders" },
   { title: "Menu", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "FoodCategory", icon: <CategoryIcon />, path: "/category" },
   { title: "Ingredients", icon: <FastfoodIcon />, path: "/ingredients" },
