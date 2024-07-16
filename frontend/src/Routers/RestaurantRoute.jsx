@@ -33,6 +33,11 @@ export const RestaurantRoute = () => {
             <Route path="/event/update/:eventId" element={<UpdateEvent />} />
             <Route path="/event/add" element={<AddEvent />} /> 
 
+            <Route path="/event/:eventId" element={<EventDetails />} />  
+            <Route path="/incoming-order/:orderId" element={<InOrderDetails />} /> 
+            <Route path="/drivers" element={<Drivers />} /> 
+            <Route path="/event/:eventId" element={<EventDetails />} /> 
+
         </Routes>
     </div>
   )
