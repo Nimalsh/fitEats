@@ -31,7 +31,7 @@ export const findCart = (token) => {
         },
       });
       dispatch({ type: FIND_CART_SUCCESS, payload: response.data });
-      console.log("find user cart", data);
+    
     } catch (error) {
       console.log("error", error);
       dispatch({ type: FIND_CART_FAILURE, payload: error });
@@ -68,7 +68,7 @@ export const getAllCartItems = (reqData) => {
         },
       });
       dispatch({ type: GET_ALL_CART_ITEMS_SUCCESS, payload: response.data });
-      console.log("get all cart items", data);
+     
     } catch (error) {
       console.log("error", error);
       dispatch({ type: GET_ALL_CART_ITEMS_FAILURE, payload: error });
