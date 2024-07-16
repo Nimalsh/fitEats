@@ -168,8 +168,7 @@ textarea {
   color: var(--text-color);
 }
 
-.details-button {
-  width: 70%;
+.details-button { 
   height: 50px;
   color: #000000;
   background-color: #95CD41; 
@@ -180,6 +179,21 @@ textarea {
   font-weight:bold; 
   margin-top: 10px;
   padding: 10px 20px;
+}
+
+.nutritions-button { 
+
+  height: 50px;
+  color: white;
+  background-color: black; 
+  border-radius: 15px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight:bold; 
+  margin-top: 10px;
+  padding: 10px 20px;
+  width: 30%;
 }
 
 .view-button {

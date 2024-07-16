@@ -43,9 +43,10 @@ function App() {
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
+
+      {/* <CustomRoutes/>  */}
     
-      
-      
+
 
      </ThemeProvider>
   
