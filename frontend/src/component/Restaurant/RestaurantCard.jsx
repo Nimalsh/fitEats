@@ -4,14 +4,14 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { useNavigate } from 'react-router-dom';
 
-const RestaurantCard = () => {
-  const navigate = useNavigate();
+const RestaurantCard = ({item}) => {
+  // const navigate = useNavigate();
 
-  const handleCardClick = () => {
-    navigate(`/restaurant-details`); // Adjust the path to your restaurant details page
-  };
+  // const handleCardClick = () => {
+  //   navigate(`/restaurant-details`); // Adjust the path to your restaurant details page
+  // };
   return (
-    <Card className='mb-4 w-[18rem] 'onClick={handleCardClick}>
+    <Card className='mb-4 w-[18rem] '>
       <div className={`${true?'cursor-pointer':'cursor-not-allowed'}relative`}>
       <img className='w-full h-[10rem] rounded-t-md object-cover' src="https://cdn.pixabay.com/photo/2016/11/18/14/05/brick-wall-1834784_1280.jpg" alt=''/>
       <Chip 
