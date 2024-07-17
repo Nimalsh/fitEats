@@ -47,7 +47,7 @@ export const AdminSideBar = ({ handleClose }) => {
           flexDirection: 'column',
           justifyContent: 'center',
           fontSize: '1.25rem',
-          backgroundColor: 'rgba(22, 84, 17, 1)', /* project color */
+          backgroundColor: 'black', // Background color changed to black
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
@@ -65,10 +65,10 @@ export const AdminSideBar = ({ handleClose }) => {
                   alignItems: 'center',
                   cursor: 'pointer',
                   gap: '10px',
-                  color: 'white', /* Font color is set to white */
+                  color: 'white',
                   borderRadius: '10px',
                   margin: '5px',
-                  backgroundColor: hoverIndex === i ? ' #A9A9A9,' : 'rgba(22, 84, 17, 1)', /* Hover color */
+                  backgroundColor: hoverIndex === i ? '#696969' : 'black', // Hover color changed to dark grey
                   transition: 'background-color 0.3s',
                 }}
                 className={`sidebar-item ${i === menu.length - 1 ? 'active' : ''}`}
@@ -83,4 +83,6 @@ export const AdminSideBar = ({ handleClose }) => {
       </Drawer>
     </div>
   );
-}
+};
+
+

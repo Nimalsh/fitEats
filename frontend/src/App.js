@@ -47,7 +47,7 @@ function App() {
       {/* <CustomRoutes/>  */}
     
 
-
+    <Routers/>
      </ThemeProvider>
   
       
