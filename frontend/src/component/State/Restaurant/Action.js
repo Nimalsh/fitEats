@@ -1,5 +1,4 @@
-import {api} from "../../../config/api";
-
+import { api } from "../../config/api";
 import {
   CREATE_CATEGORY_REQUEST,
   CREATE_CATEGORY_SUCCESS,
@@ -43,7 +42,7 @@ export const getAllRestaurantsAction = (token) => {
     try {
       const { data } = await api.get("/api/restaurants", {
         headers: {
-          Authorization: `Bearer${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data });
@@ -119,7 +118,6 @@ export const updateRestaurant = ({restaurantId,restaurantData,jwt}) => {
         },
       });
       dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload:res.data });
-      console.log("create restaurant",data);
     } catch (error) {
       console.log("error", error);
       dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error });

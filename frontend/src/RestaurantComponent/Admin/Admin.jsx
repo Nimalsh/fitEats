@@ -8,6 +8,7 @@ import { FoodCategory } from '../FoodCategory/FoodCategory'
 import { Ingredients } from '../Ingredients/Ingredients'
 import { Events } from '../Events/Events'
 import { RestuarantDetails } from './RestuarantDetails'
+import { IncomingOrders } from '../IncomingOrders/IncomingOrders'
 
 export const Admin = () => {
   const handleClose = () => {
@@ -23,6 +24,7 @@ export const Admin = () => {
             <Routes>
               <Route path='/' element={<Dashboard/>} /> 
               <Route path='/orders' element={<Orders/>} />
+              <Route path='/incomingorders' element={<IncomingOrders/>} />
               <Route path='/menu' element={<Menu/>} />
               <Route path='/category' element={<FoodCategory/>} />
               <Route path='/ingredients' element={<Ingredients/>} />

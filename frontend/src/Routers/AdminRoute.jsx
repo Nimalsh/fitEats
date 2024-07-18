@@ -42,5 +42,3 @@ export const RestaurantRoute = () => {
     </div>
   )
 }
-
-
