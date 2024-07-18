@@ -15,6 +15,9 @@ import Meallog from './Meallog';
 import BuildMuscle from './BuildMuscle';
 import Mealprogress from './Mealprogress';
 import NutriQueries from './NutriQueries';
+import MenuSuggest from './MenuSuggest';
+import AutoSuggestRes from './AutoSuggestRes';
+import MealPlansPage from './MealPlansPage';
 
 
 const Profile = () => {
@@ -38,6 +41,9 @@ const Profile = () => {
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Mealprogress/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
+          <Route path="/meal-plan" element={<MealPlansPage />} />
+          <Route path="/menu-suggest" element={<MenuSuggest/>} />
+          <Route path="/auto-suggest-restaurant" element={<AutoSuggestRes/>} />
           
         </Routes>
       </div>
