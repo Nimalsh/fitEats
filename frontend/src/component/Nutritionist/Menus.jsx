@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Grid, Typography, Box, TextField, Button } from '@mui/material';
 import MenuCard from './MenuCard';
-
+import Newmenuform from './Newmenuform';
 const menusData = [
   {
     name: 'Menu 1',
@@ -121,7 +121,7 @@ function Menus() {
 
       {tabIndex === 1 && (
         <Box sx={{ mt: 2 }}>
-          <NewMenuForm />
+          <Newmenuform />
         </Box>
       )}
     </Box>
