@@ -7,6 +7,7 @@ import RestaurantDetails from '../component/Restaurant/RestaurantDetails';
 import Cart from '../component/Cart/Cart';
 import { Auth } from '../component/Auth/Auth';
 import Nutrigoals from '../component/Profile/Nutrigoals';
+import BMI from '../component/Profile/BMI';
 import NutritionInfo from '../component/Profile/Nutricontent';
 
 import Nutritionistbase from '../component/Nutritionist/Nutritionistbase';
@@ -26,6 +27,7 @@ export default function CustomRoutes() {
         <Route path="/nutrition-content" element={<NutritionInfo />} />
 
         <Route path='/nutri/*' element={<Nutritionistbase />} />
+        
 
 
       </Routes>
