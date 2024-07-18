@@ -4,7 +4,7 @@ import 'chart.js/auto';
 import { Card, CardContent, Typography, Box, TextField,Button } from '@mui/material';
 import correctbmi from './BMIimage.jpg';
 
-const Dashboard = () => {
+const BMI = () => {
   const [currentWeight, setCurrentWeight] = useState(70); // kg
   const [currentHeight, setCurrentHeight] = useState(1.75); // meters
   const [bmi, setBmi] = useState(23.44);
@@ -273,4 +273,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default BMI;
