@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Grid, TextField, Paper, Typography, Box, Avatar, Button } from '@mui/material';
 
-const Articles = () => {
+const Othergoal = () => {
+  // Initialize with initial values and disable
   const [currentWeight, setCurrentWeight] = useState('75'); // Initial value
   const [targetWeightLoss, setTargetWeightLoss] = useState('5'); // Initial value
   const [duration, setDuration] = useState('12'); // Initial value
@@ -12,84 +13,61 @@ const Articles = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState('Vegan');
   const [dietaryRestrictions, setDietaryRestrictions] = useState('Nut free');
   const [mealsPerDay, setMealsPerDay] = useState('3');
-  const [query, setQuery] = useState('rfghhjjjsjsj ffhhrhhhssh'); // Renamed state to setQuery for consistency
-  const [replyVisible, setReplyVisible] = useState(false); // State to manage reply input visibility
-  const [replyText, setReplyText] = useState(''); // State to manage reply text
-  const [weight, setWeight] = useState('55');
+  const [goal, setGoal] = useState('rfghhjjjsjsj ffhhrhhhssh'); // Renamed state to setGoal for consistency
+
+  // Assume we have the user's name
   const userName = 'John Doe';
 
-  
-  const handleReplyClick = () => {
-    setReplyVisible(true);
-  };
-
-  const handleSaveReply = () => {
-    // Implement save logic here
-    console.log('Saving reply:', replyText);
-    setReplyVisible(false); // Hide reply input after saving
-  };
+  // Mock data for previously achieved goals
+  const achievedGoals = [
+    { description: 'Lost 5kg in 8 weeks', duration: '8 weeks', weightLost: '5kg' },
+    { description: 'Lost 3kg in 4 weeks', duration: '4 weeks', weightLost: '3kg' },
+    { description: 'Lost 2kg in 3 weeks', duration: '3 weeks', weightLost: '2kg' },
+  ];
 
   return (
     <Container>
-      <Grid container spacing={0}>
+      <Grid container spacing={2}>
         {/* Left Tile */}
         <Grid item xs={12} sm={8}>
-          <Box mt={5} ml={2} width={'700px'}>
-            <Paper style={{ padding: 20, position: 'relative' }}>
+          <Box mt={5} ml={-5} width={'700px'}>
+            <Paper style={{ padding: 20 }}>
               <Typography variant="h6" gutterBottom>
-              Queries
+                {/* Title or Heading */}
               </Typography>
-              <Box position="relative">
-                <Box position="absolute" top={16} left={16} display="flex" flexDirection="column" alignItems="center" mr={5}>
+              <Box display="flex" alignItems="center">
+                <Box display="flex" flexDirection="column" alignItems="center" mr={5} mt={5}>
                   <Avatar
                     alt="User Image"
-                    src="https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
+                    src="path_to_user_image.jpg"
                     sx={{ width: 60, height: 60 }}
                   />
-                  <Typography variant="subtitle1" mt={1} sx={{ whiteSpace: 'nowrap' }}>
+                  <Typography variant="subtitle1" mt={1}>
                     {userName}
                   </Typography>
                 </Box>
-                <Box sx={{ width: '550px', pl: 10 }}>
+                <Box sx={{ width: '100%', position: 'relative' }}>
                   <form noValidate autoComplete="off">
                     <TextField
-                      label="Query"
+                      label="Goal"
                       fullWidth
                       margin="normal"
-                      multiline
-                      rows={4}
-                      variant="outlined"
                       type="text"
-                      name="query"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
+                      name="goal"
+                      value={goal}
                       disabled // Make the field disabled
-                      sx={{ width: '100%', marginLeft: '15px' }} 
                     />
                   </form>
-                  <Box display="flex" justifyContent="flex-end" mt={2}>
-                    <Button variant="contained" onClick={handleReplyClick}>Reply</Button>
-                  </Box>
-                  {replyVisible && (
-                    <>
-                      <TextField
-                        label="Reply"
-                        fullWidth
-                        margin="normal"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        type="text"
-                        name="reply"
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        sx={{ width: '100%', mt: 2 }}
-                      />
-                      <Box display="flex" justifyContent="flex-end" mt={2}>
-                        <Button variant="contained" onClick={handleSaveReply}>Save</Button>
-                      </Box>
-                    </>
-                  )}
+                  <Button
+                    variant="contained"
+                    sx={{
+                      position: 'absolute',
+                      bottom: 10,
+                      right: 10,
+                    }}
+                  >
+                    Reply
+                  </Button>
                 </Box>
               </Box>
             </Paper>
@@ -98,7 +76,7 @@ const Articles = () => {
 
         {/* Right Tile */}
         <Grid item xs={12} sm={4}>
-          <Box mt={5} ml={-1} width={'400px'}>
+          <Box mt={5} ml={-1} width={'500px'}>
             <Paper style={{ padding: 20, width: '100%' }}>
               <Typography variant="h6" gutterBottom>
                 Personal Information
@@ -113,15 +91,6 @@ const Articles = () => {
                     type="number"
                     name="Age"
                     value={age}
-                    disabled // Make the field disabled
-                  />
-                   <TextField
-                    label="Weight"
-                    fullWidth
-                    margin="normal"
-                    type="number"
-                    name="weight"
-                    value={weight}
                     disabled // Make the field disabled
                   />
                   <TextField
@@ -179,6 +148,7 @@ const Articles = () => {
                     disabled // Make the field disabled
                   />
                 </form>
+                
               </Grid>
             </Paper>
           </Box>
@@ -188,4 +158,4 @@ const Articles = () => {
   );
 };
 
-export default Articles;
+export default Othergoal;
