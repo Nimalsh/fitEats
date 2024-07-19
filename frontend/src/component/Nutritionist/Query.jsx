@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase, Avatar } from '@mui/material';
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const orders = [
   { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Not Replied', description: 'A program for losing weight', userImage: 'https://media.istockphoto.com/id/180866257/photo/design-is-his-passion.jpg?s=2048x2048&w=is&k=20&c=4Jmxxt1oo1bQdOooPl5anov8ZCcyLK1bDoz-FJaLxZ4=' },
   { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Replied', description: 'Nutrition plan for gaining muscle mass', userImage: 'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg' },
@@ -21,7 +21,15 @@ const getStatusColor = (status) => {
   }
 };
 
+
 function Query() {
+   const navigate = useNavigate();
+   const handleViewClick = () => {
+    // Navigate to the article page
+   navigate('/nutri/queries/reply');
+  };
+  
+
   const [clickedUser, setClickedUser] = useState(null);
 
   const handleUserClick = (user) => {
@@ -93,7 +101,7 @@ function Query() {
                     </Box>
                   </TableCell>
                   <TableCell align="center" sx={{ marginRight: 10 }}>
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" onClick={handleViewClick}>
                       View
                     </Button>
                   </TableCell>

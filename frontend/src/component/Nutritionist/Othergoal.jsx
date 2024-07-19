@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Container, Grid, TextField, Paper, Typography, Box, Avatar, Button, Card, CardContent } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useNavigate } from 'react-router-dom';
+
 
 const Othergoal = () => {
+  const navigate = useNavigate();
   // Initialize with initial values and disable
   const [currentWeight, setCurrentWeight] = useState('75'); // Initial value
   const [targetWeightLoss, setTargetWeightLoss] = useState('5'); // Initial value
@@ -25,13 +28,19 @@ const Othergoal = () => {
     { description: 'Lost 3kg in 4 weeks', duration: '4 weeks', weightLost: '3kg' },
     { description: 'Lost 2kg in 3 weeks', duration: '3 weeks', weightLost: '2kg' },
   ];
+  const handleProceedClick = () => {
+    // Navigate to the article page
+   navigate('/nutri/other/view/proceed');
+  };
 
   return (
+    
+   
     <Container>
       <Grid container spacing={2}>
         {/* Left Tile */}
-        <Grid item xs={12} sm={8}>
-          <Box mt={5} ml={-5} width={'700px'}>
+        <Grid item xs={12} sm={8} >
+          <Box mt={5} ml={-5} width={'600px'} marginLeft={'5px'}>
             <Paper style={{ padding: 20 }}>
               <Typography variant="h6" gutterBottom>
                 Current Goal
@@ -65,7 +74,7 @@ const Othergoal = () => {
           </Box>
 
           {/* New Tile for Previously Achieved Goals */}
-          <Box mt={2} ml={-5} width={'700px'} minHeight={'200px'}>
+          <Box mt={2} ml={-5} width={'600px'} minHeight={'200px'} marginLeft={'5px'}>
             <Paper style={{ padding: 20 }}>
               <Typography variant="h6" gutterBottom>
                 Previously Achieved Goals
@@ -88,7 +97,7 @@ const Othergoal = () => {
 
         {/* Right Tile */}
         <Grid item xs={12} sm={4}>
-          <Box mt={5} ml={-1} width={'500px'}>
+          <Box mt={5} ml={-1} width={'400px'}>
             <Paper style={{ padding: 20, width: '100%' }}>
               <Typography variant="h6" gutterBottom>
                 Personal Information
@@ -163,9 +172,9 @@ const Othergoal = () => {
                 <Button
                   variant="contained"
                   sx={{
-                    marginLeft: '350px',
+                    marginLeft: '250px',
                     marginTop: '30px',
-                  }}
+                  }} onClick={handleProceedClick}
                 >
                   Proceed
                 </Button>
