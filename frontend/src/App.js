@@ -42,7 +42,12 @@ function App() {
 
   useEffect(()=>{
     dispatch(getUser(auth.jwt||jwt));
-  }, [auth.jwt])
+  }, [auth.jwt]);
+
+  // useEffect(()=>{
+  //   dispatch(getRestaurantByUserId(auth.jwt || jwt));
+  // },[auth.user])
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
