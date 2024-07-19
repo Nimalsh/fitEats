@@ -6,6 +6,11 @@ import Articles from './Articles';
 import Query from './Query';
 import Menus from './Menus';
 import Requests from './Requests';
+import Queryanswer from './Queryanswer';
+import WeightGain from './Weightgain';
+import Weightloss from './Weightloss';
+import Othergoal from './Othergoal';
+import Plangeneration from './Plangeneration';
 
 
 
@@ -25,8 +30,14 @@ const Nutritionistbase = () => {
             <Route path="/menus" element={<Menus />} />
             <Route path="/queries" element={<Query />} /> 
             <Route path="/articles" element={<Articles />} />
-           
-            
+            <Route path="/requests" element={<Requests />} />
+            <Route path="/queries/reply" element={<Queryanswer />} />
+            <Route path="/weightgain/view" element={<WeightGain />} />
+            <Route path="/weightloss/view" element={<Weightloss />} />
+            <Route path="/other/view" element={<Othergoal />} />
+            <Route path="/other/view/proceed" element={<Plangeneration />} />
+            <Route path="/weightloss/view/proceed" element={<Plangeneration />} />
+            <Route path="/weightgain/view/proceed" element={<Plangeneration />} />
           </Routes>
         </div>
       </div>

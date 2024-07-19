@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Container, Grid, TextField, Paper, Typography, Box, Avatar, Button } from '@mui/material';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title, ArcElement } from 'chart.js';
-
+import { useNavigate } from 'react-router-dom';
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title, ArcElement);
 
 const WeightGain = () => {
+  const navigate = useNavigate();
   // Initialize with initial values and disable
   const [currentWeight, setCurrentWeight] = useState('55'); // Initial value
   const [targetWeightGain, setTargetWeightGain] = useState('5'); // Initial value
@@ -92,25 +93,40 @@ const WeightGain = () => {
       },
     },
   };
+  const handleProceedClick = () => {
+    // Navigate to the article page
+   navigate('/nutri/weightgain/view/proceed');
+  };
 
   return (
     <Container>
       <Grid container spacing={-2}>
         {/* Left Tile */}
         <Grid item xs={12} sm={8}>
-          <Box mt={5} ml={-5} width={'700px'}>
+          <Box mt={5} ml={-5} width={'650px'} marginLeft={'5px'}>
             <Paper style={{ padding: 20 }}>
               <Typography variant="h6" gutterBottom>
                 Weight Gain Plan
               </Typography>
               <Box display="flex" alignItems="center">
-                <Box display="flex" flexDirection="column" alignItems="center" mr={5} mt={-5}>
+                <Box display="flex" flexDirection="column" alignItems="center" mr={2} mt={-5}>
                   <Avatar
                     alt="User Image"
                     src="path_to_user_image.jpg"
-                    sx={{ width: 100, height: 100 }}
+                    sx={{ width: 50, height:50 }}
                   />
-                  <Typography variant="subtitle1" mt={1}>
+                  <Typography
+                    variant="subtitle1"
+                    mt={1}
+                    mr={3}
+                    ml={1}
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '100px',
+                    }}
+                  >
                     {userName}
                   </Typography>
                 </Box>
@@ -158,7 +174,7 @@ const WeightGain = () => {
                 <Typography variant="h6" gutterBottom mb={-5}>
                   Daily Caloric Needs Breakdown
                 </Typography>
-                <Box width={600} height={400} marginRight={'20px'}>
+                <Box width={400} height={400} marginRight={'20px'}>
                   <Doughnut data={donutData} options={donutOptions} />
                 </Box>
               </Box>
@@ -167,7 +183,7 @@ const WeightGain = () => {
         </Grid>
         {/* Right Tile */}
         <Grid item xs={12} sm={4}>
-          <Box mt={5} ml={-1} width={'500px'}>
+          <Box mt={5} ml={-1} width={'400px'}>
             <Paper style={{ padding: 20, width: '100%' }}>
               <Typography variant="h6" gutterBottom>
                 Personal Information
@@ -242,9 +258,9 @@ const WeightGain = () => {
                 <Button
                   variant="contained"
                   sx={{
-                    marginLeft: '350px',
+                    marginLeft: '250px',
                     marginTop: '30px',
-                  }}
+                  }} onClick={handleProceedClick}
                 >
                   Proceed
                 </Button>
