@@ -14,7 +14,7 @@ const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/" },
   { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
   { title: "Incoming Orders", icon: <ShoppingBag />, path: "/incomingorders" },
-  { title: "Menu", icon: <ShopTwoIcon />, path: "/menu" },
+  { title: "Diet Plan Packages", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "FoodCategory", icon: <CategoryIcon />, path: "/category" },
   { title: "Ingredients", icon: <FastfoodIcon />, path: "/ingredients" },
   { title: "Events", icon: <EventIcon />, path: "/events" },
