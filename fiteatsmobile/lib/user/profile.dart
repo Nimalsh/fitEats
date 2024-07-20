@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'calories_count.dart';
-import 'cartDetails.dart';
 import 'diet_plan.dart';
 import 'feedback.dart';
 import 'menu.dart';
@@ -42,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
         backgroundColor: Colors.green,
         title: const Text("My Profile"),
         leading: Builder(

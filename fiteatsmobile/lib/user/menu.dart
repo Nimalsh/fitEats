@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'food_ordering.dart';
+import 'resfavourite.dart';
 
 
 class MenuDrawer extends StatelessWidget {
@@ -82,12 +83,12 @@ class SettingsPage extends StatelessWidget {
 //   }
 // }
 
-class RestaurantPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Restaurant')),
-      body: Center(child: Text('Restaurant Page')),
-    );
-  }
-}
+// class RestaurantPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Restaurant')),
+//       body: Center(child: Text('Restaurant Page')),
+//     );
+//   }
+// }
