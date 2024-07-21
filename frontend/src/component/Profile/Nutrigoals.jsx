@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Grid, Paper, Typography, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import HealthIcon from '@mui/icons-material/HealthAndSafety';
@@ -24,14 +25,22 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Nutrigoals = () => {
+  const navigate = useNavigate();
+
   const goals = [
-    { icon: <ManIcon />, label: 'BMI Analysis' },
-    { icon: <WeightIcon />, label: 'Lose Weight' },
-    { icon: <MuscleIcon />, label: 'Build Muscle' },
-    { icon: <FoodLogIcon />, label: 'Meal Log' },
-    { icon: <HealthIcon />, label: 'Personalize plans' },
-    { icon: <PsychologyAltIcon />, label: 'Nutri queries' },
+    { icon: <ManIcon />, label: 'BMI Analysis', route: '/my-profile/BMI' },
+    { icon: <WeightIcon />, label: 'Lose Weight',route: '/my-profile/lose-weight' },
+    { icon: <MuscleIcon />, label: 'Build Muscle',route: '/my-profile/build-muscle' },
+    { icon: <FoodLogIcon />, label: 'Meal Log',route: '/my-profile/meal-log' },
+    { icon: <HealthIcon />, label: 'Personalize plans',route: '/my-profile/personalized-plan' },
+    { icon: <PsychologyAltIcon />, label: 'Nutri queries',route: '/my-profile/nutri-queries' },
   ];
+
+  const handleItemClick = (route) => {
+    if (route) {
+      navigate(route);
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1, width: '100%', maxWidth: 360, margin: '0 auto', padding: '16px' }}>
@@ -41,7 +50,7 @@ const Nutrigoals = () => {
       <Grid container spacing={2}>
         {goals.map((goal, index) => (
           <Grid item xs={6} key={index}>
-            <Item>
+            <Item onClick={() => handleItemClick(goal.route)}>
               {goal.icon}
               <Typography variant="subtitle1">{goal.label}</Typography>
             </Item>
@@ -53,3 +62,4 @@ const Nutrigoals = () => {
 };
 
 export default Nutrigoals;
+

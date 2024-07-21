@@ -8,6 +8,13 @@ import Favorites from './Favorites';
 import Orders from './Orders';
 import Food from './Food';
 import Nutrigoals from './Nutrigoals';
+import RestaurantDetails from '../Restaurant/RestaurantDetails';
+import BMI from './BMI';
+import Setgoal from './Setgoal';
+import Meallog from './Meallog';
+import BuildMuscle from './BuildMuscle';
+import Mealprogress from './Mealprogress';
+import NutriQueries from './NutriQueries';
 
 
 const Profile = () => {
@@ -25,6 +32,12 @@ const Profile = () => {
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/BMI" element={<BMI />} />
+          <Route path="/lose-weight" element={<Setgoal/>} />
+          <Route path="/build-muscle" element={<BuildMuscle />} />
+          <Route path="/meal-log" element={<Meallog />} />
+          <Route path="/personalized-plan" element={<Mealprogress/>} />
+          <Route path="/nutri-queries" element={<NutriQueries/>} />
           
         </Routes>
       </div>

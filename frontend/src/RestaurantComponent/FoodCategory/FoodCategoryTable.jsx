@@ -1,5 +1,5 @@
-import { Box, CardHeader, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
+import { Box, CardHeader, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
 import PizzaImage from './Pizza.jpeg';
 import BurgerImage from './Burger.jpeg';
 import BreakfastImage from './Breakfast.jpeg';
@@ -23,6 +23,21 @@ const orders = [
 ];
 
 const FoodCategoryTile = ({ category }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleDelete = () => {
+    console.log(`Deleting category ${category.id}`);
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <Box
       sx={{
@@ -50,12 +65,24 @@ const FoodCategoryTile = ({ category }) => {
       </Typography>
 
       <div className="button-container mt-5">
-      <Link to={`../food-category/${category.id}`} className="button view-button">
+        <Link to={`../food-category/${category.id}`} className="button view-button">
           <ViewIcon /> View
         </Link>
-        <button type="button" className="button delete-button">
+        <button type="button" className="button delete-button" onClick={handleClickOpen}>
           <DeleteIcon /> Delete
         </button>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Are you sure you want to delete {category.name}?</DialogTitle>
+          <DialogActions>
+            <button type="button" className="button add-button mb-5 mr-5" onClick={handleDelete} autoFocus>
+              Yes
+            </button>
+            <button type="button" className="button add-button mb-5 mr-5" onClick={handleClose}>
+              No
+            </button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Box>
   );

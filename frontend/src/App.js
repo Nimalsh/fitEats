@@ -17,6 +17,18 @@ import { useEffect } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 
 import Routers from './Routers/Routers'; 
+import Mealprogress from './component/Profile/Mealprogress';
+import Setgoal from './component/Profile/Setgoal';
+
+import Weightloss from './component/Nutritionist/Weightloss';
+import Weightgain from './component/Nutritionist/Weightgain';
+
+import CustomRoutes from './Routers/CustomRoutes';
+
+import Othergoal from './component/Nutritionist/Othergoal';
+import Plangeneration from './component/Nutritionist/Plangeneration';
+import Mealplanmakebysearch from './component/Nutritionist/Mealplansmakebysearch';
+
 
 
 
@@ -30,7 +42,12 @@ function App() {
 
   useEffect(()=>{
     dispatch(getUser(auth.jwt||jwt));
-  }, [auth.jwt])
+  }, [auth.jwt]);
+
+  // useEffect(()=>{
+  //   dispatch(getRestaurantByUserId(auth.jwt || jwt));
+  // },[auth.user])
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
@@ -39,11 +56,14 @@ function App() {
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
-      {/* <CustomRoutes/>  */}
-      
-       <Routers/>
 
-    </ThemeProvider>
+      <CustomRoutes/> 
+    
+
+
+    <Routers/>
+
+     </ThemeProvider>
   
       
   
