@@ -18,6 +18,7 @@ import NutriQueries from './NutriQueries';
 import MenuSuggest from './MenuSuggest';
 import AutoSuggestRes from './AutoSuggestRes';
 import MealPlansPage from './MealPlansPage';
+import Payments from './Payment';
 
 
 const Profile = () => {
@@ -35,6 +36,7 @@ const Profile = () => {
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/payments" element={<Payments />} />
           <Route path="/BMI" element={<BMI />} />
           <Route path="/lose-weight" element={<Setgoal/>} />
           <Route path="/build-muscle" element={<BuildMuscle />} />
