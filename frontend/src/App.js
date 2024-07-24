@@ -57,7 +57,7 @@ function App() {
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
 
-      <CustomRoutes/> 
+      {/* <CustomRoutes/>  */}
     
 
 

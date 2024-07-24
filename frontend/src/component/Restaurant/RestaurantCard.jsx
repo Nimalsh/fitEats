@@ -1,46 +1,60 @@
-import { Card, Chip, IconButton } from '@mui/material'
-import React from 'react'
+import { Card, Chip, IconButton } from '@mui/material';
+import React from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFavorite } from '../State/Authentication/Action';
+import { isPresentInFavorites } from '../config/logic';
+import { store } from '../State/store';
 
-const RestaurantCard = ({item}) => {
+const RestaurantCard = ({ item }) => {
   const navigate = useNavigate();
-
+  const dispatch=useDispatch();
+  const {auth}=useSelector(store=>store)
   const handleCardClick = () => {
     navigate(`/restaurant-details`); // Adjust the path to your restaurant details page
   };
+
+  const jwt=localStorage.getItem("jwt")
+  const handleAddToFavorite=()=>{
+    dispatch(addToFavorite({restaurantId:item.id,jwt}))
+  }
+
   return (
-    <Card className='mb-4 w-[18rem]'onClick={handleCardClick}>
-      <div className={`${true?'cursor-pointer':'cursor-not-allowed'}relative`}>
-      <img className='w-full h-[10rem] rounded-t-md object-cover'  src={item.images[2]} alt=''/>
-      <Chip 
-      size='small' 
-      className='absolute top-2 left-2'
-      color={item.open?"success":"error"}
-      label={item.open?"open":"closed"}/>
+    <Card className="mb-4 w-[18rem]" onClick={handleCardClick}>
+      <div className={`relative ${item.open ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
+        <img
+          className="w-full h-[10rem] rounded-t-md object-cover"
+          src={item.images[2]}
+          alt=""
+        />
+        <Chip
+          size="small"
+          className="absolute top-2 left-2"
+          color={item.open ? 'success' : 'error'}
+          label={item.open ? 'open' : 'closed'}
+        />
       </div>
 
-      <div className='p-4 textPart lg:flex w-full justify-between'>
-        <div className='space-y-1'>
-          <p className='font-semibold text-lg'>{item.name} </p>
-          <p className='text-gray-500 text-sm'>
-           {item.description}
-          </p>
+      <div className="p-4 textPart lg:flex w-full justify-between">
+        <div className="space-y-1">
+          <p className="font-semibold text-lg">{item.name}</p>
+          <p className="text-gray-500 text-sm">{item.description}</p>
         </div>
 
         <div>
-          <IconButton>
-              {true?<FavoriteIcon/>:<FavoriteBorderOutlinedIcon/>}
+          <IconButton onClick={handleAddToFavorite}>
+            {isPresentInFavorites(auth.favorite,item) ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
           </IconButton>
         </div>
-
       </div>
     </Card>
-  )
-}
+  );
+};
 
-export default RestaurantCard
+export default RestaurantCard;
+
 
 /*import { Card, Chip, IconButton } from '@mui/material';
 import React from 'react';
