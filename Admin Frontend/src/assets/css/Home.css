@@ -1,0 +1,72 @@
+.bg{
+    background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(32,32,32,1) 80%, rgba(0, 0, 0, 1) 100%),url('../images/home-background.jpg') ;
+    /* background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgba(117, 19, 93, 0.73),url("../images/home-background.jpg")); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* margin: 0; */
+}
+
+img.bg {
+    
+    min-height: 100%;
+    min-width: 1024px;
+      
+    
+    width: 100%;
+    height: 100%;
+      
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+@media screen and (max-width: 1024px) { 
+    img.bg {
+      left: 50%;
+      margin-left: -512px;   
+    }
+}
+
+
+.food-card {
+    transform: scale(1, 1);
+    transition: 0.3s all ease-in-out;
+ }
+  
+.food-card:hover > img{
+    transform: scale(1, 1);
+}
+
+.food-card:hover {
+    transform: scale(1, 1);
+}
+
+/* square buttons */
+.rec.rec-arrow {
+    border-radius: 0;
+}
+/* round buttons on hover */
+.rec.rec-arrow:hover {
+    border-radius: 50%;
+}
+
+.rec.rec-arrow:hover:enabled,
+.rec.rec-arrow:enabled, 
+.rec.rec-arrow:focus:enabled{
+    background-color: #95CD41;
+}
+/* hide disabled buttons */
+.rec.rec-arrow:disabled {
+    visibility: hidden;
+}
+
+
+/* disable default outline on focused items */
+/* add custom outline on focused items */
+.rec-carousel-item:focus {
+    outline: none;
+    box-shadow: inset 0 0 1px 1px lightgrey;
+}
+
+

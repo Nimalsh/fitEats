@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase } from '@mui/material';
 import React, { useState } from 'react';
 import { Person } from '@mui/icons-material';
-
+import { useNavigate } from 'react-router-dom';
 const orders = [
   { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Pending' },
   { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Finished' },
@@ -23,6 +23,25 @@ const getStatusColor = (status) => {
 };
 
 function Requests() {
+  const navigate = useNavigate();
+
+  const handleViewClick = (title) => {
+    switch (title) {
+      case 'Weight Loss':
+        navigate('/nutri/weightloss/view');
+        break;
+      case 'Weight Gain':
+        navigate('/nutri/weightgain/view');
+        break;
+      case 'Other':
+      case 'Others':
+        navigate('/nutri/other/view');
+        break;
+      default:
+        navigate('/nutri/queries/reply'); // Fallback route
+        break;
+    }
+  };
   const [clickedUser, setClickedUser] = useState(null);
 
   const handleUserClick = (user) => {
@@ -94,7 +113,7 @@ function Requests() {
                     </Box>
                   </TableCell>
                   <TableCell align="center" sx={{ marginRight: 10 }}>
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary"onClick={() => handleViewClick(row.title)}>
                       View
                     </Button>
                   </TableCell>
