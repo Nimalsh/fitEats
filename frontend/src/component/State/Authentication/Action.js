@@ -56,22 +56,20 @@ export const getUser=(jwt)=>async(dispatch)=>{
   }
 }
 
-export const addToFavorite=(jwt,restaurantId)=>async(dispatch)=>{
-  dispatch({type:ADD_TO_FAVOURITE_REQUEST})
-  try{
-    const {data} =await  axios.put(`/api/restaurants/${restaurantId}/add-favorites`,{},{
-      headers:{
-        Authorization:`Bearer ${jwt}`
-      }
-    })
-   
-    dispatch({type:ADD_TO_FAVOURITE_SUCCESS,payload:data})
-    console.log("add to favorite",data)
-  }catch(error){
-    dispatch({type:ADD_TO_FAVOURITE_FAILURE,payload:error})
-    console.log("error",error)
+export const addToFavorites = ({ jwt, restaurantId }) => async (dispatch) => {
+  dispatch({ type: ADD_TO_FAVOURITE_REQUEST });
+  try {
+    const { data } = await axios.put(`/api/restaurants/${restaurantId}/add-favorites`, {}, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+    dispatch({ type: ADD_TO_FAVOURITE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: ADD_TO_FAVOURITE_FAILURE, payload: error });
+    console.error("error", error);
   }
-}
+};
 
 export const logout=()=>async(dispatch)=>{
   try{
