@@ -43,6 +43,7 @@ const Profile = () => {
           <Route path="/nutri-queries" element={<NutriQueries/>} />
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />
           <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
+          <Route path="/personalized-plan/view" element={<Mealprogress/>} />
         </Routes>
       </div>
     </div>
