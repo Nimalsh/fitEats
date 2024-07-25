@@ -18,7 +18,9 @@ import NutriQueries from './NutriQueries';
 import Goalselect from './Goalselect';
 import Nutritionistselection from './Nutritionistselection';
 import Paidweightlossform from './Paidweightlossform';
-import Paidweightgainform from './Paidweightgainform'
+import Paidweightgainform from './Paidweightgainform';
+import Calorytrack from './Calorytrack';
+import Paidothergoalform from './Paidothergoalform'
 
 
 const Profile = () => {
@@ -46,6 +48,8 @@ const Profile = () => {
           <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
           <Route path="/personalized-plan/view" element={<Mealprogress/>} />
           <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
+          <Route path="/BMI/plan" element={<Calorytrack/>} />
+          <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
         </Routes>
       </div>
     </div>

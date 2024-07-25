@@ -53,7 +53,7 @@ const Goalselect = () => {
                             <Grid item xs={12}>
                                 <ButtonBase
                                     sx={{ width: '100%' }}
-                                    onClick={() => alert('Other selected')}
+                                    onClick={() => navigate('/my-profile/personalized-plan/other')}
                                 >
                                     <Card sx={{ width: 400, height: 70 }}>
                                         <CardContent>

@@ -3,8 +3,9 @@ import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { Card, CardContent, Typography, Box, TextField,Button } from '@mui/material';
 import correctbmi from './BMIimage.jpg';
-
+import { useNavigate } from 'react-router-dom';
 const BMI = () => {
+  const navigate = useNavigate();
   const [currentWeight, setCurrentWeight] = useState(70); // kg
   const [currentHeight, setCurrentHeight] = useState(1.75); // meters
   const [bmi, setBmi] = useState(23.44);
@@ -256,11 +257,14 @@ const BMI = () => {
               <Box style={styles.chartContainer}>
                 <Line data={data} options={options} />
               </Box>
-              <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '10px' }}>
+              <Typography variant=
+              "h6" sx={{ textAlign: 'center', marginTop: '10px' }}>
                 Target Weight loss or gain: {targetWeight} kg
               </Typography>
               <Box sx={{ marginLeft: '500px', marginTop: '20px' }}>
-          <Button variant="contained"  style={{ whiteSpace: 'nowrap' }}>
+          <Button variant="contained"  style={{ whiteSpace: 'nowrap' }}
+           onClick={() => navigate('/my-profile/BMI/plan')}
+          >
   Lets Proceed
 </Button>
         </Box>

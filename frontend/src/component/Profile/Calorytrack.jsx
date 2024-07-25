@@ -62,7 +62,7 @@ const foodItems = [
   };
   
 
-const Meallog = () => {
+const Calorytrack = () => {
  
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -433,7 +433,7 @@ const Meallog = () => {
       <Button
   variant="contained"
   color="primary"
-  sx={{ marginLeft: '600px', marginTop: '8px' }}
+  sx={{ marginLeft: '500px', marginTop: '8px' }}
   onClick={() => {
     saveMealsAndActivities();
   }}
@@ -652,4 +652,4 @@ const SelectedFoodCard = ({ food, index, handleQuantityChange, handleRemoveFood 
   </Card>
 );
 
-export default Meallog;
+export default Calorytrack;
