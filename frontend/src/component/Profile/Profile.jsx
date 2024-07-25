@@ -18,6 +18,7 @@ import NutriQueries from './NutriQueries';
 import Goalselect from './Goalselect';
 import Nutritionistselection from './Nutritionistselection';
 import Paidweightlossform from './Paidweightlossform';
+import Paidweightgainform from './Paidweightgainform'
 
 
 const Profile = () => {
@@ -44,6 +45,7 @@ const Profile = () => {
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />
           <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
           <Route path="/personalized-plan/view" element={<Mealprogress/>} />
+          <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
         </Routes>
       </div>
     </div>
