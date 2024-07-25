@@ -1,8 +1,10 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Box, ButtonBase } from '@mui/material';
 import diet from './diet.png';
+import { useNavigate } from 'react-router-dom';
 
 const Goalselect = () => {
+    const navigate = useNavigate();
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
         
@@ -12,7 +14,7 @@ const Goalselect = () => {
           <Grid item xs={12}>
             <ButtonBase
               sx={{ width: '100%' }}
-              onClick={() => alert('Weight Loss selected')}
+              onClick={() => navigate('/my-profile/personalized-plan/weightloss')}
             >
               <Card sx={{ width: 400, height: 70 }}>
                 <CardContent>
