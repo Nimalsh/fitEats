@@ -15,6 +15,7 @@ import Meallog from './Meallog';
 import BuildMuscle from './BuildMuscle';
 import Mealprogress from './Mealprogress';
 import NutriQueries from './NutriQueries';
+import Goalselect from './Goalselect';
 
 
 const Profile = () => {
@@ -36,9 +37,9 @@ const Profile = () => {
           <Route path="/lose-weight" element={<Setgoal/>} />
           <Route path="/build-muscle" element={<BuildMuscle />} />
           <Route path="/meal-log" element={<Meallog />} />
-          <Route path="/personalized-plan" element={<Mealprogress/>} />
+          <Route path="/personalized-plan" element={<Goalselect/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
-          
+         
         </Routes>
       </div>
     </div>
