@@ -259,7 +259,7 @@ const BMI = () => {
               <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '10px' }}>
                 Target Weight loss or gain: {targetWeight} kg
               </Typography>
-              <Box sx={{ marginLeft: '600px', marginTop: '20px' }}>
+              <Box sx={{ marginLeft: '500px', marginTop: '20px' }}>
           <Button variant="contained"  style={{ whiteSpace: 'nowrap' }}>
   Lets Proceed
 </Button>

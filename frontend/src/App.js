@@ -28,6 +28,7 @@ import CustomRoutes from './Routers/CustomRoutes';
 import Othergoal from './component/Nutritionist/Othergoal';
 import Plangeneration from './component/Nutritionist/Plangeneration';
 import Mealplanmakebysearch from './component/Nutritionist/Mealplansmakebysearch';
+import Calorytrack from './component/Profile/Calorytrack';
 
 
 
@@ -51,12 +52,11 @@ function App() {
 
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
-
-      <CustomRoutes/> 
+    
     
 
 
-    <Routers/>
+   <Routers/>
 
      </ThemeProvider>
   
