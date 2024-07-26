@@ -5,7 +5,7 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MenuCard from "./MenuCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getRestaurantById } from "../State/Restaurant/Action";
+import { getRestaurantById, getRestaurantsCategory } from "../State/Restaurant/Action";
 
 const categories = [
   "pizza",
@@ -42,6 +42,7 @@ const RestaurantDetails = () => {
   console.log("restaurant",restaurant)
   useEffect(()=>{
     dispatch(getRestaurantById({jwt,restaurantId:id}))
+    dispatch(getRestaurantsCategory({jwt,restaurantId:id}))
   },[])
 
   return (
