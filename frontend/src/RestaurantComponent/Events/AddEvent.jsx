@@ -3,6 +3,7 @@ import { Box, CardHeader, TextField, Button, styled } from '@mui/material';
 import BackgroundImage from '../../assets/images/Add.jpg';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
+import dayjs from 'dayjs';
 
 // Styled TextField to change the calendar icon color
 const CustomTextField = styled(TextField)({
@@ -26,6 +27,30 @@ const CustomTextField = styled(TextField)({
 });
 
 export const AddEvent = () => {
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleColse = () => setOpen(false);
+  const [formValues,setFormValues] = React.useState({
+    image:"",
+    location:"",
+    name:"",
+    startAt:"",
+    endAt:null
+  })
+
+  const handleSubmit = () => {
+
+  }
+
+  const  handleChange = (e) => {
+    setFormValues({...formValues,[e.target.name]:e.target.value})
+  }
+
+  const handleDateChange = (date,dateType) => {
+    const formtedDate = dayjs(date)
+  }
+
   const [eventName, setEventName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
