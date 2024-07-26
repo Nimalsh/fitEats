@@ -9,6 +9,16 @@ import Orders from './Orders';
 import Food from './Food';
 import Nutrigoals from './Nutrigoals';
 import RestaurantDetails from '../Restaurant/RestaurantDetails';
+import BMI from './BMI';
+import Setgoal from './Setgoal';
+import Meallog from './Meallog';
+import BuildMuscle from './BuildMuscle';
+import Mealprogress from './Mealprogress';
+import NutriQueries from './NutriQueries';
+import MenuSuggest from './MenuSuggest';
+import AutoSuggestRes from './AutoSuggestRes';
+import MealPlansPage from './MealPlansPage';
+import Payments from './Payment';
 
 
 const Profile = () => {
@@ -26,6 +36,16 @@ const Profile = () => {
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/payments" element={<Payments />} />
+          <Route path="/BMI" element={<BMI />} />
+          <Route path="/lose-weight" element={<Setgoal/>} />
+          <Route path="/build-muscle" element={<BuildMuscle />} />
+          <Route path="/meal-log" element={<Meallog />} />
+          <Route path="/personalized-plan" element={<Mealprogress/>} />
+          <Route path="/nutri-queries" element={<NutriQueries/>} />
+          <Route path="/meal-plan" element={<MealPlansPage />} />
+          <Route path="/menu-suggest" element={<MenuSuggest/>} />
+          <Route path="/auto-suggest-restaurant" element={<AutoSuggestRes/>} />
           
         </Routes>
       </div>

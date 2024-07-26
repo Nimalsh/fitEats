@@ -114,7 +114,7 @@ const Mealprogress = () => {
           marginBottom: '20px'
         }}
       >
-        <Typography variant="h4">Daily Food Log</Typography>
+        <Typography variant="h4">Your Personlized Plan</Typography>
         <Typography variant="body1">Plan or log what you eat.</Typography>
 
         <Box

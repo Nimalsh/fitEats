@@ -1,0 +1,35 @@
+.Target-root{
+    color: aliceblue;
+}
+input#\:r0\:{
+    color: white;
+    padding: 4%;
+    border: none;
+    font-family: 'Poppins';
+    font-size: 14px;
+}
+
+input#\:r1\:{
+    color: white;
+    padding: 4%;
+    border: none;
+    font-family: 'Poppins';
+    font-size: 14px;
+}
+
+.css-i4bv87-MuiSvgIcon-root{
+    color: white;
+}
+
+button.MuiButtonBase-root.MuiPickersDay-root.Mui-selected.MuiPickersDay-dayWithMargin.MuiPickersDay-today.css-533gds-MuiButtonBase-root-MuiPickersDay-root{
+    background-color:#FAC213;
+}
+
+input#search-box{
+    color: white;
+    font-family: 'Poppins';
+}
+
+.css-mgoxz0-MuiFormLabel-root-MuiInputLabel-root.Mui-focused{
+    color: white;
+}

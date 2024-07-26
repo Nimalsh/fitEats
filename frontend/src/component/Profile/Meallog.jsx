@@ -15,7 +15,7 @@ const foodItems = [
   { name: 'Romaine Lettuce', normalConsumption: '1 cup', calories: 8, protein: 0.6, fat: 0.1, carbohydrate: 1.4, fiber: 1, sugars: 0.4, sodium: 2 }
 ];
 
-const Dashboard = () => {
+const Meallog = () => {
   const [startDay, setStartDay] = useState(1);
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -401,4 +401,4 @@ const SelectedFoodCard = ({ food, index, handleQuantityChange, handleRemoveFood 
   </Card>
 );
 
-export default Dashboard;
+export default Meallog;
