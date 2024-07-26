@@ -103,7 +103,7 @@ function Menus() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }} marginTop={"5px"}>
       <Tabs value={tabIndex} onChange={handleTabChange} >
         <Tab label="Menus" />
         <Tab label="New Menu" />

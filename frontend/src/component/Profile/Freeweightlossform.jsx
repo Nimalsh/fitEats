@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
-const Setgoal = () => {
+const Freeweightlossform = () => {
+  const navigate = useNavigate();
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -532,7 +534,7 @@ const Setgoal = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                >
+                  onClick={() => navigate('/my-profile/personalized-plan/view')}  >
                   Proceed
                 </Button>
               </Grid>
@@ -544,4 +546,4 @@ const Setgoal = () => {
   );
 };
 
-export default Setgoal;
+export default Freeweightlossform;
