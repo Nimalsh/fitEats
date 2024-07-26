@@ -15,6 +15,8 @@ const ingredientItemsMap = {
   Spices: ["Salt", "Pepper", "Cumin", "Turmeric", "Paprika"]
 };
 
+
+
 export const AddFoodItem = () => {
   const { categoryId } = useParams();
   const [foodName, setFoodName] = useState('');
