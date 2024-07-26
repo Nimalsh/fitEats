@@ -16,13 +16,14 @@ import { EventDetails } from '../RestaurantComponent/Events/EventDetails';
 import { InOrderDetails } from '../RestaurantComponent/IncomingOrders/InOrderDetails';
 import { Drivers } from '../RestaurantComponent/IncomingOrders/Drivers'; 
 import { MenuPlans } from '../RestaurantComponent/Menu/MenuPlans';
+import { RestaurantForm } from '../RestaurantComponent/CreateRestaurantForm/RestaurantForm';
 
 export const RestaurantRoute = () => {
   const { restaurant } = useSelector(store => store);
   return (
     <div>
       <Routes>
-        <Route path='/*' element={restaurant ? <Admin /> : <CreateRestaurantForm />} />
+        <Route path='/*' element={false? <RestaurantForm /> : <Admin />}></Route>
         <Route path="/category/add" element={<AddFoodCategory />} />
         <Route path="/food-category/:categoryId" element={<FoodItemsByCategory />} />
         <Route path="/food-item/add/:categoryId" element={<AddFoodItem />} />
@@ -35,6 +36,7 @@ export const RestaurantRoute = () => {
         <Route path="/incoming-order/:orderId" element={<InOrderDetails />} />
         <Route path="/drivers" element={<Drivers />} />
         <Route path="/menu-plan/:id" element={<MenuPlans />} />
+        {/* <Route path="/ingredientCategory/add/:restaurantId" element={<Crea />} /> */}
       </Routes>
     </div>
   );

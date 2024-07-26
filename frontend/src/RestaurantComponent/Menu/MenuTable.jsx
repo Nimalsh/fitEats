@@ -6,11 +6,11 @@ import BackgroundImage from '../../assets/images/Background_image.png';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ViewIcon from '@mui/icons-material/CalendarViewDay';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const menuItems = [
-  { id: 1, name: "7 Day Weight Loss Meal Plan", image: MenuImage, description: "Medically reviewed by Melizza Rifkin." },
-  { id: 2, name: "7 Day Balanced Meal Plan", image: HealthyImage, description: "Medically reviewed by Melizza Rifkin." },
+  { id: 1, name: "Scrumbled Egg", amount:3, description: "Medically reviewed by Melizza Rifkin." },
+  { id: 2, name: "Grilled Chicken wedges", amount:2,  description: "Medically reviewed by Melizza Rifkin." },
 ];
 
 const MenuItemTile = ({ item }) => {
@@ -28,6 +28,8 @@ const MenuItemTile = ({ item }) => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const navigate = useNavigate();
 
   return (
     <Box

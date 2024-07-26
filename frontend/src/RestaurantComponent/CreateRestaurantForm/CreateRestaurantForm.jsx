@@ -6,8 +6,54 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadImageToCloudinary } from '../util/UploadToCloudinary';
 import axios from 'axios';
+import { useFormik } from 'formik';
+
+const initialValues={
+  name: '',
+  description: '',
+  openingDays: 'Mon-Sun',
+  openingHoursFrom: '',
+  openingHoursTo: '',
+  cuisineType: '',
+  address: '',
+  city: '',
+  district: '',
+  postalCode: '',
+  email: '',
+  mobileNumber: '',
+  image: null,
+  businessRegNumber: '',
+  businessRegCertImage: null,
+}
 
 export const CreateRestaurantForm = () => {
+   
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => {
+        const data = {
+          name:values.name,
+          describe:values.description,
+          openingDays:values.openingDays,
+          openingHoursFrom:values.openingHoursFrom,
+          openingHoursTo:values.openingHoursTo,
+          cuisineType:values.cuisineType,
+          location:{
+            address:values.address,
+            city:values.city,
+            district:values.district,
+            postalCode:values.postalCode,
+          },
+         contact:{
+          email:values.email,
+          mobileNumber:values.mobileNumber,
+         },
+          image:values.image,
+          businessRegNumber:values.businessRegNumber,
+          businessRegCertImage:values.businessRegCertImage
+        }
+    }
+  })
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -31,13 +77,16 @@ export const CreateRestaurantForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleImageChange = (e, fieldName) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [fieldName]: e.target.files[0],
-      }));
-    }
+  const handleImageChange = async(e) => {
+    // if (e.target.files && e.target.files[0]) {
+    //   setFormData((prevData) => ({
+    //     ...prevData,
+    //     [fieldName]: e.target.files[0],
+    //   }));
+    // }
+    const file = e.target.files[0] 
+    const image = await uploadImageToCloudinary(file)
+    formik.setFieldValue("images",[...formik.values.image])
   };
 
   const handleRemoveImage = (fieldName) => {
@@ -46,6 +95,7 @@ export const CreateRestaurantForm = () => {
       [fieldName]: null,
     }));
   };
+
 
   const handleClearForm = () => {
     setFormData({
@@ -128,13 +178,15 @@ export const CreateRestaurantForm = () => {
           sx={{ pt: 2, alignItems: 'center', color: 'white', textAlign: 'center', marginBottom: '50px', fontWeight: 'bold' }}
         />
 
+        <form onSubmit={formik.handleSubmit}>
+
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
               label="Name"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
+              value={formik.values.name}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
@@ -142,56 +194,56 @@ export const CreateRestaurantForm = () => {
             <TextField
               label="Cuisine Type"
               name="cuisineType"
-              value={formData.cuisineType}
-              onChange={handleChange}
+              value={formik.values.cuisineType}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="Address"
               name="address"
-              value={formData.address}
-              onChange={handleChange}
+              value={formik.values.address}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="City"
               name="city"
-              value={formData.city}
-              onChange={handleChange}
+              value={formik.values.city}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="District"
               name="district"
-              value={formData.district}
-              onChange={handleChange}
+              value={formik.values.district}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="Postal Code"
               name="postalCode"
-              value={formData.postalCode}
-              onChange={handleChange}
+              value={formik.values.postalCode}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="Mobile Number"
               name="mobileNumber"
-              value={formData.mobileNumber}
-              onChange={handleChange}
+              value={formik.values.mobileNumber}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="Email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={formik.values.email}
+              onChange={formik.handleChange}
               type="email"
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
@@ -202,8 +254,8 @@ export const CreateRestaurantForm = () => {
             <TextField
               label="Description"
               name="description"
-              value={formData.description}
-              onChange={handleChange}
+              value={formik.values.description}
+              onChange={formik.handleChange}
               multiline
               rows={4}
               fullWidth
@@ -212,16 +264,16 @@ export const CreateRestaurantForm = () => {
             <TextField
               label="Opening Days"
               name="openingDays"
-              value={formData.openingDays}
-              onChange={handleChange}
+              value={formik.values.openingDays}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
             <TextField
               label="Opening Hours (From)"
               name="openingHoursFrom"
-              value={formData.openingHoursFrom}
-              onChange={handleChange}
+              value={formik.values.openingHoursFrom}
+              onChange={formik.handleChange}
               type="time"
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
@@ -229,8 +281,8 @@ export const CreateRestaurantForm = () => {
             <TextField
               label="Opening Hours (To)"
               name="openingHoursTo"
-              value={formData.openingHoursTo}
-              onChange={handleChange}
+              value={formik.values.openingHoursTo}
+              onChange={formik.handleChange}
               type="time"
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
@@ -238,8 +290,8 @@ export const CreateRestaurantForm = () => {
             <TextField
               label="Business Registration Number"
               name="businessRegNumber"
-              value={formData.businessRegNumber}
-              onChange={handleChange}
+              value={formik.values.businessRegNumber}
+              onChange={formik.handleChange}
               fullWidth
               sx={{ marginBottom: '20px', backgroundColor: '#000000', borderRadius: 1, 'label': { color: '#fff' }, '& label.Mui-focused': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }}
             />
@@ -262,10 +314,12 @@ export const CreateRestaurantForm = () => {
             >
               Upload Restaurant Image
               <input
+                id="fileInput"
                 type="file"
                 hidden
                 accept="image/*"
                 onChange={(e) => handleImageChange(e, 'image')}
+                // onChange = {handleImageChange}
               />
             </Button>
             <Button
@@ -295,6 +349,7 @@ export const CreateRestaurantForm = () => {
             </Button>
           </Grid>
         </Grid>
+        </form>
 
         {formData.image && (
           <Box
@@ -309,7 +364,7 @@ export const CreateRestaurantForm = () => {
             <img
               src={URL.createObjectURL(formData.image)}
               alt="Restaurant"
-              style={{ width: 150, height: 150 }}
+              style={{ width: 150, height: 150 }} 
             />
             <IconButton
               size="small"
@@ -320,9 +375,9 @@ export const CreateRestaurantForm = () => {
                 outline: 'none',
                 backgroundColor: 'rgba(255, 255, 255, 0.6)',
               }}
-              onClick={() => handleRemoveImage('image')}
+              onClick={() => handleRemoveImage("image")}
             >
-              <CloseIcon />
+              <CloseIcon sx={{fontSize:'1rem'}} />
             </IconButton>
           </Box>
         )}

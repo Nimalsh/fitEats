@@ -11,6 +11,7 @@ import Rectangle from '../../assets/images/rect.png';
 import Map from '../../assets/images/map.png'; 
 
 export const RestuarantDetails = () => {
+   
   const [isOpen, setIsOpen] = useState(true);
 
   const handleRestaurantStatus = () => {

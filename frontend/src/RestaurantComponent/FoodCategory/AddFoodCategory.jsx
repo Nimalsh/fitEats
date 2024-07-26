@@ -1,36 +1,66 @@
 import React, { useState } from 'react';
-import { Box, CardHeader, TextField, Button, Typography } from '@mui/material';
-import BackgroundImage from '../../assets/images/Add.jpg';
-import CatImage from '../../assets/images/category.png';
+import { Box, CardHeader, TextField, Button, IconButton, Grid, CircularProgress } from '@mui/material';
+import BackgroundImage from '../../assets/images/Add.jpg'; 
 import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Link } from 'react-router-dom';
+import ClearIcon from '@mui/icons-material/Clear'; 
+import { useFormik } from 'formik'
+import CloseIcon from "@mui/icons-material/Close"
+import { uploadImageToCloudinary } from '../util/UploadToCloudinary';
+import { AddPhotoAlternate } from '@mui/icons-material';
+
+const initialValues = {
+  categoryName: '', 
+  images: [], 
+  restaurantId:''
+}
 
 export const AddFoodCategory = () => {
-  const [categoryName, setCategoryName] = useState('');
-  const [image, setImage] = useState(null);
+ 
+  const [uploadImages,setUploadImage] = useState(false);
 
-  const handleNameChange = (event) => {
-    setCategoryName(event.target.value);
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => {
+        const data = {
+            categoryName:values.categoryName,
+            images:values.images, 
+            restaurantId:{
+              id : 1,
+            },
+          };
+
+          console.log("data ---",data)
+    }
+  })  
+
+  const handleImageChange = async(e) => {
+    const file = e.target.files[0]
+    setUploadImage(true)
+    const image = await uploadImageToCloudinary(file) 
+    formik.setFieldValue("images",[...formik.values.images,image])
+    setUploadImage(false)
   };
 
-  const handleImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-    }
+  const handleRemoveImage=(index) => {
+    const updatedImages = [...formik.values.images];
+    updatedImages.splice(index,1);
+    formik.setFieldValue("images", updatedImages)
   };
 
   const handleAddCategory = () => {
-    // Add category logic
-    console.log('Category Added:', categoryName, image);
-    setCategoryName('');
-    setImage(null);
+    // console.log('Category Added:', categoryName, image);
+    // setCategoryName('');
+    // setImage(null);
   };
 
   const handleClearForm = () => {
-    setCategoryName('');
-    setImage(null);
+    // setCategoryName('');
+    // setImage(null);
   };
+
+  const handleSubmit = () => {
+
+  }
 
   return (
     <Box
@@ -62,12 +92,58 @@ export const AddFoodCategory = () => {
           title="Add Food Category"
           sx={{ pt: 2, alignItems: 'center', color: 'white' }}
         />
+        
+        <form onSubmit={formik.handleSubmit} className='space-y-4'>
 
-        <TextField
-          id="category_name"
+
+<Grid className='flex flex-wrap gap-5' items xs={12}>
+
+<input
+accept = 'image/*'
+id='fileInput'
+style={{display:"none"}}
+onChange = {handleImageChange}
+type="file"/>
+
+<label className='relative' htmlFor="fileInput">
+    <span className='w-24 h-24 cursor-pointer flex items-center justify-center
+    p-3 border rounded-md bordergrey-600 text-black'><AddPhotoAlternate className=''/></span>
+    {
+        uploadImages && <div className='absolute left-0-right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center'>
+            <CircularProgress/>
+        </div>
+    }
+</label>
+
+<div className='flex flex-wrap gap-2'>
+{formik.values.images.map((image, index) => (
+<div className='relative'>
+<img className='w-24 h-24 object-cover' 
+key={index}
+src={image} alt=""/>
+<IconButton 
+size="small"
+sx={{
+position: 'absolute',
+top: 0,
+right: 0,
+outline: "none"
+}}
+onClick={() => handleRemoveImage(index)} >
+<CloseIcon sx={{fontSize:"1rem"}}/>
+</IconButton>
+</div>
+))}
+</div>
+</Grid>
+
+        <TextField fullWidth
+          id="categoryName"
+          name="categoryName"
           label="Category Name"
-          value={categoryName}
-          onChange={handleNameChange}
+          variant="outlined" 
+          onChange={formik.handleChange}
+          value={formik.values.categoryName} 
           sx={{
             marginBottom: '20px',
             marginTop:'50px',
@@ -75,54 +151,12 @@ export const AddFoodCategory = () => {
             borderRadius: 1,
             'label': { color: '#fff' },
             '& label.Mui-focused': { color: '#fff' },
-          }}
-          fullWidth
-        />
-
-        <Button
-          type="button"
-          variant="contained"
-          component="label"
-          sx={{
-            width: '70%',
-            backgroundColor: '#95CD41', // Adjusted to a similar green color
-            borderRadius: '20px',
-            height: '70%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontWeight: 'bold',
-            marginBottom:'50px',
-          }}
-        >
-          Upload Image
-          <input
-            type="file"
-            hidden
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </Button>
-        {image && (
-          <Box
-            sx={{
-              marginBottom: 2,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <img
-              src={image}
-              alt="Category"
-              style={{ width: 150, height: 150, borderRadius: '50%' }}
-            />
-          </Box>
-        )}
+          }}         
+        ></TextField>
 
         <Box sx={{ display: 'flex', gap: 2 }}>
           <div className="button-container mt-5">
-            <button type="button" className="button add-button" onClick={handleAddCategory}>
+            <button type="submit" className="button add-button" onClick={handleAddCategory}>
               <AddIcon /> Add
             </button>
             <button type="button" className="button delete-button" onClick={handleClearForm}>
@@ -130,7 +164,9 @@ export const AddFoodCategory = () => {
             </button>
           </div>
         </Box>
+        </form>
       </Box>
+
       <Box
         sx={{
           width: '50%',
