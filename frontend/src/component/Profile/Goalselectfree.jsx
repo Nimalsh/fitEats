@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Card, CardContent, Typography, Grid, Box, ButtonBase, Tabs, Tab } from '@mui/material';
 import diet from './diet.png';
 import { useNavigate } from 'react-router-dom';
-import Plans from './Plans';
+import  Plans from './Plans';
 
-const Goalselect = () => {
+const Goalselectfree = () => {
     const navigate = useNavigate();
     const [tabValue, setTabValue] = useState(0);
 
@@ -14,7 +14,7 @@ const Goalselect = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-            <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginBottom: 2 }}>
+            <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginBottom: 2, marginLeft: 2  }}>
                 <Tab label="New Plan" />
                 <Tab label="My Plans" />
             </Tabs>
@@ -25,7 +25,7 @@ const Goalselect = () => {
                             <Grid item xs={12}>
                                 <ButtonBase
                                     sx={{ width: '100%' }}
-                                    onClick={() => navigate('/my-profile/personalized-plan/weightloss')}
+                                    onClick={() => navigate('/my-profile/lose-weight/weightloss')}
                                 >
                                     <Card sx={{ width: 400, height: 70 }}>
                                         <CardContent>
@@ -39,7 +39,7 @@ const Goalselect = () => {
                             <Grid item xs={12}>
                                 <ButtonBase
                                     sx={{ width: '100%' }}
-                                    onClick={() => navigate('/my-profile/personalized-plan/weightgain')}
+                                    onClick={() => navigate('/my-profile/lose-weight/weightgain')}
                                 >
                                     <Card sx={{ width: 400, height: 70 }}>
                                         <CardContent>
@@ -50,20 +50,7 @@ const Goalselect = () => {
                                     </Card>
                                 </ButtonBase>
                             </Grid>
-                            <Grid item xs={12}>
-                                <ButtonBase
-                                    sx={{ width: '100%' }}
-                                    onClick={() => navigate('/my-profile/personalized-plan/other')}
-                                >
-                                    <Card sx={{ width: 400, height: 70 }}>
-                                        <CardContent>
-                                            <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
-                                                Other Goal
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </ButtonBase>
-                            </Grid>
+                          
                         </Grid>
                     </Box>
                     <Box sx={{ width: '70%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 2 }}>
@@ -76,10 +63,10 @@ const Goalselect = () => {
                 </Box>
             )}
             {tabValue === 1 && (
-                <Plans />
+                <Plans/>
             )}
         </Box>
     );
 };
 
-export default Goalselect;
+export default Goalselectfree;

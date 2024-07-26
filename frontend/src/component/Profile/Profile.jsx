@@ -10,7 +10,6 @@ import Food from './Food';
 import Nutrigoals from './Nutrigoals';
 import RestaurantDetails from '../Restaurant/RestaurantDetails';
 import BMI from './BMI';
-import Setgoal from './Setgoal';
 import Meallog from './Meallog';
 import BuildMuscle from './BuildMuscle';
 import Mealprogress from './Mealprogress';
@@ -21,6 +20,9 @@ import Paidweightlossform from './Paidweightlossform';
 import Paidweightgainform from './Paidweightgainform';
 import Calorytrack from './Calorytrack';
 import Paidothergoalform from './Paidothergoalform'
+import Goalselectfree from './Goalselectfree';
+import Freeweightgainform from './Freeweightgainform';
+import Freeweightlossform from './Freeweightlossform';
 
 
 const Profile = () => {
@@ -39,7 +41,7 @@ const Profile = () => {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/events" element={<Events />} />
           <Route path="/BMI" element={<BMI />} />
-          <Route path="/lose-weight" element={<Setgoal/>} />
+          <Route path="/lose-weight" element={<Goalselectfree/>} />
           <Route path="/build-muscle" element={<BuildMuscle />} />
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Goalselect/>} />
@@ -50,6 +52,8 @@ const Profile = () => {
           <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
           <Route path="/BMI/plan" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
+          <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
+          <Route path="/lose-weight/weightloss" element={<Freeweightlossform/>} />
         </Routes>
       </div>
     </div>
