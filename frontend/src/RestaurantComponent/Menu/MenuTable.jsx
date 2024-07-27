@@ -6,11 +6,11 @@ import BackgroundImage from '../../assets/images/Background_image.png';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ViewIcon from '@mui/icons-material/CalendarViewDay';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const menuItems = [
-  { id: 1, name: "7 Day Weight Loss Meal Plan", image: MenuImage, description: "Medically reviewed by Melizza Rifkin." },
-  { id: 2, name: "7 Day Balanced Meal Plan", image: HealthyImage, description: "Medically reviewed by Melizza Rifkin." },
+  { id: 1, name: "Scrumbled Egg", amount:3, description: "Medically reviewed by Melizza Rifkin." },
+  { id: 2, name: "Grilled Chicken wedges", amount:2,  description: "Medically reviewed by Melizza Rifkin." },
 ];
 
 const MenuItemTile = ({ item }) => {
@@ -28,6 +28,8 @@ const MenuItemTile = ({ item }) => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -49,21 +51,25 @@ const MenuItemTile = ({ item }) => {
       <img
         src={item.image}
         alt={item.name}
-        style={{ width: 350, height: 250, borderRadius: '50px', boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)' }}
-      />
+        style={{ width: 350, height: 80, borderRadius: '50px', boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)' }}
+      /> 
       <Typography variant="h6" sx={{ marginTop: 1 }}>
-        {item.name}
+        Amount of items:  {item.amount}
       </Typography>
       <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
         {item.description}
       </Typography>
 
+      {/* <button type="button" className="button details-button" sx={{ width: '70%' }}>
+        <Link to={`../food-item/${item.id}`}>View Details</Link>
+      </button> */}
+
       <div className="button-container mt-5">
         <Link to={`../menu-plan/${item.id}`} className="button view-button">
-          <ViewIcon /> View
+           Accept
         </Link>
         <button type="button" className="button delete-button" onClick={handleClickOpen}>
-          <DeleteIcon /> Delete
+           Reject 
         </button>
 
         <Dialog open={open} onClose={handleClose}>
@@ -93,14 +99,7 @@ export const MenuTable = () => {
         padding: 2,
       }}
     >
-      <CardHeader
-        action={
-          <Link to='../menu/add'>
-            <button className="button add-button">
-              <AddIcon /> Add Item
-            </button>
-          </Link>
-        }
+      <CardHeader 
         title="Menu"
         sx={{ pt: 2, alignItems: "center" }}
       />

@@ -19,11 +19,9 @@ export default function CustomRoutes() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/account/:register' element={<Home />} />
-        <Route path='/restaurant/:city/:title/:Id' element={<RestaurantDetails />} />
+        <Route path='/restaurant/:city/:title/:id' element={<RestaurantDetails />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/my-profile/*' element={<Profile />} />
-
-        <Route path="/restaurant-details" element={<RestaurantDetails />} />
         <Route path="/nutrition-content" element={<NutritionInfo />} />
 
         <Route path='/nutri/*' element={<Nutritionistbase />} />
