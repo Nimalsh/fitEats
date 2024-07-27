@@ -51,21 +51,25 @@ const MenuItemTile = ({ item }) => {
       <img
         src={item.image}
         alt={item.name}
-        style={{ width: 350, height: 250, borderRadius: '50px', boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)' }}
-      />
+        style={{ width: 350, height: 80, borderRadius: '50px', boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)' }}
+      /> 
       <Typography variant="h6" sx={{ marginTop: 1 }}>
-        {item.name}
+        Amount of items:  {item.amount}
       </Typography>
       <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
         {item.description}
       </Typography>
 
+      {/* <button type="button" className="button details-button" sx={{ width: '70%' }}>
+        <Link to={`../food-item/${item.id}`}>View Details</Link>
+      </button> */}
+
       <div className="button-container mt-5">
         <Link to={`../menu-plan/${item.id}`} className="button view-button">
-          <ViewIcon /> View
+           Accept
         </Link>
         <button type="button" className="button delete-button" onClick={handleClickOpen}>
-          <DeleteIcon /> Delete
+           Reject 
         </button>
 
         <Dialog open={open} onClose={handleClose}>
@@ -95,14 +99,7 @@ export const MenuTable = () => {
         padding: 2,
       }}
     >
-      <CardHeader
-        action={
-          <Link to='../menu/add'>
-            <button className="button add-button">
-              <AddIcon /> Add Item
-            </button>
-          </Link>
-        }
+      <CardHeader 
         title="Menu"
         sx={{ pt: 2, alignItems: "center" }}
       />
