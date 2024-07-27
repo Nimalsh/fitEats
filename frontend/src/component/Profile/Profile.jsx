@@ -29,6 +29,7 @@ import Paidothergoalform from './Paidothergoalform'
 import Goalselectfree from './Goalselectfree';
 import Freeweightgainform from './Freeweightgainform';
 import Freeweightlossform from './Freeweightlossform';
+import Dashboard from './Dashboard';
 
 
 
@@ -43,6 +44,8 @@ const Profile = () => {
       <div className='lg:w-[80%]'>
         <Routes>
           <Route path="/" element={<Food />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/restaurant" element={<Food />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
