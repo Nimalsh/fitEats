@@ -1,9 +1,8 @@
-// menu.dart
 import 'package:flutter/material.dart';
 
 import 'food_ordering.dart';
+import 'nutrigoals.dart';
 import 'resfavourite.dart';
-
 
 class MenuDrawer extends StatelessWidget {
   @override
@@ -16,12 +15,31 @@ class MenuDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.greenAccent,
             ),
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage('assets/image/profile.jpg'), // Replace with your profile image path
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'tharika', // Replace with dynamic user name if needed
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'tharika123@gmail.com', // Replace with dynamic user email if needed
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
           ListTile(
@@ -29,15 +47,17 @@ class MenuDrawer extends StatelessWidget {
             title: Text('Settings'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()));
             },
           ),
           ListTile(
-            leading: Icon(Icons.brightness_6),
-            title: Text('Dark Mode'),
+            leading: Icon(Icons.food_bank),
+            title: Text('Nutrigoals'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
-              // Implement dark mode toggle logic here
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NutriGoals()));
             },
           ),
           ListTile(
@@ -45,7 +65,8 @@ class MenuDrawer extends StatelessWidget {
             title: Text('Restaurant'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
-              Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RestaurantPage()));
             },
           ),
           ListTile(
@@ -53,7 +74,8 @@ class MenuDrawer extends StatelessWidget {
             title: Text('Food Ordering'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FoodOrderingPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FoodOrderingPage()));
             },
           ),
         ],
@@ -72,23 +94,3 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
-
-// class FoodOrderingPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Food Ordering')),
-//       body: Center(child: Text('Food Ordering Page')),
-//     );
-//   }
-// }
-
-// class RestaurantPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Restaurant')),
-//       body: Center(child: Text('Restaurant Page')),
-//     );
-//   }
-// }

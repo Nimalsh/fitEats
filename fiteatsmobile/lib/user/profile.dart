@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'calories_count.dart';
 import 'diet_plan.dart';
 import 'feedback.dart';
+import 'landpage.dart';
 import 'menu.dart';
 import 'status.dart';
 
@@ -16,7 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   PageController _pageController = PageController();
 
   static final List<Widget> _widgetOptions = <Widget>[
-    Center(child: ProfileContent()),
+    LandingPage(),
     DailyCaloriesPage(),
     StatusPage(),
     DietPlanPage(),
@@ -101,55 +102,3 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
 
-
-class ProfileContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: AssetImage("assets/image/profile.jpg"),
-              ),
-              SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Thushi',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Age: 23',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Text(
-            'Calorie Count: 2000',
-            style: TextStyle(fontSize: 18),
-          ),
-          Text(
-            'BMI: 22.5',
-            style: TextStyle(fontSize: 18),
-          ),
-          Text(
-            'Diet Goal: Maintain weight',
-            style: TextStyle(fontSize: 18),
-          ),
-          SizedBox(height: 20),
-          Expanded(child: Container()),
-           // Filler to push bottom nav bar down
-        ],
-      ),
-    );
-  }
-}

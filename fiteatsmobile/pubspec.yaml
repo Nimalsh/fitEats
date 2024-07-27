@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   provider: ^6.1.2
   device_preview: ^1.2.0
+  pie_chart: ^5.4.0
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +73,7 @@ flutter:
     - assets/image/profile.jpg
     - assets/image/plate.png
     - assets/image/restaurant.jpg
+    - assets/image/nutrigoals.jpg
 
 
 
