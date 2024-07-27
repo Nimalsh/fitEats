@@ -1,16 +1,17 @@
+import 'package:delivery/pages/finance.dart';
 import 'package:delivery/pages/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery/components/bottom_nav_bar.dart';
-import 'package:delivery/components/sidebar.dart';
 import 'package:delivery/pages/homepage.dart';
 
 class OrderHistoryPage extends StatefulWidget {
-  const OrderHistoryPage({super.key});
+  final int userId;
+
+  const OrderHistoryPage({super.key, required this.userId});
 
   @override
   _OrderHistoryPageState createState() => _OrderHistoryPageState();
 }
-
 class _OrderHistoryPageState extends State<OrderHistoryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -52,7 +53,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+         MaterialPageRoute(
+            builder: (context) => HomePage(userId: widget.userId), // Pass userId here
+          ),
         );
         break;
       case 1:
@@ -65,7 +68,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
         // Handle profile page navigation
         Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) =>  ProfilePage(userId: widget.userId)),
       );
         break;
       default:
@@ -73,6 +76,22 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
         break;
     }
   }
+  void _navigateToFinancePage() {
+          Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FinancePage(userId: widget.userId), // Pass userId here
+          ),
+        );
+}
+
+    void _navigateToProfilePage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  ProfilePage(userId: widget.userId)),
+    );
+  }
+
 void _showNotificationDialog() {
     showDialog(
       context: context,
@@ -102,12 +121,7 @@ void _showNotificationDialog() {
           : AppBar(
               backgroundColor: const Color.fromARGB(255, 251, 251, 251),
               elevation: 5,
-              leading: IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: _toggleSidebar,
-                iconSize: 35,
-                color: const Color.fromARGB(255, 3, 3, 3),
-              ),
+             
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -131,6 +145,7 @@ void _showNotificationDialog() {
                   ),
                 ],
               ),
+
               bottom: TabBar(
                 controller: _tabController,
                 tabs: const [
@@ -146,24 +161,209 @@ void _showNotificationDialog() {
               ),
               
             ),
+              drawer: Drawer(
+              width: 330.0,
+        child: Container(
+          color: const Color.fromARGB(255, 232, 231, 231),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                              image: AssetImage("assets/images/profile_picture.png"),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 92, 92, 92).withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.close, color: Color.fromARGB(255, 0, 0, 0)),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close drawer
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "John Doe",
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              // Menu items
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 40.0),
+                leading: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Icon(
+                  Icons.home,
+                  size: 26,
+                  color: Color.fromARGB(255, 78, 78, 78),
+                ),
+              ),
+                title: const Text('Home', style: TextStyle(color: Color.fromARGB(255, 46, 46, 46), fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  // Additional logic for item 1
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  HomePage(userId: widget.userId)),
+                  );
+                },
+              ),
+              const SizedBox(height: 8), 
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 40.0),
+                leading:Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Icon(
+                  Icons.person,
+                  size: 26,
+                  color: Color.fromARGB(255, 78, 78, 78),
+                ),
+              ),
+                title: const Text('Edit Profile', style: TextStyle(color: Color.fromARGB(255, 46, 46, 46),fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  // Additional logic for item 2
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  ProfilePage(userId: widget.userId)),
+                  );
+                },
+              ),
+              const SizedBox(height: 8), 
+
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 40.0),
+                leading: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Icon(
+                  Icons.attach_money,
+                  size: 26,
+                  color: Color.fromARGB(255, 78, 78, 78),
+                ),
+              ),
+                title: const Text('Finance', style: TextStyle(color:Color.fromARGB(255, 46, 46, 46), fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  // Additional logic for item 3
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  FinancePage(userId: widget.userId)),
+                  );
+                },
+              ),
+              const SizedBox(height: 8), 
+
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 40.0),
+                leading: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Icon(
+                  Icons.settings,
+                  size: 26,
+                  color: Color.fromARGB(255, 78, 78, 78),
+                ),
+              ),
+                title: const Text('Settings', style: TextStyle(color:Color.fromARGB(255, 46, 46, 46), fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  // Additional logic for item 4
+                },
+              ),
+              const SizedBox(height: 8), 
+
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 40.0),
+                leading:  Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Icon(
+                  Icons.help,
+                  size: 26,
+                  color: Color.fromARGB(255, 78, 78, 78),
+                ),
+              ),
+                title: const Text('Help', style: TextStyle(color:Color.fromARGB(255, 46, 46, 46), fontSize: 20, fontWeight: FontWeight.bold)),
+                onTap: () {
+                  Navigator.pop(context); // Close drawer
+                  // Additional logic for item 5
+                },
+              ),
+              // Logout button
+              const SizedBox(height: 255), 
+           
+              ListTile(
+                contentPadding: const EdgeInsets.only(left: 40.0),
+                leading: const Icon(Icons.logout, size: 26, color: Color.fromARGB(255, 78, 78, 78)),
+                title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 46, 46, 46), fontWeight: FontWeight.bold)),
+                onTap: () {
+                  // Implement logout logic here
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           // Sidebar
-          if (_isSidebarOpen) ...[
-            Sidebar(
-              isSidebarOpen: _isSidebarOpen,
-              toggleSidebar: _toggleSidebar,
-            ),
-            // Overlay to darken the screen when sidebar is open
-            GestureDetector(
-              onTap: _toggleSidebar,
-              child: Container(
-                color: const Color.fromARGB(255, 244, 244, 244).withOpacity(0.1),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-              ),
-            ),
-          ],
+
           // Content
           if (!_isSidebarOpen)
             TabBarView(
@@ -178,6 +378,7 @@ void _showNotificationDialog() {
       bottomNavigationBar: _isSidebarOpen
           ? null
           : BottomNavBar(
+            currentIndex: _selectedIndex,
               selectedIndex: _selectedIndex,
               onItemTapped: _onItemTapped,
             ),

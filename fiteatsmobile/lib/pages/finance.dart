@@ -4,7 +4,9 @@ import 'package:delivery/pages/homepage.dart';
 import 'package:delivery/pages/order.dart';
 
 class FinancePage extends StatefulWidget {
-  const FinancePage({super.key});
+  final int userId;
+
+  const FinancePage({super.key, required this.userId});
 
   @override
   State<FinancePage> createState() => _FinancePageState();
@@ -24,7 +26,9 @@ class _FinancePageState extends State<FinancePage> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(
+            builder: (context) => HomePage(userId: widget.userId), // Pass userId here
+          ),
         );
         break;
       case 1:
@@ -33,7 +37,7 @@ class _FinancePageState extends State<FinancePage> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
+          MaterialPageRoute(builder: (context) =>  OrderHistoryPage(userId: widget.userId)),
         );
         break;
       case 3:

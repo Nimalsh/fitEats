@@ -2,15 +2,18 @@ import 'package:delivery/pages/finance.dart';
 import 'package:delivery/pages/homepage.dart';
 import 'package:delivery/pages/profile.dart';
 import 'package:flutter/material.dart';
-
 class Sidebar extends StatelessWidget {
   final bool isSidebarOpen;
   final Function() toggleSidebar;
+  final int userId; // Add this line
 
   const Sidebar({
     required this.isSidebarOpen,
     required this.toggleSidebar,
-    super.key, required void Function(BuildContext context, int index) selectedItem, required void Function(String newItem) onItemSelected,
+    required this.userId, // Add this line
+    super.key,
+    required void Function(BuildContext context, int index) selectedItem,
+    required void Function(String newItem) onItemSelected,
   });
 
   @override
@@ -166,36 +169,44 @@ class Sidebar extends StatelessWidget {
           ),
         ),
         onTap: onClicked,
-      
       ),
     );
   }
 
-
-  
- void selectedItem(BuildContext context, int index) {
-
-  switch (index) {
+  void selectedItem(BuildContext context, int index) {
+    switch (index) {
       case 0:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomePage(userId: userId),
+          ),
+        );
         break;
       case 1:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ProfilePage()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProfilePage(userId: userId),
+          ),
+        );
         break;
       case 2:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const FinancePage()));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FinancePage(userId: userId),
+          ),
+        );
         break;
       case 3:
-       
+        // Implement navigation to Settings page if needed
         break;
       case 4:
-    
+        // Implement navigation to Help page if needed
         break;
       case 5:
         // Implement logout logic here
         break;
       default:
         break;
- }
-}
+    }
+  }
 }
