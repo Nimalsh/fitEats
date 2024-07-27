@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:delivery/components/bottom_nav_bar.dart';
-import 'package:delivery/pages/homepage.dart';
-import 'package:delivery/pages/order.dart';
 
 class FinancePage extends StatefulWidget {
   final int userId;
@@ -13,58 +10,27 @@ class FinancePage extends StatefulWidget {
 }
 
 class _FinancePageState extends State<FinancePage> {
-  int _selectedIndex = 3;
-  bool _isEditingPersonalDetails = false;
-  bool _isEditingVehicleDetails = false;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(userId: widget.userId), // Pass userId here
-          ),
-        );
-        break;
-      case 1:
-        // Handle another page navigation
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>  OrderHistoryPage(userId: widget.userId)),
-        );
-        break;
-      case 3:
-        // Handle current page or default action
-        break;
-      default:
-        // Handle default navigation or action
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 236, 236, 236),
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Remove the back button
         backgroundColor: const Color.fromARGB(255, 251, 251, 251),
         elevation: 5,
         title: const Text(
-          "Profile",
+          "Finance",
           style: TextStyle(
             color: Color.fromARGB(255, 3, 3, 3),
             fontFamily: 'Poppins',
             fontWeight: FontWeight.bold,
             fontSize: 24,
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 3, 3, 3)),
+          onPressed: () {
+            Navigator.pop(context); // Navigate back to the previous screen
+          },
         ),
       ),
       body: Stack(
@@ -88,92 +54,54 @@ class _FinancePageState extends State<FinancePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Stack(
-                            children: [
-                              const CircleAvatar(
-                                radius: 50,
-                                backgroundImage: AssetImage('assets/images/profile_picture.png'), // Replace with your profile image path
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    // Add your edit button logic here
-                                  },
-                                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.7),
-                                  iconSize: 25,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'John Doe', // Replace with user's name
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'john.doe@example.com', // Replace with user's email
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
+                    // Combined container for earnings
+                    _buildCombinedEarningsContainer(
+                      todayEarnings: "\$150.00", // Replace with dynamic data
+                      weekEarnings: "\$1,050.00", // Replace with dynamic data
+                      monthEarnings: "\$2,300.00", // Replace with dynamic data
                     ),
                     const SizedBox(height: 20),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Personal Details',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(_isEditingPersonalDetails ? Icons.check : Icons.edit),
-                          onPressed: () {
-                            setState(() {
-                              _isEditingPersonalDetails = !_isEditingPersonalDetails;
-                            });
-                          },
-                        ),
-                      ],
+                    
+                    // Container for deliveries
+                    _buildDeliveriesContainer(
+                      completedToday: 5, // Replace with dynamic data
+                      completedThisWeek: 25, // Replace with dynamic data
+                      completedThisMonth: 100, // Replace with dynamic data
+                      cancelled: 3, // Replace with dynamic data
                     ),
-                    const SizedBox(height: 10),
-                    _isEditingPersonalDetails ? _buildEditablePersonalDetailsSection() : _buildPersonalDetailsSection(),
                     const SizedBox(height: 20),
+                    
+                    // Container for amount paid
+                    _buildAmountPaidContainer(
+                      paidByCash: "\$300.00", // Replace with dynamic data
+                      paidByCard: "\$700.00", // Replace with dynamic data
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Container for tips
+                    _buildTipsContainer(
+                      tipsGiven: "\$50.00", // Replace with dynamic data
+                    ),
+                    const SizedBox(height: 20),
+                    
+                    // Container for amount left to be transferred
+                    _buildAmountLeftContainer(
+                      amountLeft: "\$500.00", // Replace with dynamic data
+                    ),
+                    const SizedBox(height: 20),
+                    
+                    // Button for transferring earnings
                     Align(
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Add your change password logic here
+                          // Add your transfer logic here
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 20, 193, 49),
                         ),
                         child: const Text(
-                          'Change Password',
+                          'Transfer Earnings',
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
@@ -182,32 +110,6 @@ class _FinancePageState extends State<FinancePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Vehicle Details',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(_isEditingVehicleDetails ? Icons.check : Icons.edit),
-                          onPressed: () {
-                            setState(() {
-                              _isEditingVehicleDetails = !_isEditingVehicleDetails;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    _isEditingVehicleDetails ? _buildEditableVehicleDetailsSection() : _buildVehicleDetailsSection(),
                   ],
                 ),
               ),
@@ -215,65 +117,209 @@ class _FinancePageState extends State<FinancePage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavBar(
-        selectedIndex: _selectedIndex,
-        currentIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+    );
+  }
+
+  Widget _buildCombinedEarningsContainer({
+    required String todayEarnings,
+    required String weekEarnings,
+    required String monthEarnings,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Earnings",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildEarningsDetailRow('Today\'s Earnings', todayEarnings),
+          _buildEarningsDetailRow('This Week\'s Earnings', weekEarnings),
+          _buildEarningsDetailRow('Current Month\'s Earnings', monthEarnings),
+        ],
       ),
     );
   }
 
-  Widget _buildPersonalDetailsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildDetailRow('First Name', 'John'),
-        _buildDetailRow('Last Name', 'Doe'),
-        _buildDetailRow('Address', '123 Main St'),
-        _buildDetailRow('NIC', '123456789V'),
-        _buildDetailRow('Phone Number', '123-456-7890'),
-        _buildDetailRow('Phone Number 2', '098-765-4321'),
-      ],
+  Widget _buildDeliveriesContainer({
+    required int completedToday,
+    required int completedThisWeek,
+    required int completedThisMonth,
+    required int cancelled,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Deliveries",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildDeliveriesDetailRow('Completed Today', completedToday.toString()),
+          _buildDeliveriesDetailRow('Completed This Week', completedThisWeek.toString()),
+          _buildDeliveriesDetailRow('Completed This Month', completedThisMonth.toString()),
+          _buildDeliveriesDetailRow('Cancelled Deliveries', cancelled.toString()),
+        ],
+      ),
     );
   }
 
-  Widget _buildVehicleDetailsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildDetailRow('Vehicle Name', 'Toyota Prius'),
-        _buildDetailRow('Model', '2015'),
-        _buildDetailRow('Plate Number', 'ABC-1234'),
-      ],
+  Widget _buildAmountPaidContainer({
+    required String paidByCash,
+    required String paidByCard,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Payments",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildPaymentDetailRow('Amount Paid by Cash', paidByCash),
+          _buildPaymentDetailRow('Amount Paid by Card', paidByCard),
+        ],
+      ),
     );
   }
 
-  Widget _buildEditablePersonalDetailsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildDetailRow('First Name', 'John'),
-        _buildDetailRow('Last Name', 'Doe'),
-        _buildEditableDetailRow('Address', '123 Main St'),
-        _buildDetailRow('NIC', '123456789V'),
-        _buildEditableDetailRow('Phone Number', '123-456-7890'),
-        _buildEditableDetailRow('Phone Number 2', '098-765-4321'),
-      ],
+  Widget _buildTipsContainer({required String tipsGiven}) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Tips",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            tipsGiven,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 20, 193, 49),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildEditableVehicleDetailsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildEditableDetailRow('Vehicle Name', 'Toyota Prius'),
-        _buildEditableDetailRow('Model', '2015'),
-        _buildEditableDetailRow('Plate Number', 'ABC-1234'),
-      ],
+  Widget _buildAmountLeftContainer({required String amountLeft}) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Amount Left to be Transferred",
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            amountLeft,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 20, 193, 49),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildEarningsDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
@@ -298,7 +344,7 @@ class _FinancePageState extends State<FinancePage> {
     );
   }
 
-  Widget _buildEditableDetailRow(String label, String value) {
+  Widget _buildDeliveriesDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
@@ -311,17 +357,36 @@ class _FinancePageState extends State<FinancePage> {
               fontSize: 16,
             ),
           ),
-          SizedBox(
-            width: 200,
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: value,
-                hintStyle: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                ),
-                border: const UnderlineInputBorder(),
-              ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 16,
             ),
           ),
         ],

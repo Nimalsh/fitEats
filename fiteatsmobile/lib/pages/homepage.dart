@@ -4,6 +4,7 @@ import 'package:delivery/pages/profile.dart';
 import 'package:delivery/components/bottom_nav_bar.dart';
 import 'package:delivery/services/user_service.dart'; // Import the UserService
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   final int userId; // Change from fullName to userId
@@ -110,46 +111,52 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
 
   @override
   Widget build(BuildContext context) {
+     ScreenUtil.init(context);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 236, 236, 236),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 251, 251, 251),
         elevation: 5,
-       
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const Text(
-                  " ",
-                ),
-                const SizedBox(width: 200),
-                Switch(
-                  value: _isSwitchOn,
-                  onChanged: _toggleSwitch,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: _showNotificationDialog,
-                  iconSize: 27,
-                  color: const Color.fromARGB(255, 3, 3, 3),
-                ),
-              ],
-            ),
-          ],
+  title: Row(
+      children: [
+        const Expanded(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(" "), // Use an empty text or adjust if needed
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Row(
+            mainAxisSize: MainAxisSize.min, // Makes sure Row only takes as much space as its content
+            children: [
+              Switch(
+                value: _isSwitchOn,
+                onChanged: _toggleSwitch,
+              ),
+              IconButton(
+                icon: const Icon(Icons.notifications),
+                onPressed: _showNotificationDialog,
+                iconSize: 27,
+                color: const Color.fromARGB(255, 3, 3, 3),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
             drawer: Drawer(
-              width: 330.0,
+              width: 295.0.w,
         child: Container(
           color: const Color.fromARGB(255, 232, 231, 231),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+               SizedBox(height: 0.07.sh),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:  EdgeInsets.symmetric(horizontal: 20.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -157,22 +164,22 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 70,
-                          height: 70,
+                          width: 70.0.w,
+                          height: 70.0.w,
                           decoration: BoxDecoration(
                             image: const DecorationImage(
                               image: AssetImage("assets/images/profile_picture.png"),
                               fit: BoxFit.cover,
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(8.0.r),
                           ),
                         ),
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: 30.0.w,
+                          height: 30.0.h,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 92, 92, 92).withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5.0.r),
                           ),
                           child: IconButton(
                             icon: const Icon(Icons.close, color: Color.fromARGB(255, 0, 0, 0)),
@@ -183,7 +190,7 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                         ),
                       ],
                     ),
-                                      const SizedBox(height: 10),
+                     SizedBox(height: 0.022.sh),
                     _fullName != null ? Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -199,16 +206,16 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
 
                 ),
               ),
-              const SizedBox(height: 30),
+               SizedBox(height: 0.04.sh),
               // Menu items
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.home,
@@ -228,15 +235,15 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                  );
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading:Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.person,
@@ -254,16 +261,16 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                   );
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.attach_money,
@@ -283,16 +290,16 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
         );
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.settings,
@@ -306,16 +313,16 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                   // Additional logic for item 4
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading:  Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.help,
@@ -330,10 +337,10 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                 },
               ),
               // Logout button
-              const SizedBox(height: 255), 
+              SizedBox(height: 0.28.sh), 
            
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: const Icon(Icons.logout, size: 26, color: Color.fromARGB(255, 78, 78, 78)),
                 title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 46, 46, 46), fontWeight: FontWeight.bold)),
                 onTap: () {
@@ -348,54 +355,53 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
         children: [
           // Content
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding:  EdgeInsets.symmetric(horizontal: 20.0.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 10),
+                 SizedBox(height: 0.02.sh),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "Hello, ",
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  color: Color.fromARGB(255, 13, 12, 12),
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                              TextSpan(
-                                text: _fullName ?? 'Loading...',
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  color: Color.fromARGB(255, 13, 12, 12),
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                     Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: "Hello, ",
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Color.fromARGB(255, 13, 12, 12),
+                      fontFamily: 'Poppins',
                     ),
-                    const CircleAvatar(
-                      radius: 17,
-                      backgroundImage: AssetImage("assets/images/profile_picture.png"),
+                  ),
+                  TextSpan(
+                    text: _fullName ?? 'Loading...',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      color: Color.fromARGB(255, 13, 12, 12),
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const CircleAvatar(
+            radius: 17,
+            backgroundImage: AssetImage("assets/images/profile_picture.png"),
+          ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                 SizedBox(height: 0.03.sh),
                 // Rectangle about last completed delivery
+                
                 Container(
-                  padding: const EdgeInsets.all(16.0),
+                  padding:  EdgeInsets.all(14.0.w),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 255, 253, 253),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8.0.r),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
@@ -427,20 +433,20 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                       SizedBox(height: 0.02.sh),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 26.0),
+                            padding:  EdgeInsets.only(left: 25.0.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding:  EdgeInsets.all(5.0.w),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderRadius: BorderRadius.circular(5.0.r),
                                   ),
                                   child: const Icon(
                                     Icons.food_bank,
@@ -454,10 +460,10 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                                   color: Colors.grey[400],
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.all(5.0),
+                                  padding:  EdgeInsets.all(5.0.w),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderRadius: BorderRadius.circular(5.0.r),
                                   ),
                                   child: const Icon(
                                     Icons.location_pin,
@@ -468,18 +474,18 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                               ],
                             ),
                           ),
-                          const SizedBox(width: 16),
-                          const Column(
+                           SizedBox(width: 0.04.sw),
+                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Pick Up",
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Color.fromARGB(255, 111, 111, 111),
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 "Restaurant A",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -487,15 +493,15 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 30),
-                              Text(
+                              SizedBox(height: 0.04.sh),
+                              const Text(
                                 "Deliver",
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Color.fromARGB(255, 111, 111, 111),
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 "123 Main St, Cityville",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -507,15 +513,15 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                           ),
                         ],
                       ),
-                      const SizedBox(height: 18),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 26.0),
-                        child: Row(
+                       SizedBox(height: 0.03.sh),
+                       Padding(
+                        padding: EdgeInsets.only(left: 25.0.w),
+                        child:  Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(Icons.attach_money, size: 20, color: Colors.black),
-                            SizedBox(width: 8),
-                            Text(
+                            const Icon(Icons.attach_money, size: 20, color: Colors.black),
+                            SizedBox(width: 0.02.sw),
+                            const Text(
                               "\$25",
                               style: TextStyle(
                                 fontSize: 16,
@@ -524,10 +530,10 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 20), // Adjust the width as needed
-                            Icon(Icons.access_time, size: 20, color: Colors.black),
-                            SizedBox(width: 8),
-                            Text(
+                            SizedBox(width: 0.05.sw), // Adjust the width as needed
+                            const Icon(Icons.access_time, size: 20, color: Colors.black),
+                            SizedBox(width: 0.02.sw),
+                            const Text(
                               "12:30 PM",
                               style: TextStyle(
                                 fontSize: 16,
@@ -536,10 +542,10 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 20), // Adjust the width as needed
-                            Icon(Icons.directions_run, size: 20, color: Colors.black),
-                            SizedBox(width: 8),
-                            Text(
+                            SizedBox(width: 0.05.sw), // Adjust the width as needed
+                            const Icon(Icons.directions_run, size: 20, color: Colors.black),
+                            SizedBox(width: 0.02.sw),
+                            const Text(
                               "5 km",
                               style: TextStyle(
                                 fontSize: 16,
@@ -554,14 +560,14 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                     ],
                   ),
                 ),
-                const SizedBox(height: 5),
+                 SizedBox(height: 0.007.sh),
                 // Statistics
                 Expanded(
                   child: GridView.count(
-                    padding: const EdgeInsets.only(top: 20.0),
+                    padding:  EdgeInsets.only(top: 16.h),
                     crossAxisCount: 2,
-                    mainAxisSpacing: 16.0,
-                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.w,
+                    crossAxisSpacing: 16.w,
                     childAspectRatio: 2.0,
                     children: [
                       _buildStatistic(
@@ -596,12 +602,12 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                   ),
                 ),
                 // Total Earnings
-                const SizedBox(height: 10),
+                 SizedBox(height: 0.001.sh),
                 Container(
-                  padding: const EdgeInsets.all(16.0),
+                  padding:  EdgeInsets.all(16.0.w),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8.0.r),
                     boxShadow: [
                       BoxShadow(
                         color: const Color.fromARGB(255, 158, 158, 158).withOpacity(0.5),
@@ -611,10 +617,10 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                       ),
                     ],
                   ),
-                  child: const Column(
+                  child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Total Earnings",
                         style: TextStyle(
                           fontSize: 18,
@@ -622,8 +628,8 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      SizedBox(height: 0.008.sh),
+                      const Text(
                         "\$10,000",
                         style: TextStyle(
                           fontSize: 24,
@@ -633,7 +639,7 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                       ),  
                     ],
                   ), 
-                ), const SizedBox(height: 60),
+                ),  SizedBox(height: 0.05.sh),
                 // Graph or other content as needed
               ],
             ),
@@ -662,10 +668,10 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
     Color textColor = useCustomColor ? iconColor : Colors.white;
 
     return Container(
-      padding: const EdgeInsets.all(5.0),
+      padding:  EdgeInsets.all(5.0.w),
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 250, 250, 250),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8.0.r),
         boxShadow: [
           BoxShadow(
             color: const Color.fromARGB(255, 158, 158, 158).withOpacity(0.5),
@@ -687,7 +693,7 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
               color: Colors.black,
             ),
           ),
-          const SizedBox(height: 4),
+           SizedBox(height: 0.004.sh),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -696,7 +702,7 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                 height: 40,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 161, 161, 161).withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: Center(
                   child: Icon(
@@ -706,7 +712,7 @@ final UserService _userService = UserService('http://10.0.3.2:8080'); // Initial
                   ),
                 ),
               ),
-              const SizedBox(width: 4),
+               SizedBox(width: 0.04.sw),
               Text(
                 value,
                 style: TextStyle(

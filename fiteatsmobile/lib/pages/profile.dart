@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:delivery/components/bottom_nav_bar.dart';
 import 'package:delivery/pages/homepage.dart';
@@ -123,9 +124,82 @@ Future<void> _updateUserDetails() async {
         break;
     }
   }
+void _showChangePasswordDialog() {
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Change Password'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: currentPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Current Password',
+                ),
+              ),
+              TextField(
+                controller: newPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'New Password',
+                ),
+              ),
+              TextField(
+                controller: confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Submit'),
+            onPressed: () {
+              // Implement password change logic here
+              final currentPassword = currentPasswordController.text;
+              final newPassword = newPasswordController.text;
+              final confirmPassword = confirmPasswordController.text;
+
+              if (newPassword == confirmPassword) {
+                // Call your password change function here
+
+                Navigator.of(context).pop(); // Close the dialog
+              } else {
+                // Show error if passwords do not match
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Passwords do not match'),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
   @override
   Widget build(BuildContext context) {
+     ScreenUtil.init(context);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 236, 236, 236),
       appBar: AppBar(
@@ -153,10 +227,10 @@ Future<void> _updateUserDetails() async {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding:  EdgeInsets.all(9.0.w),
             child: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.all(20.0),
+                padding:  EdgeInsets.all(18.0.w),
                 color: Colors.white.withOpacity(0.9),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,9 +241,9 @@ Future<void> _updateUserDetails() async {
                         children: <Widget>[
                           Stack(
                             children: [
-                              const CircleAvatar(
-                                radius: 50,
-                                backgroundImage: AssetImage('assets/images/profile_picture.png'),
+                               CircleAvatar(
+                                radius: 50.0.r,
+                                backgroundImage: const AssetImage('assets/images/profile_picture.png'),
                               ),
                               Positioned(
                                 bottom: 0,
@@ -187,7 +261,7 @@ Future<void> _updateUserDetails() async {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                           SizedBox(height: 0.02.sh),
                           Text(
                             _personalDetails['Full Name'] ?? 'N/A',
                             style: const TextStyle(
@@ -196,7 +270,7 @@ Future<void> _updateUserDetails() async {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                           SizedBox(height: 0.01.sh),
                           Text(
                             _personalDetails['Email'] ?? 'N/A',
                             style: const TextStyle(
@@ -208,9 +282,9 @@ Future<void> _updateUserDetails() async {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 0.02.sh),
                     const Divider(thickness: 1),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 0.02.sh),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -235,17 +309,16 @@ Future<void> _updateUserDetails() async {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                     SizedBox(height: 0.02.sh),
                     _isEditingPersonalDetails ? _buildEditablePersonalDetailsSection() : _buildPersonalDetailsSection(),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 0.02.sh),
                     Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 20, 193, 49),
-                        ),
+                       alignment: Alignment.centerRight,
+                         child: ElevatedButton(
+                      onPressed: _showChangePasswordDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 20, 193, 49),
+                          ),
                         child: const Text(
                           'Change Password',
                           style: TextStyle(
@@ -256,9 +329,9 @@ Future<void> _updateUserDetails() async {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 0.02.sh),
                     const Divider(thickness: 1),
-                    const SizedBox(height: 20),
+                     SizedBox(height: 0.02.sh),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -283,7 +356,7 @@ Future<void> _updateUserDetails() async {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                     SizedBox(height: 0.01.sh),
                     _isEditingVehicleDetails ? _buildEditableVehicleDetailsSection() : _buildVehicleDetailsSection(),
                   ],
                 ),
@@ -360,7 +433,7 @@ Future<void> _updateUserDetails() async {
     final isEditable = label != 'NIC' && label != 'Email';
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding:  EdgeInsets.only(bottom: 10.0.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

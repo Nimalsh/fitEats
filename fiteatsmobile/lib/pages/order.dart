@@ -1,8 +1,10 @@
 import 'package:delivery/pages/finance.dart';
 import 'package:delivery/pages/profile.dart';
+import 'package:delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery/components/bottom_nav_bar.dart';
 import 'package:delivery/pages/homepage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   final int userId;
@@ -18,6 +20,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   bool _isSidebarOpen = false;
   bool _isSwitchOn = false;
   int _selectedIndex = 2;
+    String? _fullName;
+
+final UserService _userService = UserService('http://10.0.3.2:8080');
 
   @override
   void initState() {
@@ -31,11 +36,24 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
     super.dispose();
   }
 
+void _fetchUserFullName() async {
+    try {
+      final fullName = await _userService.getUserFullName(widget.userId);
+      setState(() {
+        _fullName = fullName;
+      });
+    } catch (e) {
+      // Handle error, for example, show an error message
+      print('Error fetching user data: $e');
+    }
+  }
+
   void _toggleSidebar() {
     setState(() {
       _isSidebarOpen = !_isSidebarOpen;
     });
   }
+
 
   void _toggleSwitch(bool value) {
     setState(() {
@@ -114,6 +132,8 @@ void _showNotificationDialog() {
 
   @override
   Widget build(BuildContext context) {
+     ScreenUtil.init(context);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 236, 236, 236),
       appBar: _isSidebarOpen
@@ -122,29 +142,35 @@ void _showNotificationDialog() {
               backgroundColor: const Color.fromARGB(255, 251, 251, 251),
               elevation: 5,
              
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const Text(
-                        " ",
-                      ),
-                      const SizedBox(width: 200),
-                      Switch(
-                        value: _isSwitchOn,
-                        onChanged: _toggleSwitch,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.notifications),
-                        onPressed: _showNotificationDialog,
-                        iconSize: 27,
-                        color: const Color.fromARGB(255, 3, 3, 3),
-                      ),
-                    ],
-                  ),
-                ],
+title: Row(
+      children: [
+        const Expanded(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(" "), // Use an empty text or adjust if needed
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Row(
+            mainAxisSize: MainAxisSize.min, // Makes sure Row only takes as much space as its content
+            children: [
+              Switch(
+                value: _isSwitchOn,
+                onChanged: _toggleSwitch,
               ),
+              IconButton(
+                icon: const Icon(Icons.notifications),
+                onPressed: _showNotificationDialog,
+                iconSize: 27,
+                color: const Color.fromARGB(255, 3, 3, 3),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  
 
               bottom: TabBar(
                 controller: _tabController,
@@ -162,15 +188,15 @@ void _showNotificationDialog() {
               
             ),
               drawer: Drawer(
-              width: 330.0,
+              width: 295.0.w,
         child: Container(
           color: const Color.fromARGB(255, 232, 231, 231),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+               SizedBox(height: 0.07.sh),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:  EdgeInsets.symmetric(horizontal: 20.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -178,22 +204,22 @@ void _showNotificationDialog() {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 70,
-                          height: 70,
+                          width: 70.0.w,
+                          height: 70.0.w,
                           decoration: BoxDecoration(
                             image: const DecorationImage(
                               image: AssetImage("assets/images/profile_picture.png"),
                               fit: BoxFit.cover,
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(8.0.r),
                           ),
                         ),
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: 30.0.w,
+                          height: 30.0.h,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 92, 92, 92).withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5.0.r),
                           ),
                           child: IconButton(
                             icon: const Icon(Icons.close, color: Color.fromARGB(255, 0, 0, 0)),
@@ -204,31 +230,32 @@ void _showNotificationDialog() {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    const Align(
+                     SizedBox(height: 0.022.sh),
+                    _fullName != null ? Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "John Doe",
-                        style: TextStyle(
+                        _fullName!,
+                        style: const TextStyle(
                           fontSize: 22,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
+                    ) : const CircularProgressIndicator(),
                   ],
+
                 ),
               ),
-              const SizedBox(height: 30),
+               SizedBox(height: 0.04.sh),
               // Menu items
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.home,
@@ -240,21 +267,23 @@ void _showNotificationDialog() {
                 onTap: () {
                   Navigator.pop(context); // Close drawer
                   // Additional logic for item 1
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  HomePage(userId: widget.userId)),
-                  );
+                 Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(userId: widget.userId),
+                    ),
+                 );
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading:Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.person,
@@ -272,16 +301,16 @@ void _showNotificationDialog() {
                   );
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.attach_money,
@@ -293,22 +322,24 @@ void _showNotificationDialog() {
                 onTap: () {
                   Navigator.pop(context); // Close drawer
                   // Additional logic for item 3
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  FinancePage(userId: widget.userId)),
-                  );
+                 Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FinancePage(userId: widget.userId), // Pass userId here
+          ),
+        );
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.settings,
@@ -322,16 +353,16 @@ void _showNotificationDialog() {
                   // Additional logic for item 4
                 },
               ),
-              const SizedBox(height: 8), 
+               SizedBox(height: 0.01.sh), 
 
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading:  Container(
-                width: 50,
-                height: 50,
+                width: 50.0.w,
+                height: 50.0.h,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8.0.r),
                 ),
                 child: const Icon(
                   Icons.help,
@@ -346,10 +377,10 @@ void _showNotificationDialog() {
                 },
               ),
               // Logout button
-              const SizedBox(height: 255), 
+              SizedBox(height: 0.28.sh), 
            
               ListTile(
-                contentPadding: const EdgeInsets.only(left: 40.0),
+                contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: const Icon(Icons.logout, size: 26, color: Color.fromARGB(255, 78, 78, 78)),
                 title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 46, 46, 46), fontWeight: FontWeight.bold)),
                 onTap: () {
@@ -392,7 +423,7 @@ class OngoingOrders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(8.0),
+      padding:  EdgeInsets.all(7.0.w),
       children: const [
         SizedBox(height: 20),
         RequestCard(  
@@ -429,11 +460,11 @@ class OngoingOrders extends StatelessWidget {
       
       child: Container(
         
-                      padding: const EdgeInsets.all(16.0),
+                      padding:  EdgeInsets.all(16.0.w),
                       decoration: BoxDecoration(
                         
                         color: const Color.fromARGB(255, 255, 253, 253),
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(8.0.r),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
@@ -465,20 +496,20 @@ class OngoingOrders extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                           SizedBox(height: 0.02.sh),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 26.0),
+                                padding:  EdgeInsets.only(left: 26.0.w),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.all(5.0),
+                                      padding:  EdgeInsets.all(5.0.w),
                                       decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(5.0),
+                                        borderRadius: BorderRadius.circular(5.0.r),
                                       ),
                                       child: const Icon(
                                         Icons.food_bank,
@@ -492,10 +523,10 @@ class OngoingOrders extends StatelessWidget {
                                       color: Colors.grey[400],
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.all(5.0),
+                                      padding:  EdgeInsets.all(5.0.w),
                                       decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(5.0),
+                                        borderRadius: BorderRadius.circular(5.0.r),
                                       ),
                                       child: const Icon(
                                         Icons.location_pin,
@@ -506,7 +537,7 @@ class OngoingOrders extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                               SizedBox(width: 0.01.sw),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -525,7 +556,7 @@ class OngoingOrders extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                 const SizedBox(height: 30),
+                                  SizedBox(height: 0.04.sh),
                                 const  Text(
                                     "Deliver",
                                     style: TextStyle(
@@ -545,9 +576,9 @@ class OngoingOrders extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 18),
+                           SizedBox(height: 0.03.sh),
                            Padding(
-              padding: const EdgeInsets.only(left: 97.0),
+              padding:  EdgeInsets.only(left: 80.0.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -568,7 +599,7 @@ class OngoingOrders extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                   SizedBox(width: 17.0.w),
                   ElevatedButton(
                     onPressed: () {
                       // Add your cancel button logic here
@@ -596,39 +627,60 @@ class OngoingOrders extends StatelessWidget {
     );
   }
 }
-
-
-
 class CompletedOrders extends StatelessWidget {
   const CompletedOrders({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0.r),
       children: const [
         OrderCard(
-          orderNumber: 'Order #123',
-          restaurant: 'Restaurant A',
-          fee: '\$25',
+          orderNumber: 'Order #12',
+          restaurant: 'Elite Restaurant',
+          address: '11, Main st, Colombo 06',
+          amount: 'Rs 1125',
+          time: '5:00 PM',
+          deliveredtime: '5:20 PM',
+          date: '12/05/2024',
+          distance: '7 KM',
+          fee: 'Rs 125',
+          tips: 'Rs 0',
+          paymentMethod: 'Card',
+          rating: 4.5,
+          review: 'Great service!',
+        ),
+        Divider(),
+        OrderCard(
+          orderNumber: 'Order #34',
+          restaurant: 'Al Maas Restaurant',
+          address: '121, Rober st, Colombo 05',
+          amount: 'Rs 890',
           time: '12:00 PM',
-          distance: '5 miles',
+          deliveredtime: '12:30 PM',
+          date: '12/05/2024',
+          distance: '10 KM',
+          fee: 'Rs 100',
+          tips: 'Rs 50',
+          paymentMethod: 'Cash',
+          rating: 4.0,
+          review: 'Quick delivery.',
         ),
         Divider(),
         OrderCard(
-          orderNumber: 'Order #124',
-          restaurant: 'Restaurant B',
-          fee: '\$30',
-          time: '1:00 PM',
-          distance: '10 miles',
-        ),
-        Divider(),
-        OrderCard(
-          orderNumber: 'Order #125',
-          restaurant: 'Restaurant C',
-          fee: '\$20',
-          time: '2:00 PM',
-          distance: '3 miles',
+          orderNumber: 'Order #38',
+          restaurant: 'Hill Restaurant',
+          address: '11, Main st, Colombo 08',
+          amount: 'Rs 2500',
+          time: '10:00 AM',
+          deliveredtime: '10:20 PM',
+          date: '11/05/2024',
+          distance: '5 KM',
+          fee: 'Rs 150',
+          tips: 'Rs 80',
+          paymentMethod: 'Card',
+          rating: 4.8,
+          review: 'Excellent!',
         ),
       ],
     );
@@ -638,17 +690,33 @@ class CompletedOrders extends StatelessWidget {
 class OrderCard extends StatelessWidget {
   final String orderNumber;
   final String restaurant;
-  final String fee;
+  final String address;
+  final String amount;
   final String time;
+  final String deliveredtime;
+  final String date;
   final String distance;
+  final String fee;
+  final String tips;
+  final String paymentMethod;
+  final double rating;
+  final String review;
 
   const OrderCard({
     super.key,
     required this.orderNumber,
     required this.restaurant,
-    required this.fee,
+    required this.address,
+    required this.amount,
     required this.time,
+    required this.deliveredtime,
+    required this.date,
     required this.distance,
+    required this.fee,
+    required this.tips,
+    required this.paymentMethod,
+    required this.rating,
+    required this.review,
   });
 
   @override
@@ -659,7 +727,8 @@ class OrderCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Restaurant: $restaurant'),
-          Text('Fee: $fee'),
+          Text('Address: $address'),
+          Text('Amount: $amount'),
           Text('Time: $time'),
           Text('Distance: $distance'),
         ],
@@ -671,9 +740,17 @@ class OrderCard extends StatelessWidget {
             builder: (context) => OrderDetailsPage(
               orderNumber: orderNumber,
               restaurant: restaurant,
-              fee: fee,
+              address: address,
+              amount: amount,
               time: time,
+              deliveredtime: deliveredtime,
+              date: date,
               distance: distance,
+              fee: fee,
+              tips: tips,
+              paymentMethod: paymentMethod,
+              rating: rating,
+              review: review,
             ),
           ),
         );
@@ -685,17 +762,33 @@ class OrderCard extends StatelessWidget {
 class OrderDetailsPage extends StatelessWidget {
   final String orderNumber;
   final String restaurant;
-  final String fee;
+  final String address;
+  final String amount;
   final String time;
+  final String deliveredtime;
+  final String date;
   final String distance;
+  final String fee;
+  final String tips;
+  final String paymentMethod;
+  final double rating;
+  final String review;
 
   const OrderDetailsPage({
     super.key,
     required this.orderNumber,
     required this.restaurant,
-    required this.fee,
+    required this.address,
+    required this.amount,
     required this.time,
+    required this.deliveredtime,
+    required this.date,
     required this.distance,
+    required this.fee,
+    required this.tips,
+    required this.paymentMethod,
+    required this.rating,
+    required this.review,
   });
 
   @override
@@ -704,18 +797,127 @@ class OrderDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Order Details: $orderNumber'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Order Number: $orderNumber'),
-            Text('Restaurant: $restaurant'),
-            Text('Fee: $fee'),
-            Text('Time: $time'),
-            Text('Distance: $distance'),
-          ],
+      body: Stack(
+        children: [
+          // Background Container
+          Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 236, 236, 236),
+              // Add a background image here if needed
+              // image: DecorationImage(
+              //   image: AssetImage('assets/background_image.png'),
+              //   fit: BoxFit.cover,
+              // ),
+            ),
+            // Make sure the container fills the screen
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          // Main content
+          Padding(
+            padding: EdgeInsets.all(16.0.w),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle('General Order Details'),
+                  _buildDetailRow('Restaurant:', restaurant),
+                  _buildDetailRow('Delivery Address:', address),
+                  _buildDetailRow('Amount:', amount),
+                  _buildDetailRow('Picked up Time:', time),
+                  _buildDetailRow('Delivered Time:', deliveredtime),
+                  _buildDetailRow('Date:', date),
+                  SizedBox(height: 0.02.sh),
+                  _buildSectionTitle('Delivery Details'),
+                  _buildDetailRow('Distance:', distance),
+                  _buildDetailRow('Delivery Amount:', fee),
+                  _buildDetailRow('Tip:', tips),
+                  _buildDetailRow('Payment Method:', paymentMethod),
+                  SizedBox(height: 0.02.sh),
+                  _buildSectionTitle('Review & Rating'),
+                  _buildDetailRowWithIcon(
+                    'Rating:',
+                    rating.toString(),
+                    Icons.star,
+                  ),
+                  _buildDetailRowWithIcon(
+                    'Review:',
+                    review,
+                    Icons.comment,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+          color: Color.fromARGB(181, 0, 0, 0),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          SizedBox(width: 0.01.sw),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRowWithIcon(String label, String value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, color: const Color.fromARGB(235, 0, 0, 0)),
+          SizedBox(width: 0.01.sw),
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          SizedBox(width: 0.01.sw),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

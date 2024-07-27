@@ -1,6 +1,7 @@
 // lib/pages/register_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../components/my_button.dart';
@@ -74,6 +75,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+     ScreenUtil.init(context);
+
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
@@ -86,12 +90,12 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding:  EdgeInsets.symmetric(horizontal: 20.0.w),
               child: Container(
-                padding: const EdgeInsets.all(24.0),
+                padding:  EdgeInsets.all(20.0.w),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 70, 70, 70).withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.0.r),
                 ),
                 constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height * 0.7,
@@ -106,7 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       width: 100,
                       height: 100,
                     ),
-                    const SizedBox(height: 25),
+                     SizedBox(height: 0.03.sh),
                     Text(
                       "Let's Create an Account",
                       textAlign: TextAlign.center,
@@ -115,35 +119,35 @@ class _RegisterPageState extends State<RegisterPage> {
                         color: Theme.of(context).colorScheme.surface,
                       ),
                     ),
-                    const SizedBox(height: 25),
+                     SizedBox(height: 0.03.sh),
                     MyTextField(
                       controller: fullNameController,
                       hintText: "Full Name",
                       obscureText: false,
                       prefixIcon: Icons.person,
                     ),
-                    const SizedBox(height: 16),
+                     SizedBox(height: 0.02.sh),
                     MyTextField(
                       controller: emailController,
                       hintText: "Email",
                       obscureText: false,
                       prefixIcon: Icons.email,
                     ),
-                    const SizedBox(height: 16),
+                     SizedBox(height: 0.02.sh),
                     MyTextField(
                       controller: addressController,
                       hintText: "Address",
                       obscureText: false,
                       prefixIcon: Icons.home,
                     ),
-                    const SizedBox(height: 16),
+                     SizedBox(height: 0.02.sh),
                     MyTextField(
                       controller: telephoneController,
                       hintText: "Telephone Number",
                       obscureText: false,
                       prefixIcon: Icons.phone,
                     ),
-                    const SizedBox(height: 16),
+                     SizedBox(height: 0.02.sh),
                     CustomDropdown(
                       value: selectedGender,
                       items: const ['Male', 'Female'],
@@ -155,22 +159,22 @@ class _RegisterPageState extends State<RegisterPage> {
                         });
                       },
                     ),
-                    const SizedBox(height: 24),
+                     SizedBox(height: 0.03.sh),
                     ElevatedButton(
                       onPressed: _pickImage,
                       child: const Text("Upload Image"),
                     ),
-                    const SizedBox(height: 24),
+                     SizedBox(height: 0.03.sh),
                     if (_image != null)
                       Image.file(
                         _image!,
-                        height: 50,
+                        height: 50.0.h,
                       ),
                     MyButton(
                       text: "Next",
                       onTap: navigateToRegisterDetailsPage,
                     ),
-                    const SizedBox(height: 16),
+                     SizedBox(height: 0.02.sh),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -180,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Theme.of(context).colorScheme.surface,
                           ),
                         ),
-                        const SizedBox(width: 4),
+                         SizedBox(width: 0.01.sw),
                         GestureDetector(
                           onTap: widget.onTap,
                           child: Text(

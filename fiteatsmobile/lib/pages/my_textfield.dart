@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -14,6 +15,8 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     ScreenUtil.init(context);
+
     return TextField(
       controller: controller,
       obscureText: obscureText,
@@ -22,20 +25,20 @@ class MyTextField extends StatelessWidget {
         filled: true,
         fillColor: Colors.white.withOpacity(0.2), // Transparent background
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16), // Rounded borders
+          borderRadius: BorderRadius.circular(16.r), // Rounded borders
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16), // Rounded borders
+          borderRadius: BorderRadius.circular(16.r), // Rounded borders
           borderSide: BorderSide(color: Colors.white.withOpacity(0.5)), // Border color
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16), // Rounded borders
+          borderRadius: BorderRadius.circular(16.r), // Rounded borders
           borderSide: BorderSide(color: Theme.of(context).colorScheme.primary), // Focused border color
         ),
         hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
       ),
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
     );
   }
 }

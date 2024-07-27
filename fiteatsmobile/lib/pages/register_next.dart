@@ -2,6 +2,7 @@
 
 import 'package:delivery/components/my_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import '../components/my_textfield.dart';
 import '../services/auth_service.dart';
@@ -57,6 +58,8 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+     ScreenUtil.init(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -81,64 +84,64 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 24.0),
                   child: Container(
-                    padding: const EdgeInsets.all(24.0),
+                    padding:  EdgeInsets.all(22.0.w),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 70, 70, 70).withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const SizedBox(height: 25),
+                         SizedBox(height: 0.03.sh),
                         MyTextField(
                           controller: nationalIdController,
                           hintText: 'National ID',
                           obscureText: false,
                           prefixIcon: Icons.perm_identity,
                         ),
-                        const SizedBox(height: 16.0),
+                         SizedBox(height: 0.02.sh),
                         MyTextField(
                           controller: vehicleNameController,
                           hintText: 'Vehicle Name',
                           obscureText: false,
                           prefixIcon: Icons.directions_car,
                         ),
-                        const SizedBox(height: 16.0),
+                         SizedBox(height: 0.02.sh),
                         MyTextField(
                           controller: vehicleModelController,
                           hintText: 'Vehicle Model',
                           obscureText: false,
                           prefixIcon: Icons.car_rental,
                         ),
-                        const SizedBox(height: 16.0),
+                         SizedBox(height: 0.02.sh),
                         MyTextField(
                           controller: plateNumberController,
                           hintText: 'Plate Number',
                           obscureText: false,
                           prefixIcon: Icons.confirmation_number,
                         ),
-                        const SizedBox(height: 16.0),
+                         SizedBox(height: 0.02.sh),
                         MyTextField(
                           controller: passwordController,
                           hintText: 'Password',
                           obscureText: true,
                           prefixIcon: Icons.lock,
                         ),
-                        const SizedBox(height: 16.0),
+                         SizedBox(height: 0.02.sh),
                         MyTextField(
                           controller: confirmPasswordController,
                           hintText: 'Confirm Password',
                           obscureText: true,
                           prefixIcon: Icons.lock,
                         ),
-                        const SizedBox(height: 24),
+                         SizedBox(height: 0.03.sh),
                         ElevatedButton(
                           onPressed: () {
                             // Add your upload image logic here
                           },
                           child: const Text("Upload License Image"),
                         ),
-                        const SizedBox(height: 24),
+                         SizedBox(height: 0.03.sh),
                         MyButton(
                           text: "Register",
                           onTap: registerDriver, // Register the driver here
