@@ -109,7 +109,7 @@ const Nutrigoals = () => {
                   <Typography variant="body2">{nutritionist.description}</Typography>
                 </Box>
                 <Button variant="contained" color="primary">
-                  Contact
+                  view profile
                 </Button>
               </Paper>
             </Grid>
