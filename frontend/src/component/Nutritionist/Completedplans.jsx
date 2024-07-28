@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Typography, Grid, Card, CardContent, Button, Checkbox
+  Box, Typography, Grid, Card, CardContent, Button, Checkbox, Divider, TextField
 } from '@mui/material';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -26,92 +26,56 @@ const initialMealPlan = {
   7: [{ meal: 'Breakfast', food: foodItems[2] }, { meal: 'Lunch', food: foodItems[3] }, { meal: 'Dinner', food: foodItems[0] }],
 };
 
-const Mealprogress = () => {
-  const [startDay, setStartDay] = useState(1);
+const Completedplans = () => {
   const [selectedDay, setSelectedDay] = useState(1);
-  const [progress, setProgress] = useState(0);
-  const [mealCompleted, setMealCompleted] = useState(new Array(7).fill(false));
-  const [mealCheckboxes, setMealCheckboxes] = useState(
-    new Array(7).fill(null).map(() => ({
-      Breakfast: false,
-      Lunch: false,
-      Dinner: false,
-    }))
-  );
+  const [mealCheckboxes, setMealCheckboxes] = useState([
+    { Breakfast: true, Lunch: false, Dinner: true },
+    { Breakfast: false, Lunch: true, Dinner: false },
+    { Breakfast: true, Lunch: false, Dinner: false },
+    { Breakfast: false, Lunch: false, Dinner: true },
+    { Breakfast: true, Lunch: true, Dinner: false },
+    { Breakfast: false, Lunch: false, Dinner: false },
+    { Breakfast: false, Lunch: true, Dinner: true },
+  ]);
+  const [comment, setComment] = useState("");
+  const [isCommentDisabled, setIsCommentDisabled] = useState(false);
 
-  const handleNextDay = () => {
-    setStartDay(prevStartDay => prevStartDay + 1);
-  };
-
-  const handlePrevDay = () => {
-    setStartDay(prevStartDay => Math.max(prevStartDay - 1, 1));
-  };
-
-  const handleDayClick = day => {
+  const handleDayClick = (day) => {
     setSelectedDay(day);
   };
 
-  const handleCompleteDay = () => {
-    if (!mealCompleted[selectedDay - 1]) {
-      const updatedMealCompleted = [...mealCompleted];
-      updatedMealCompleted[selectedDay - 1] = true;
-      setMealCompleted(updatedMealCompleted);
-      setProgress(updatedMealCompleted.filter(Boolean).length * (100 / 7));
-    }
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
   };
 
-  const handleCheckboxChange = (day, meal) => {
-    const updatedMealCheckboxes = [...mealCheckboxes];
-    updatedMealCheckboxes[day - 1][meal] = !updatedMealCheckboxes[day - 1][meal];
-    setMealCheckboxes(updatedMealCheckboxes);
+  const handleSaveComment = () => {
+    console.log("Comment saved:", comment);
+    // You can add logic here to save the comment to a backend or perform other actions.
+    setIsCommentDisabled(true);
   };
 
-  const getNutritionalSummary = () => {
-    const summary = initialMealPlan[selectedDay].reduce(
-      (acc, { food }) => {
-        acc.calories += food.calories;
-        acc.protein += food.protein;
-        acc.fat += food.fat;
-        acc.carbohydrate += food.carbohydrate;
-        return acc;
-      },
-      { calories: 0, protein: 0, fat: 0, carbohydrate: 0 }
-    );
-    return summary;
+  const calculateOverallProgress = () => {
+    const totalMeals = 7 * 3;
+    const completedMeals = mealCheckboxes.reduce((total, day) => {
+      return total + Object.values(day).filter(Boolean).length;
+    }, 0);
+    return (completedMeals / totalMeals) * 100;
   };
 
-  const nutritionalSummary = getNutritionalSummary();
+  const progress = calculateOverallProgress();
 
-  const chartData = {
-    labels: ['Calories', 'Protein', 'Fat', 'Carbohydrate'],
-    datasets: [
-      {
-        label: 'Nutritional Value',
-        data: [nutritionalSummary.calories, nutritionalSummary.protein, nutritionalSummary.fat, nutritionalSummary.carbohydrate],
-        backgroundColor: ['#77E4C8', '#36C2CE', '#478CCF', '#4535C1']
-      }
-    ]
-  };
+  const pastweight = 75; // Example past weight
+  const currentweight = 70; // Example current weight
 
-  const chartOptions = {
-    responsive: true,
-    indexAxis: 'y',
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
+  const weightDifference = pastweight - currentweight;
+  const weightProgress = (weightDifference / 10) * 100;
 
   return (
     <Box sx={{ padding: '20px' }}>
-      {/* Upper Part */}
-     
-      {/* Lower Part */}
       <Grid container spacing={-2}>
         {/* Left Hand Side Tile */}
         <Grid item xs={12} md={8}>
-          <Card sx={{ width: '700px', height: '500px' }}>
+          <Card sx={{ width: '700px', height: 'auto', minHeight: '500px' }}>
             <CardContent>
               {initialMealPlan[selectedDay].map((meal, index) => (
                 <MealCard
@@ -120,20 +84,29 @@ const Mealprogress = () => {
                   food={meal.food}
                   day={selectedDay}
                   completed={mealCheckboxes[selectedDay - 1][meal.meal]}
-                  handleCheckboxChange={handleCheckboxChange}
                 />
               ))}
+              <TextField
+                label="Comment"
+                fullWidth
+                margin="normal"
+                type="text"
+                name="comment"
+                value={comment}
+                onChange={handleCommentChange}
+                multiline
+                rows={4}
+                disabled={isCommentDisabled}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveComment}
+                sx={{ marginTop: '10px' }}
+              >
+                Save
+              </Button>
             </CardContent>
-            <Button
-              variant='contained'
-              onClick={handleCompleteDay}
-              sx={{
-                marginLeft: '550px',
-                marginTop: '30px'
-              }}
-            >
-              completed
-            </Button>
           </Card>
         </Grid>
 
@@ -177,7 +150,7 @@ const Mealprogress = () => {
                   ))}
                 </Grid>
               </Box>
-              <Typography variant="h6">Your Progress</Typography>
+              <Typography variant="h6">Meal Plan Adherence</Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%', marginTop: '30px' }}>
                 <div style={{ width: 200, height: 200 }}>
                   <CircularProgressbar
@@ -191,12 +164,66 @@ const Mealprogress = () => {
                   />
                 </div>
               </Box>
+              <Divider sx={{ my: 2 }} />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2">Planned Meals</Typography>
+                  <Typography variant="h6">13</Typography>
+                </Box>
+                <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2">Logged Meals</Typography>
+                  <Typography variant="h6">21</Typography>
+                </Box>
+              </Box>
               <Box sx={{ marginTop: '40px' }}>
-                <Typography variant="h6">Nutritional Summary</Typography>
-                <Bar
-                  data={chartData}
-                  options={chartOptions}
-                />
+                <Typography variant="h6">Meeting Goal</Typography>
+                <Box>
+                <TextField
+                    label="Past Weight"
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                    name="past weight"
+                    value={pastweight}
+                    disabled
+                  />
+                  <TextField
+                    label="Current Weight"
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                    name="current weight"
+                    value={currentweight}
+                    disabled
+                  />
+                </Box>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%', marginTop: '30px' }}>
+                  <div style={{ width: 200, height: 200 }}>
+                    <CircularProgressbar
+                      value={weightProgress}
+                      text={`${Math.round(weightProgress)}%`}
+                      styles={buildStyles({
+                        pathColor: '#40F3AA',
+                        textColor: '#40F3AA',
+                        trailColor: '#d6d6d6'
+                      })}
+                    />
+                  </div>
+                </Box>
+                <Divider sx={{ my: 2 }} />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="body2">Achieved weight loss</Typography>
+                    <Typography variant="h6">13</Typography>
+                  </Box>
+                  <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="body2">Target weight loss</Typography>
+                    <Typography variant="h6">21</Typography>
+                  </Box>
+                </Box>
               </Box>
             </CardContent>
           </Card>
@@ -206,20 +233,20 @@ const Mealprogress = () => {
   );
 };
 
-const MealCard = ({ meal, food, day, completed, handleCheckboxChange }) => {
+const MealCard = ({ meal, food, day, completed }) => {
   return (
     <Card sx={{ marginTop: '20px', backgroundColor: completed ? '#88891D' : '#545453', width: '100%' }}>
       <CardContent>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h6">{meal}</Typography>
-          <Checkbox checked={completed} onChange={() => handleCheckboxChange(day, meal)} />
+          <Checkbox checked={completed} disabled />
         </Box>
         <Box display="flex" alignItems="center">
-          <Typography variant="body1" sx={{ marginLeft: '20px' }}> {food.name} - {food.normalConsumption}</Typography>
+          <Typography variant="body1" sx={{ marginLeft: '20px' }}>{food.name} - {food.normalConsumption}</Typography>
         </Box>
       </CardContent>
     </Card>
   );
 };
 
-export default Mealprogress;
+export default Completedplans;

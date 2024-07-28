@@ -12,6 +12,7 @@ import Weightloss from './Weightloss';
 import Othergoal from './Othergoal';
 import Plangeneration from './Plangeneration';
 import Dashboard from './Dashboard';
+import Completedplans from './Completedplans';
 
 
 
@@ -39,6 +40,7 @@ const Nutritionistbase = () => {
             <Route path="/other/view/proceed" element={<Plangeneration />} />
             <Route path="/weightloss/view/proceed" element={<Plangeneration />} />
             <Route path="/weightgain/view/proceed" element={<Plangeneration />} />
+            <Route path="requests/view/completed" element={<Completedplans/>} />
           </Routes>
         </div>
       </div>
