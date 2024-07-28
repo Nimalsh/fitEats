@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'calories_count.dart';
-import 'diet_plan.dart';
 import 'feedback.dart';
 import 'landpage.dart';
 import 'menu.dart';
+import 'myorder.dart';
 import 'status.dart';
 
 
@@ -18,9 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     LandingPage(),
-    DailyCaloriesPage(),
+    CaloriesCountPage(),
     StatusPage(),
-    DietPlanPage(),
+    MyOrderPage(),
     FeedbackPage(),
     // CartItem(foodItem: null, customizations: []),
     // Center(child: Text('Feedbacks')),
@@ -82,12 +82,12 @@ class _ProfilePageState extends State<ProfilePage> {
             label: 'Status',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.food_bank),
-            label: 'diet plan',
+           icon: Icon(Icons.fastfood),
+            label: 'Order',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.feedback),
-            label: 'Feedbacks',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
          currentIndex: _selectedIndex,
