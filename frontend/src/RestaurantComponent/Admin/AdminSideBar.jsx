@@ -28,7 +28,7 @@ export const AdminSideBar = ({ handleClose }) => {
   const [hoverIndex, setHoverIndex] = useState(null);
 
   const handleNavigate = (item) => {
-    navigate(`/admin/restaurants${item.path}`);
+    navigate(`/admin/restaurant${item.path}`);
   };
 
   return (

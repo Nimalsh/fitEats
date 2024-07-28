@@ -11,9 +11,8 @@ import { uploadImageToCloudinary } from '../util/UploadToCloudinary';
 const initialValues = {
     name: '',
     description: '',
-    openingDays: 'Mon-Sun',
-    openingHoursFrom: '',
-    openingHoursTo: '',
+    // openingDays: 'Mon-Sun', 
+    openingHours: 'Mon-Sun',
     cuisineType: '',
     streetAddress: '',
     city: '',
@@ -39,9 +38,7 @@ export const CreateRestaurantForm = () => {
         const data = {
             name: values.name,
             description: values.description, // Correct field name
-            openingDays: values.openingDays,
-            openingHoursFrom: values.openingHoursFrom,
-            openingHoursTo: values.openingHoursTo,
+            openingDays: values.openingDays, 
             cuisineType: values.cuisineType,
             address: {
               streetAddress: values.streetAddress, // Correct field name
@@ -56,6 +53,7 @@ export const CreateRestaurantForm = () => {
               twitter: values.twitter,
               facebook: values.facebook,
             },
+            openingHours:values.openingHours,
             images: values.images, 
           }
 
@@ -199,12 +197,12 @@ export const CreateRestaurantForm = () => {
             </Grid>
             <Grid item xs={12} lg={3}>
               <TextField fullWidth
-                id="openingHoursFrom"
-                name="openingHoursFrom"
-                label="Opening Hours From"
+                id="openingHours"
+                name="openingHours"
+                label="Opening Hours"
                 variant="outlined"
                 onChange={formik.handleChange}
-                value={formik.values.openingHoursFrom}
+                value={formik.values.openingHours}
                 sx={{ 
                   backgroundColor: '#000000',
                   borderRadius: 1,
@@ -213,22 +211,7 @@ export const CreateRestaurantForm = () => {
                 }} 
               />
             </Grid>
-            <Grid item xs={12} lg={3}>
-              <TextField fullWidth
-                id="openingHoursTo"
-                name="openingHoursTo"
-                label="Opening Hours To"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.openingHoursTo}
-                sx={{ 
-                  backgroundColor: '#000000',
-                  borderRadius: 1,
-                  'label': { color: '#fff' },
-                  '& label.Mui-focused': { color: '#fff' },
-                }} 
-              />
-            </Grid>
+        
             <Grid item xs={12}>
               <TextField fullWidth
                 id="streetAddress"

@@ -15,7 +15,8 @@ import { updateRestaurantStatus } from '../../component/State/Restaurant/Action'
 export const RestuarantDetails = () => {
    
   const { restaurant } = useSelector(store => store);
-  const dispatch = useDispatch
+  console.log("Restaurant Details",restaurant)
+  const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(true);
 
   const handleRestaurantStatus = () => {
@@ -50,8 +51,7 @@ export const RestuarantDetails = () => {
       <div>
       </div> 
       <div className="mi-0 py-5 flex justify-left items-center gap-3"> 
-        <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>{restaurant.usersRestaurants?.name}</h1>
-        <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>Hungry Restaurant</h1>
+        <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>{restaurant.usersRestaurants?.name}</h1> 
 
         <div>
           <Button 
@@ -169,7 +169,7 @@ export const RestuarantDetails = () => {
               <div className='space-y-1 text-grey-200'>
                 <div className='flex'>
                   <p className='w-48'>Restaurant Name</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>Indian Fast Foods</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>Hungry Restaurant</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Address</p>
