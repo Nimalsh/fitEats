@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'personalizePlan.dart';
+
 class NutriGoals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -151,15 +153,15 @@ class LoseWeightPage extends StatelessWidget {
   }
 }
 
-class PersonalizePlanPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Personalize Plan')),
-      body: Center(child: Text('Personalize Plan Page')),
-    );
-  }
-}
+// class PersonalizePlanPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Personalize Plan')),
+//       body: Center(child: Text('Personalize Plan Page')),
+//     );
+//   }
+// }
 
 class NutriQueriesPage extends StatelessWidget {
   @override
