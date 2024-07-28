@@ -28,6 +28,7 @@ import CustomRoutes from './Routers/CustomRoutes';
 import Othergoal from './component/Nutritionist/Othergoal';
 import Plangeneration from './component/Nutritionist/Plangeneration';
 import Mealplanmakebysearch from './component/Nutritionist/Mealplansmakebysearch';
+import { getRestaurantByUserId } from './component/State/Restaurant/Action';
 
 
 
@@ -44,9 +45,9 @@ function App() {
     dispatch(getUser(auth.jwt||jwt));
   }, [auth.jwt]);
 
-  // useEffect(()=>{
-  //   dispatch(getRestaurantByUserId(auth.jwt || jwt));
-  // },[auth.user])
+  useEffect(()=>{
+    dispatch(getRestaurantByUserId(auth.jwt || jwt));
+  },[auth.user])
 
   return (
     <ThemeProvider theme={darkTheme}>

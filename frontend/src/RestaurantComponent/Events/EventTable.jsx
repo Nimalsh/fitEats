@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, CardHeader, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
 import EventImage from '../../assets/images/offer.jpg'; // replace with actual image import
-import BackgroundImage from '../../assets/images/Background_image.png';
+import BackgroundImage from '../../assets/images/item.png';
 import AddIcon from '@mui/icons-material/Add'; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateIcon from '@mui/icons-material/Update';
