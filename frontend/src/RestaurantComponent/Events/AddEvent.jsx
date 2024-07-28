@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, CardHeader, TextField, Button, IconButton, Grid, CircularProgress } from '@mui/material';
-import BackgroundImage from '../../assets/images/Add.jpg'; 
+import BackgroundImage from '../../assets/images/item.png'; 
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear'; 
 import { Formik, useFormik } from 'formik';

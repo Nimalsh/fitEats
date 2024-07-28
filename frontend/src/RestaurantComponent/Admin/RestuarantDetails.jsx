@@ -9,13 +9,21 @@ import backgroundImage from '../../assets/images/Background_image.png';
 import RestaurantImage from '../../assets/images/Restaurant.jpeg'; 
 import Rectangle from '../../assets/images/rect.png';  
 import Map from '../../assets/images/map.png'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { updateRestaurantStatus } from '../../component/State/Restaurant/Action';
 
 export const RestuarantDetails = () => {
    
+  const { restaurant } = useSelector(store => store);
+  const dispatch = useDispatch
   const [isOpen, setIsOpen] = useState(true);
 
   const handleRestaurantStatus = () => {
     setIsOpen(prevState => !prevState);
+    // dispatch(updateRestaurantStatus({
+    //   restaurantId:restaurant.usersRestaurant.id,
+    //   jwt : localStorage.getItem("jwt")
+    // }))
   };
 
   return (
@@ -42,10 +50,15 @@ export const RestuarantDetails = () => {
       <div>
       </div> 
       <div className="mi-0 py-5 flex justify-left items-center gap-3"> 
+        <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>{restaurant.usersRestaurants?.name}</h1>
         <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>Hungry Restaurant</h1>
 
         <div>
-          <Button color={isOpen ? "primary" : "error"} className='py-[1rem] px-[2rem]' variant='contained' onClick={handleRestaurantStatus} size='large'>
+          <Button 
+             color={!restaurant.usersRestaurant?.open  ? "primary" : "error"} 
+             className='py-[1rem] px-[2rem]' variant='contained' 
+             onClick={handleRestaurantStatus} 
+             size='large'>
             {isOpen ? "Close" : "Open"}
           </Button>
         </div>
@@ -75,18 +88,22 @@ export const RestuarantDetails = () => {
                 <div className='flex'>
                   <p className='w-48'>Owner</p>
                   <p className='text-grey-400'><span className='pr-5'>-</span>Mr.Shiwantha Dias</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.owner.fullName}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Restaurant Name</p>
                   <p className='text-grey-400'><span className='pr-5'>-</span>Hungry Restaurant</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.name}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Cuisine Type</p>
                   <p className='text-grey-400'><span className='pr-5'>-</span>Sri Lankan</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.cuisineType}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Opening Hours</p>
                   <p className='text-grey-400'><span className='pr-5'>-</span>6.00am-10.00pm</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.openingHours}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Status</p>
@@ -198,6 +215,7 @@ export const RestuarantDetails = () => {
                 <div className='flex'>
                   <p className='w-48'>Email</p>
                   <p className='text-grey-400'><span className='pr-5'>-</span>hungryrestaurant2001@gmail.com</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.contactInformation?.email}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Telephone-Fix</p>
@@ -205,15 +223,17 @@ export const RestuarantDetails = () => {
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Telephone-Mobile</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>071-3124567</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.contactInformation?.mobile}</p>
                 </div>
                 <div className='flex items-center'> 
                   <div className='flex text-gray-400 items-center pb-3'>
                     <span className='pr-5'></span>
-                    <a href='/'><InstagramIcon sx={{fontSize:"3rem"}} /></a>
-                    <a href='/'><TwitterIcon sx={{fontSize:"3rem"}} /></a>
-                    <a href='/'><FacebookIcon sx={{fontSize:"3rem"}} /></a>
-                    <a href='/'><LinkedInIcon sx={{fontSize:"3rem"}} /></a> 
+                    <a href= {restaurant.usersRestaurant?.contactInformation?.instagram}
+                    ><InstagramIcon sx={{fontSize:"3rem"}} /></a>
+                    <a href={restaurant.usersRestaurant?.contactInformation?.twitter}
+                    ><TwitterIcon sx={{fontSize:"3rem"}} /></a>
+                    <a href={restaurant.usersRestaurant?.contactInformation?.facebook}
+                    ><FacebookIcon sx={{fontSize:"3rem"}} /></a> 
                   </div>
                 </div>
               </div>
