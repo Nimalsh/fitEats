@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
-const Setgoal = () => {
+const Freeweightgainform = () => {
+  const navigate = useNavigate();
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -67,28 +69,30 @@ const Setgoal = () => {
   };
 
   // Generate chart data based on input
-  const generateChartData = () => {
+ // Generate chart data based on input
+const generateChartData = () => {
     const currentWeightNum = parseFloat(currentWeight) || 0;
-    const targetWeightLossNum = parseFloat(targetWeightLoss) || 0;
+    const targetWeightGainNum = parseFloat(targetWeightLoss) || 0; // Changed variable name to targetWeightGain
     const durationNum = parseFloat(duration) || 0;
-
+  
     const labels = Array.from({ length: durationNum }, (_, i) => `Week ${i + 1}`);
-    const weightLossPerWeek = targetWeightLossNum / durationNum;
-    const weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - (weightLossPerWeek * (i + 1)));
-
+    const weightGainPerWeek = targetWeightGainNum / durationNum;
+    const weightGainData = Array.from({ length: durationNum }, (_, i) => currentWeightNum + (weightGainPerWeek * (i + 1)));
+  
     return {
       labels,
       datasets: [
         {
           label: 'Weight (kg)',
-          data: [currentWeightNum, ...weightLossData],
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          data: [currentWeightNum, ...weightGainData],
+          borderColor: 'rgba(34, 139, 34, 1)', // Changed to green
+        backgroundColor: 'rgba(34, 139, 34, 0.2)', // Changed to green
           fill: true,
         },
       ],
     };
   };
+  
 
   const data = generateChartData();
 
@@ -119,50 +123,51 @@ const Setgoal = () => {
       <Grid container spacing={3}>
         {/* Left Tile */}
         <Grid item xs={12} sm={6}>
-          <Box mt={5} ml={-1}>
-            <Paper style={{ padding: 20 }}>
-              <Typography variant="h6" gutterBottom>
-                Weight Loss Plan
-              </Typography>
-              <form noValidate autoComplete="off">
-                <TextField
-                  label="Current Weight (kg)"
-                  fullWidth
-                  margin="normal"
-                  type="number"
-                  name="currentWeight"
-                  value={currentWeight}
-                  onChange={handleInputChange}
-                />
-                <TextField
-                  label="Weight Loss (kg)"
-                  fullWidth
-                  margin="normal"
-                  type="number"
-                  name="targetWeightLoss"
-                  value={targetWeightLoss}
-                  onChange={handleInputChange}
-                />
-                <TextField
-                  label="Duration (weeks)"
-                  fullWidth
-                  margin="normal"
-                  type="number"
-                  name="duration"
-                  value={duration}
-                  onChange={handleInputChange}
-                />
-              </form>
-              {/* Chart Component */}
-              <Box mt={3}>
-                <Typography variant="h6" gutterBottom>
-                  Weight Loss and Duration Chart
-                </Typography>
-                <Line data={data} options={options} />
-              </Box>
-            </Paper>
-          </Box>
-        </Grid>
+  <Box mt={5} ml={-1}>
+    <Paper style={{ padding: 20 }}>
+      <Typography variant="h6" gutterBottom>
+        Weight Gain Plan
+      </Typography>
+      <form noValidate autoComplete="off">
+        <TextField
+          label="Current Weight (kg)"
+          fullWidth
+          margin="normal"
+          type="number"
+          name="currentWeight"
+          value={currentWeight}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Weight Gain (kg)" // Changed label to "Weight Gain"
+          fullWidth
+          margin="normal"
+          type="number"
+          name="targetWeightLoss" // Consider renaming this to targetWeightGain for consistency
+          value={targetWeightLoss}
+          onChange={handleInputChange}
+        />
+        <TextField
+          label="Duration (weeks)"
+          fullWidth
+          margin="normal"
+          type="number"
+          name="duration"
+          value={duration}
+          onChange={handleInputChange}
+        />
+      </form>
+      {/* Chart Component */}
+      <Box mt={3}>
+        <Typography variant="h6" gutterBottom>
+          Weight Gain and Duration Chart // Changed label to "Weight Gain"
+        </Typography>
+        <Line data={generateChartData()} options={options} />
+      </Box>
+    </Paper>
+  </Box>
+</Grid>
+
         {/* Right Tile */}
         <Grid item xs={12} sm={4}>
           <Box mt={5} width={'550px'} marginLeft={'3px'}>
@@ -532,7 +537,7 @@ const Setgoal = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                >
+                  onClick={() => navigate('/my-profile/personalized-plan/view')}  >
                   Proceed
                 </Button>
               </Grid>
@@ -544,4 +549,4 @@ const Setgoal = () => {
   );
 };
 
-export default Setgoal;
+export default Freeweightgainform;

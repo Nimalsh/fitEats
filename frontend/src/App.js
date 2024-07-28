@@ -27,13 +27,9 @@ import CustomRoutes from './Routers/CustomRoutes';
 
 import Othergoal from './component/Nutritionist/Othergoal';
 import Plangeneration from './component/Nutritionist/Plangeneration';
-import Mealplanmakebysearch from './component/Nutritionist/Mealplansmakebysearch';
+import Mealplanmakebysearch from './component/Nutritionist/Mealplansmakebysearch'; 
 import { getRestaurantByUserId } from './component/State/Restaurant/Action';
-
-
-
-
-
+import Calorytrack from './component/Profile/Calorytrack'; 
 
 
 function App() {
@@ -58,11 +54,12 @@ function App() {
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
 
+
       {/* <CustomRoutes/>  */}
-    
 
 
-    <Routers/>
+
+   <Routers/>
 
      </ThemeProvider>
   
