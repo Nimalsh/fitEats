@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lossform.dart';
+
 class PersonalizePlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -77,7 +79,12 @@ class NewPlanSection extends StatelessWidget {
   Widget buildGoalButton(BuildContext context, String title, IconData icon) {
     return ElevatedButton(
       onPressed: () {
-        // Handle button press
+       Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LossFormPage()),
+        // MaterialPageRoute(builder: (context) => wightGain()),
+        // MaterialPageRoute(builder: (context) => other()),
+      );// Handle button press
       },
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(16.0),
