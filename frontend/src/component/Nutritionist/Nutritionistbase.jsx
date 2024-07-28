@@ -11,6 +11,7 @@ import WeightGain from './Weightgain';
 import Weightloss from './Weightloss';
 import Othergoal from './Othergoal';
 import Plangeneration from './Plangeneration';
+import Dashboard from './Dashboard';
 
 
 
@@ -26,7 +27,7 @@ const Nutritionistbase = () => {
         </div>
         <div className='lg:w-[80%]'>
           <Routes>
-            <Route path="/" element={<Requests />} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/menus" element={<Menus />} />
             <Route path="/queries" element={<Query />} /> 
             <Route path="/articles" element={<Articles />} />
