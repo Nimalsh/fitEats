@@ -34,7 +34,7 @@ export const CreateFoodCategory = () => {
             },
           };
           
-          dispatch(createCategoryAction)
+          dispatch(createCategoryAction({reqData:data,jwt:localStorage.getItem("jwt")}))
           console.log("data ---",data)
     }
   })  
