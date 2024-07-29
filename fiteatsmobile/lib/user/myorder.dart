@@ -20,6 +20,12 @@ class MyOrderPage extends StatelessWidget {
       'price': 7.99,
       'status': 'Completed',
     },
+     {
+      'photo': 'assets/image/plate.png',
+      'name': 'Salmon with Veggies',
+      'price': 15.99,
+      'status': 'Pending',
+    },
 
      {
       'photo': 'assets/image/plate.png',
