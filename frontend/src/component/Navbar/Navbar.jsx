@@ -7,6 +7,8 @@ import './Navbar.css';
 import { Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import logo from '../../assets/images/logo_remove_blackground.png';
+
 
 export const Navbar = () => {
   const { auth } = useSelector(store => store);
@@ -23,8 +25,9 @@ export const Navbar = () => {
 
   return (
     <Box className='px-5 sticky top-0 z-50 py-[.8rem] bg-[#777525] lg:px-20 flex justify-between'>
-      <div className='lg:mr-10 cursor-pointer flex item-center space-x-4'>
-        <li onClick={()=>navigate("/")} className='logo font-semibold text-gray-300 text-2xl'>
+       <div className='lg:mr-10 cursor-pointer flex items-center space-x-4'>
+        <img src={logo} alt="FitEats Logo" className='h-11' /> {/* Add the image */}
+        <li onClick={() => navigate("/")} className='logo font-semibold text-gray-300 text-2xl'>
           FitEats
         </li>
       </div>
