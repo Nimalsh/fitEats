@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 
 // Dummy data for demonstration purposes
 const events = [
-  { id: 1, name: "Event 1", image: EventImage, startDate: "2024-07-20", startTime: "10:00 AM", endDate: "2024-07-20", endTime: "12:00 PM" },
-  { id: 2, name: "Event 2", image: EventImage, startDate: "2024-07-21", startTime: "01:00 PM", endDate: "2024-07-21", endTime: "03:00 PM" },
+  { id: 1, name: "Offer 1", image: EventImage, startDate: "2024-07-20", startTime: "10:00 AM", endDate: "2024-07-20", endTime: "12:00 PM" },
+  { id: 2, name: "Offer 2", image: EventImage, startDate: "2024-07-21", startTime: "01:00 PM", endDate: "2024-07-21", endTime: "03:00 PM" },
   // add more events as needed
 ];
 
@@ -106,11 +106,11 @@ export const EventTable = () => {
           action={
             <Link to='../event/add'>
               <button className="button add-button">
-                <AddIcon /> Add Event
+                <AddIcon /> Add Offer
               </button>
             </Link>
           }
-          title="Events"
+          title="Offers"
           sx={{ pt: 2, alignItems: "center" }}
         />
 

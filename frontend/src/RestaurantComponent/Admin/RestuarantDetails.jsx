@@ -51,7 +51,7 @@ export const RestuarantDetails = () => {
       <div>
       </div> 
       <div className="mi-0 py-5 flex justify-left items-center gap-3"> 
-        <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>{restaurant.usersRestaurants?.name}</h1> 
+        <h1 className='text-xl lg:text-5xl text-center font-bold p-5 '>{restaurant.usersRestaurant?.name}</h1> 
 
         <div>
           <Button 
@@ -86,23 +86,19 @@ export const RestuarantDetails = () => {
             <CardContent>
               <div className='space-y-1 text-grey-200'>
                 <div className='flex'>
-                  <p className='w-48'>Owner</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>Mr.Shiwantha Dias</p>
+                  <p className='w-48'>Owner</p> 
                   <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.owner.fullName}</p>
                 </div>
                 <div className='flex'>
-                  <p className='w-48'>Restaurant Name</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>Hungry Restaurant</p>
+                  <p className='w-48'>Restaurant Name</p> 
                   <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.name}</p>
                 </div>
                 <div className='flex'>
-                  <p className='w-48'>Cuisine Type</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>Sri Lankan</p>
+                  <p className='w-48'>Cuisine Type</p> 
                   <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.cuisineType}</p>
                 </div>
                 <div className='flex'>
-                  <p className='w-48'>Opening Hours</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>6.00am-10.00pm</p>
+                  <p className='w-48'>Opening Hours</p> 
                   <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.openingHours}</p>
                 </div>
                 <div className='flex'>
@@ -185,7 +181,7 @@ export const RestuarantDetails = () => {
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Postal Code</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>4053</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.postalCode}</p>
                 </div>
               </div>
             </CardContent>
@@ -213,8 +209,7 @@ export const RestuarantDetails = () => {
             <CardContent>
               <div className='space-y-1 text-grey-200'>
                 <div className='flex'>
-                  <p className='w-48'>Email</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>hungryrestaurant2001@gmail.com</p>
+                  <p className='w-48'>Email</p> 
                   <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.contactInformation?.email}</p>
                 </div>
                 <div className='flex'>

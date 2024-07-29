@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, CardHeader, Typography } from '@mui/material'; 
 import BackgroundImage from '../../assets/images/Background_image.png';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add'; 
 
 // Dummy data for demonstration purposes
@@ -14,6 +14,7 @@ const ingredientCategories = [
 ];
 
 const IngredientCategoryTile = ({ ingredientcategory }) => {
+  const { ingredientCategoryId } = useParams();
   return (
     <Box
       sx={{
@@ -55,20 +56,20 @@ export const IngredientCategoryTable = () => {
       }}
     >
       <CardHeader 
-                // action={
-                //   <>
-                //   <Link to='../event/add'>
-                //     <button className="button add-button">
-                //       <AddIcon /> Add Event
-                //     </button>
-                //   </Link>
-                //   <Link to='../event/add'>
-                //     <button className="button add-button">
-                //       <AddIcon /> Add Event
-                //     </button>
-                //   </Link>
-                //   </>
-                // }
+                action={
+                  <>
+                  <Link to='../ingredientcategory/add'>
+                    <button className="button add-button">
+                      <AddIcon /> Add Category
+                    </button>
+                  </Link>
+                  {/* <Link to= {`../ingredient/add/${ingredientCategoryId}`}>  
+                    <button className="button add-button">
+                      <AddIcon /> Add Ingredient
+                    </button>
+                  </Link> */}
+                  </>
+                }
         title="Ingredients"
         sx={{ pt: 2, textAlign: "left" }}
       />

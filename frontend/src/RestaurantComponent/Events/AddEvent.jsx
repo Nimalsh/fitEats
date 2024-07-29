@@ -98,7 +98,7 @@ export const AddEvent = () => {
         }}
       >
         <CardHeader
-          title="Add New Promotion"
+          title="Add New Offer"
           sx={{ pt: 2, alignItems: 'center', color: 'white' }}
         />
         
@@ -144,7 +144,7 @@ export const AddEvent = () => {
           <TextField fullWidth
             id="name"
             name="name"
-            label="Event Name"
+            label="Offer Name"
             variant="outlined" 
             onChange={formik.handleChange}
             value={formik.values.name} 
