@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'food_ordering.dart';
 import 'nutrigoals.dart';
-import 'resfavourite.dart';
+import 'restaurant.dart';
 
 class MenuDrawer extends StatelessWidget {
   @override
