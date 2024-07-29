@@ -23,7 +23,7 @@ export const RestaurantRoute = () => {
     <div>
       <Routes>
         {/* <Route path='/*' element={false? <CreateRestaurantForm /> : <Admin />}></Route> */}
-        <Route path='/*' element={restaurant.usersRestaurant? <CreateRestaurantForm /> : <Admin />}></Route>
+        <Route path='/*' element={!restaurant.usersRestaurant? <CreateRestaurantForm /> : <Admin />}></Route>
         <Route path="/category/add" element={<CreateFoodCategory />} />
         <Route path="/food-category/:categoryId" element={<FoodItemsByCategory />} />
         <Route path="/food-item/add/:categoryId" element={<AddFoodItem />} />

@@ -73,6 +73,25 @@ export const getRestaurantById = (reqData) => {
   };
 };
 
+// export const getRestaurantByUserId = (jwt) => {
+//   return async (dispatch) => {
+//     dispatch({ type: GET_RESTAURANT_BY_USER_ID_REQUEST });
+//     try {
+//       const { data } = await api.get(`/api/admin/restaurant/user`, {
+//         headers: {
+//           Authorization: `Bearer ${jwt}`,
+//         },
+//       });
+//       console.log("get restaurant by user id ", data);
+//       dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: data });
+//     } catch (error) {
+//       console.log("error", error);
+//       dispatch({ type: GET_RESTAURANT_BY_USER_ID_FAILURE, payload: error.message });
+//     }
+//   };
+//  };
+
+ 
 export const getRestaurantByUserId = (jwt) => {
   return async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_BY_USER_ID_REQUEST });
@@ -89,44 +108,7 @@ export const getRestaurantByUserId = (jwt) => {
       dispatch({ type: GET_RESTAURANT_BY_USER_ID_FAILURE, payload: error.message });
     }
   };
- };
-
-// export const getRestaurantByUserId = (jwt) => {
-//   return async (dispatch) => {
-//     dispatch({ type: GET_RESTAURANT_BY_USER_ID_REQUEST });
-
-//     // Log the JWT token
-//     console.log("JWT Token: ", jwt);
-
-//     try {
-//       const { data } = await api.get(`/api/admin/restaurant/user`, {
-//         headers: {
-//           Authorization: `Bearer ${jwt}`,
-//         },
-//       });
-
-//       console.log("get restaurant by user id ", data);
-//       dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: data });
-//     } catch (error) {
-//       console.error("Error fetching restaurant by user ID: ", error);
-
-//       if (error.response) {
-//         // Server responded with a status other than 200 range
-//         console.error("Response data: ", error.response.data);
-//         console.error("Response status: ", error.response.status);
-//         console.error("Response headers: ", error.response.headers);
-//       } else if (error.request) {
-//         // Request was made but no response was received
-//         console.error("Request data: ", error.request);
-//       } else {
-//         // Something happened in setting up the request
-//         console.error("Error message: ", error.message);
-//       }
-
-//       dispatch({ type: GET_RESTAURANT_BY_USER_ID_FAILURE, payload: error.message });
-//     }
-//   };
-// };
+};
 
 
 export const createRestaurant = (reqData) => {
