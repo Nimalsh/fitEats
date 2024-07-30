@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'nutricontent.dart';
+import 'profilecart.dart';
+
 class MealPage extends StatefulWidget {
   @override
   _MealPageState createState() => _MealPageState();
@@ -112,9 +115,13 @@ class _MealPageState extends State<MealPage> {
                         padding: EdgeInsets.symmetric(vertical: 16),
                         textStyle: TextStyle(fontSize: 18),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/profileCartPage');
-                      },
+                     onPressed: () {
+                    Navigator.push(
+                            context,
+                        MaterialPageRoute(builder: (context) => ProfileCartPage()),
+                      );
+                          },
+
                       child: Text('Add to Cart'),
                     ),
                   ),
@@ -129,8 +136,11 @@ class _MealPageState extends State<MealPage> {
                         padding: EdgeInsets.symmetric(vertical: 16),
                         textStyle: TextStyle(fontSize: 18),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/nutricontent');
+                      onPressed: (){
+                    Navigator.push(
+                            context,
+                        MaterialPageRoute(builder: (context) => NutritionContentPage()),
+                      );
                       },
                       child: Text('Nutrition Content'),
                     ),

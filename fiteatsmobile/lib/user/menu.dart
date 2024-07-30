@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'food_ordering.dart';
+import 'logout.dart';
 import 'nutrigoals.dart';
 import 'restaurant.dart';
 
@@ -70,12 +70,12 @@ class MenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.local_dining),
-            title: Text('Food Ordering'),
+            leading: Icon(Icons.logout),
+            title: Text('Log out'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FoodOrderingPage()));
+                  MaterialPageRoute(builder: (context) => LogoutPage()));
             },
           ),
         ],

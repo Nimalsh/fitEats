@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'bmi_analysis.dart';
 import 'personalizePlan.dart';
 
 class NutriGoals extends StatelessWidget {
@@ -44,7 +45,7 @@ class NutriGoals extends StatelessWidget {
                     context,
                     'BMI Analysis',
                     Icons.analytics,
-                    BMIAnalysisPage(),
+                    BmiPage(),
                   ),
                   buildNavButton(
                     context,
@@ -133,15 +134,15 @@ class BottomWaveClipper extends CustomClipper<Path> {
 }
 
 // Placeholder pages for navigation
-class BMIAnalysisPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('BMI Analysis')),
-      body: Center(child: Text('BMI Analysis Page')),
-    );
-  }
-}
+// class BMIAnalysisPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('BMI Analysis')),
+//       body: Center(child: Text('BMI Analysis Page')),
+//     );
+//   }
+// }
 
 class LoseWeightPage extends StatelessWidget {
   @override

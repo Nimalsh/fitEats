@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_dining ,),
-            label: 'Daily Calorie',
+            label: 'Meal Plan',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart,),

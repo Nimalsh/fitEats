@@ -1,6 +1,7 @@
-import 'package:fiteatsmobile/user/user_login.dart';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'user/getstart.dart';
 
 void main() =>runApp(
       DevicePreview(
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: GetStartPage(),
     );
   }
 }

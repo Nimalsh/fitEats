@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'payments.dart';
+
 class ProfileCartPage extends StatefulWidget {
   @override
   _ProfileCartPageState createState() => _ProfileCartPageState();
@@ -76,8 +78,12 @@ void _showFoodDetails(Map<String, dynamic> foodItem) {
                 alignment: Alignment.center,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle order now action
-                  },
+                 Navigator.push(
+                  context,
+               MaterialPageRoute(builder: (context) => PaymentPage()),
+                );
+               },
+
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
