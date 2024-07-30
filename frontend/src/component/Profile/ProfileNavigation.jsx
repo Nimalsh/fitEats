@@ -22,7 +22,7 @@ const menu = [
   { title: "Favorites", icon: <FavoriteIcon /> },
   { title: "Nutrigoals", icon: <AddReactionIcon /> },
   { title: "Payments", icon: <AccountBalanceWalletIcon /> },
-  { title: "Events", icon: <EventIcon /> },
+  { title: "Offers", icon: <EventIcon /> },
   { title: "Complain", icon: <ComplaintIcon /> },
   { title: "Logout", icon: <LogoutIcon /> }
 ];
