@@ -32,6 +32,7 @@ import Freeweightlossform from './Freeweightlossform';
 import Dashboard from './Dashboard';
 import Complain from './ComplaintForm';
 import ComplaintForm from './ComplaintForm';
+import CustormizeOrder from './CustormizeOrder';
 
 
 
@@ -51,7 +52,7 @@ const Profile = () => {
           <Route path="/orders" element={<Orders />} />
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
-          <Route path="/events" element={<Events />} />
+          <Route path="/offers" element={<Events />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/BMI" element={<BMI />} />
           <Route path="/lose-weight" element={<Goalselectfree/>} />
@@ -64,6 +65,8 @@ const Profile = () => {
           <Route path="/meal-plan" element={<MealPlansPage />} />
           <Route path="/menu-suggest" element={<MenuSuggest/>} />
           <Route path="/auto-suggest-restaurant" element={<AutoSuggestRes/>} />
+
+          <Route path="/custormize-order" element={<CustormizeOrder/>} />
           
 
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />

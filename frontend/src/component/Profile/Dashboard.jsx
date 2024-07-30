@@ -1,11 +1,12 @@
 import React from 'react';
 import { Line, Pie } from 'react-chartjs-2';
-import { Card, Typography, Container, Grid, Paper, List, ListItem, ListItemText, Table, TableBody, TableRow, TableCell, TableHead } from '@mui/material';
+import { Card, Typography, Container, Grid, Paper, List, ListItem, ListItemText, Table, TableBody, TableRow, TableCell, TableHead, Button } from '@mui/material';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import OrderIcon from '@mui/icons-material/ShoppingCart';
 import MealIcon from '@mui/icons-material/Restaurant';
 import { AccountCircle } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
+import { Link } from 'react-router-dom';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
@@ -126,7 +127,6 @@ const Dashboard = () => {
     ],
   };
 
-
   const mostOrderedItemsOptions = {
     plugins: {
       legend: {
@@ -181,24 +181,30 @@ const Dashboard = () => {
 
             {/* Statistics Cards */}
             <Grid item xs={12} md={4}>
-              <Paper style={{ padding: '10px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <OrderIcon style={{ color: '#fff' }} />
-                <Typography variant="h6" style={{ color: '#979533' }}>All Orders</Typography>
-                <Typography variant="h4" style={{ color: '#fff' }}>120</Typography>
-              </Paper>
+              <Link to="/my-profile/orders" style={{ textDecoration: 'none' }}>
+                <Paper style={{ padding: '10px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', cursor: 'pointer' }}>
+                  <OrderIcon style={{ color: '#fff' }} />
+                  <Typography variant="h6" style={{ color: '#979533' }}>All Orders</Typography>
+                  <Typography variant="h4" style={{ color: '#fff' }}>120</Typography>
+                </Paper>
+              </Link>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Paper style={{ padding: '10px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <ArticleIcon style={{ color: '#fff' }} />
-                <Typography variant="h6" style={{ color: '#979533' }}>Meal Articles</Typography>
-                <Typography variant="h4" style={{ color: '#fff' }}>85</Typography>
-              </Paper>
+              <Link to="/my-profile/meal-plan" style={{ textDecoration: 'none' }}>
+                <Paper style={{ padding: '10px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', cursor: 'pointer' }}>
+                  <ArticleIcon style={{ color: '#fff' }} />
+                  <Typography variant="h6" style={{ color: '#979533' }}>Meal Articles</Typography>
+                  <Typography variant="h4" style={{ color: '#fff' }}>85</Typography>
+                </Paper>
+              </Link>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Paper style={{ padding: '15px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px',width:"270px" }}>
-                <MealIcon style={{ color: '#fff' }} />
-                <Typography variant="h6" style={{ color: '#979533' }}>Personal Meal Plan</Typography>
-              </Paper>
+              <Link to="/my-profile/personalized-plan" style={{ textDecoration: 'none' }}>
+                <Paper style={{ padding: '15px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', width: '270px', cursor: 'pointer' }}>
+                  <MealIcon style={{ color: '#fff' }} />
+                  <Typography variant="h6" style={{ color: '#979533' }}>Personal Meal Plan</Typography>
+                </Paper>
+              </Link>
             </Grid>
 
             {/* User Progress and Most Ordered Items */}
@@ -221,27 +227,27 @@ const Dashboard = () => {
 
             {/* Recent Orders */}
             <Grid item xs={12}>
-            <Paper style={{ padding: '10px', backgroundColor: '#181816' }}>
-              <Typography variant="h6" style={{ color: '#979533' }}>Recent Orders</Typography>
-              <Table>
-              <TableHead>
-                <TableRow style={{ backgroundColor: '#333' }}>
-                  <TableCell style={{ color: '#fff' }}>Date</TableCell>
-                  <TableCell style={{ color: '#fff' }}>Items</TableCell>
-                  <TableCell style={{ color: '#fff' }}>Total Calories</TableCell>
-                </TableRow>
-              </TableHead>
-                <TableBody>
-                  {recentOrders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell style={{ color: '#fff' }}>{order.date}</TableCell>
-                      <TableCell style={{ color: '#fff' }}>{order.items.join(', ')}</TableCell>
-                      <TableCell style={{ color: '#fff' }}>{order.totalCalories} Calories</TableCell>
+              <Paper style={{ padding: '10px', backgroundColor: '#181816' }}>
+                <Typography variant="h6" style={{ color: '#979533' }}>Recent Orders</Typography>
+                <Table>
+                  <TableHead>
+                    <TableRow style={{ backgroundColor: '#333' }}>
+                      <TableCell style={{ color: '#fff' }}>Date</TableCell>
+                      <TableCell style={{ color: '#fff' }}>Items</TableCell>
+                      <TableCell style={{ color: '#fff' }}>Total Calories</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Paper>
+                  </TableHead>
+                  <TableBody>
+                    {recentOrders.map((order) => (
+                      <TableRow key={order.id}>
+                        <TableCell style={{ color: '#fff' }}>{order.date}</TableCell>
+                        <TableCell style={{ color: '#fff' }}>{order.items.join(', ')}</TableCell>
+                        <TableCell style={{ color: '#fff' }}>{order.totalCalories} Calories</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Paper>
             </Grid>
           </Grid>
         </Grid>
@@ -249,15 +255,15 @@ const Dashboard = () => {
         {/* Right Sidebar */}
         <Grid item xs={12} sm={3}>
           <Paper style={{ padding: '10px', backgroundColor: '#181816', color: '#fff', marginBottom: '10px' }}>
-            <Typography variant="h6" style={{ marginBottom: '10px' , color: '#979533' }}>Profile</Typography>
+            <Typography variant="h6" style={{ marginBottom: '10px', color: '#979533' }}>Profile</Typography>
             <Card style={{ backgroundColor: '#424242', marginBottom: '10px', display: 'flex', alignItems: 'center', padding: '10px' }}>
-            <AccountCircle style={{ marginRight: '10px', fontSize: 40, color: '#fff' }} />
+              <AccountCircle style={{ marginRight: '10px', fontSize: 40, color: '#fff' }} />
               <div>
                 <Typography variant="h6" style={{ color: '#fff' }}>Nimalsha</Typography>
                 <Typography variant="body1" style={{ color: '#fff' }}>nimalsha@example.com</Typography>
               </div>
             </Card>
-            <Typography variant="h6" style={{ marginBottom: '10px',color: '#979533' }}>Today's Meal Plan</Typography>
+            <Typography variant="h6" style={{ marginBottom: '10px', color: '#979533' }}>Today's Meal Plan</Typography>
             <Paper style={{ backgroundColor: '#333', padding: '10px' }}>
               <List>
                 {mealPlan.map((meal) => (
@@ -283,7 +289,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
-
-  
