@@ -170,8 +170,8 @@ textarea {
 
 .details-button { 
   height: 50px;
-  color: #000000;
-  background-color: #95CD41; 
+  color: #FFFFFF;
+  background-color: #777525; 
   border-radius: 15px; 
   display: flex;
   justify-content: center;
@@ -197,7 +197,7 @@ textarea {
 }
 
 .view-button {
-  background-color: #165411;
+  background-color: #777525;
   color: var(--text-color);
 }
 
