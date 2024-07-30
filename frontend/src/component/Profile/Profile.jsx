@@ -32,6 +32,7 @@ import Freeweightlossform from './Freeweightlossform';
 import Dashboard from './Dashboard';
 import Complain from './ComplaintForm';
 import ComplaintForm from './ComplaintForm';
+import Completedplans from './Completedplans';
 
 
 
@@ -74,6 +75,7 @@ const Profile = () => {
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
           <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
           <Route path="/lose-weight/weightloss" element={<Freeweightlossform/>} />
+          <Route path="/completed" element={<Completedplans/>} />
 
         </Routes>
       </div>

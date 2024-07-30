@@ -275,27 +275,36 @@ const Calorytrack = () => {
       [dateKey]: selectedFoods
     }));
   
-    const hasExcess = Object.keys(dailySummary).some(key => {
-      const excessAmount = dailySummary[key] - recommendedIntake[key];
-      return excessAmount > 0;
-    });
+    // Define the threshold for calorie deficiency
+    const calorieDeficiencyThreshold = 0.5; // 50% of the recommended value
   
-    const newDateColors = {
-      ...dateColors,
-      [dateKey]: hasExcess ? 'red' : 'green'
-    };
+    // Determine the color based on calorie intake
+    let newColor = 'green'; // Default color for balanced intake
   
-    setDateColors(newDateColors);
+    const consumedCalories = dailySummary.calories;
+    const recommendedCalories = recommendedIntake.calories;
+  
+    if (consumedCalories < recommendedCalories * calorieDeficiencyThreshold) {
+      newColor = 'yellow'; // Less than 50% of recommended calories
+    } else if (consumedCalories > recommendedCalories) {
+      newColor = 'red'; // More than the recommended amount
+    }
+  
+    setDateColors(prev => ({
+      ...prev,
+      [dateKey]: newColor
+    }));
   
     // Check if all date circles are green
-    const allGreen = Object.values(newDateColors).length === 7 &&
-                      Object.values(newDateColors).every(color => color === 'green');
+    const allGreen = Object.values(dateColors).length === 7 &&
+                      Object.values(dateColors).every(color => color === 'green');
   
     if (allGreen) {
       setAchievementDialogOpen(true);
     }
   };
-  useEffect(() => {
+  
+   useEffect(() => {
     const initialDateColors = {};
     for (let i = 1; i <= 7; i++) {
       const dateKey = `2024-07-${i < 10 ? `0${i}` : i}`;
@@ -322,7 +331,7 @@ const Calorytrack = () => {
       marginBottom: '20px'
     }}
   >
-    <Typography variant="h4">Daily Food Log</Typography>
+    <Typography variant="h4">Calorie Track For Healthy BMI</Typography>
     <Typography variant="body1">Plan or log what you eat.</Typography>
 
     <Box
@@ -353,7 +362,7 @@ const Calorytrack = () => {
           padding: '10px',
           textAlign: 'center',
           backgroundColor: dateColors[dateKey] || 'transparent',
-          color: dateColors[dateKey] ? 'white' : 'white', 
+          color: dateColors[dateKey] ? 'white' : 'white',
           border: dateColors[dateKey] ? '2px solid #88891D' : '2px solid #88891D'
         }}
         onClick={() => handleDateChange(new Date(dateKey))}

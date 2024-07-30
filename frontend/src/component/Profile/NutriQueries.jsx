@@ -1,5 +1,9 @@
-import { Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell, FormLabel, TableContainer, TableHead, TableRow, ButtonBase, Avatar, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField } from '@mui/material';
+import { Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell, FormLabel, TableContainer, TableHead, TableRow, ButtonBase, Avatar, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField, Tabs, Tab } from '@mui/material';
 import React, { useState } from 'react';
+import { InputBase,InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+
+
 import { useNavigate } from 'react-router-dom';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -34,6 +38,14 @@ function NutriQueries() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openNewDialog, setOpenNewDialog] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+  
+
   const handleUserClick = (user) => {
     setClickedUser(user);
     console.log(`Clicked on user: ${user}`);
@@ -48,6 +60,17 @@ function NutriQueries() {
     setOpenDialog(false);
     setSelectedOrder(null);
   };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
+  const filteredOrders = orders.filter((order) => {
+    if (tabValue === 1) return order.status === 'Replied';
+    if (tabValue === 2) return order.status === 'Not Replied';
+    return true;
+  }).filter((order) => order.description.toLowerCase().includes(searchQuery.toLowerCase()));
+  
 
   const RepliedDialog = ({ order }) => (
     <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
@@ -144,6 +167,7 @@ function NutriQueries() {
       </Dialog>
     );
   };
+
   const NewQueryDialog = () => (
     <Dialog open={openNewDialog} onClose={() => setOpenNewDialog(false)} maxWidth="sm" fullWidth>
       <DialogTitle>New Query</DialogTitle>
@@ -174,99 +198,109 @@ function NutriQueries() {
     </Dialog>
   );
   
-  
   return (
     <Box position="relative" minHeight="400px" pb={8}>
-    <Card className='mt-1'>
-      <CardHeader
-        title={"Queries"}
-        sx={{ pt: 2, alignItems: "center" }}
-      />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>id</TableCell>
-              <TableCell align="center">Description</TableCell>
-              <TableCell align="center">Post Date</TableCell>
-              <TableCell align="center">Replied By</TableCell>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center"></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {index + 1}
-                </TableCell>
-                <TableCell align="center" sx={{ maxWidth: 100 }}>
-                  <Typography noWrap title={row.description}>
-                    {row.description.length > 10 ? `${row.description.substring(0, 10)}...` : row.description}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  {row.requestDate}
-                </TableCell>
-                <TableCell align="center">
-                  {row.status === 'Replied' && (
-                    <ButtonBase onClick={() => handleUserClick(row.user)}>
-                      <Box display="flex" alignItems="center" justifyContent="center">
-                        <Avatar src={row.userImage} alt={row.user} sx={{ width: 32, height: 32 }} />
-                        <Typography
-                          variant="body2"
-                          sx={{ marginLeft: 1, textDecoration: clickedUser === row.user ? 'underline' : 'none' }}
-                        >
-                          {row.user}
-                        </Typography>
-                      </Box>
-                    </ButtonBase>
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  <Box
-                    sx={{
-                      backgroundColor: getStatusColor(row.status),
-                      color: '#fff',
-                      borderRadius: '4px',
-                      padding: '0.25em 0.5em',
-                      display: 'inline-block',
-                    }}
-                  >
-                    {row.status}
-                  </Box>
-                </TableCell>
-                <TableCell align="center" sx={{ marginRight: 10 }}>
-                  <Button variant="contained" color="primary" onClick={() => handleViewClick(row)}>
-                    View
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Card>
-  
-    {selectedOrder && (
-          selectedOrder.status === 'Replied' ? (
-            <RepliedDialog order={selectedOrder} />
-          ) : (
-            <NotRepliedDialog order={selectedOrder} />
-          )
-        )}
-        {openNewDialog && <NewQueryDialog />}
-  
-        <Fab color="primary" aria-label="add" sx={{ position: 'absolute', bottom: -10, right: 16 }} onClick={() => setOpenNewDialog(true)}>
-  <AddIcon />
-</Fab>
+  <Card className='mt-1'>
+    <CardHeader  sx={{ pt: 2, alignItems: "center" }} />
+    <Box display="flex" alignItems="center" px={2} mt={2}>
+      <Box display="flex" alignItems="center" flexGrow={1}>
+      <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
+          <Tab label="All" />
+          <Tab label="Replied" />
+          <Tab label="Not Replied" />
+        </Tabs>
+      </Box>
+      <Box display="flex" alignItems="center" ml={1}>
+      <InputBase
+          placeholder="Search…"
+          inputProps={{ 'aria-label': 'search' }}
+          value={searchQuery}
+          onChange={handleSearchChange}
+          sx={{ border: '1px solid #ccc', borderRadius: '4px', pl: 2, pr: 2, py: 1 }}
+          startAdornment={
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          }
+        />
+      </Box>
+    </Box>
 
-  </Box>
-  
-    );
+
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                
+                <TableCell align="Left">Description</TableCell>
+                <TableCell align="center">Post Date</TableCell>
+                <TableCell align="center">Replied By</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center"></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredOrders.map((row, index) => (
+                <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  
+                  <TableCell align="left" sx={{ maxWidth: 100 }}>
+                    <Typography noWrap title={row.description}>
+                      {row.description.length > 10 ? `${row.description.substring(0, 30)}...` : row.description}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">{row.requestDate}</TableCell>
+                  <TableCell align="center">
+                    {row.status === 'Replied' && (
+                      <ButtonBase onClick={() => handleUserClick(row.user)}>
+                        <Box display="flex" alignItems="center" justifyContent="center">
+                          <Avatar src={row.userImage} alt={row.user} sx={{ width: 32, height: 32 }} />
+                          <Typography
+                            variant="body2"
+                            sx={{ marginLeft: 1, textDecoration: clickedUser === row.user ? 'underline' : 'none' }}
+                          >
+                            {row.user}
+                          </Typography>
+                        </Box>
+                      </ButtonBase>
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box
+                      sx={{
+                        backgroundColor: getStatusColor(row.status),
+                        color: '#fff',
+                        borderRadius: '4px',
+                        padding: '0.25em 0.5em',
+                        display: 'inline-block',
+                      }}
+                    >
+                      {row.status}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center" sx={{ marginRight: 10 }}>
+                    <Button variant="contained" color="primary" onClick={() => handleViewClick(row)}>
+                      View
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
+      {selectedOrder && (
+        selectedOrder.status === 'Replied' ? (
+          <RepliedDialog order={selectedOrder} />
+        ) : (
+          <NotRepliedDialog order={selectedOrder} />
+        )
+      )}
+      {openNewDialog && <NewQueryDialog />}
+      <Fab color="primary" aria-label="add" sx={{ position: 'absolute', bottom: -10, right: 16 }} onClick={() => setOpenNewDialog(true)}>
+        <AddIcon />
+      </Fab>
+    </Box>
+  );
 }
 
 export default NutriQueries;
