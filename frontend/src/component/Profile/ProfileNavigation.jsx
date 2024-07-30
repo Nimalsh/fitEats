@@ -13,6 +13,7 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useDispatch } from 'react-redux';
 import { logout } from '../State/Authentication/Action';
+import ComplaintIcon from '@mui/icons-material/Error';
 
 const menu = [
   { title: "Dashboard", icon: <DashboardIcon /> },
@@ -22,6 +23,7 @@ const menu = [
   { title: "Nutrigoals", icon: <AddReactionIcon /> },
   { title: "Payments", icon: <AccountBalanceWalletIcon /> },
   { title: "Events", icon: <EventIcon /> },
+  { title: "Complain", icon: <ComplaintIcon /> },
   { title: "Logout", icon: <LogoutIcon /> }
 ];
 
@@ -56,7 +58,7 @@ export const ProfileNavigation = ({ open, handleClose }) => {
         justifyContent: 'flex-start', 
         fontSize: '1.25rem', 
         gap: '1rem',
-        marginTop: '6rem'
+        marginTop: '4rem'
       }}>
         {menu.map((item, i) => (
           <React.Fragment key={i}>
