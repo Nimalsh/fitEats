@@ -181,7 +181,7 @@ export const RestuarantDetails = () => {
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Postal Code</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.postalCode}</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>5609</p>
                 </div>
               </div>
             </CardContent>
@@ -210,7 +210,7 @@ export const RestuarantDetails = () => {
               <div className='space-y-1 text-grey-200'>
                 <div className='flex'>
                   <p className='w-48'>Email</p> 
-                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.contactInformation?.email}</p>
+                  <p className='text-grey-400'><span className='pr-5'></span>{restaurant.usersRestaurant?.contactInformation?.email}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Telephone-Fix</p>
@@ -218,7 +218,8 @@ export const RestuarantDetails = () => {
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Telephone-Mobile</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.contactInformation?.mobile}</p>
+                  {/* <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.contactInformation?.mobile}</p> */}
+                  <p className='text-grey-400'><span className='pr-5'>-</span>071-3167428</p>
                 </div>
                 <div className='flex items-center'> 
                   <div className='flex text-gray-400 items-center pb-3'>
