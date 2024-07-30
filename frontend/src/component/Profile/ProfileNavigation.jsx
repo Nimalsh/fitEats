@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Drawer, Divider } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from 'react-router-dom';
@@ -9,31 +9,37 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import EventIcon from '@mui/icons-material/Event';
 import LogoutIcon from '@mui/icons-material/Logout';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useDispatch } from 'react-redux';
 import { logout } from '../State/Authentication/Action';
+import ComplaintIcon from '@mui/icons-material/Error';
 
 const menu = [
-  { title: "orders", icon: <ShoppingBagIcon /> },
+  { title: "Dashboard", icon: <DashboardIcon /> },
+  { title: "Restaurant", icon: <RestaurantIcon /> },
+  { title: "Orders", icon: <ShoppingBagIcon /> },
   { title: "Favorites", icon: <FavoriteIcon /> },
   { title: "Nutrigoals", icon: <AddReactionIcon /> },
   { title: "Payments", icon: <AccountBalanceWalletIcon /> },
-  { title: "Notification", icon: <NotificationsIcon /> },
   { title: "Events", icon: <EventIcon /> },
+  { title: "Complain", icon: <ComplaintIcon /> },
   { title: "Logout", icon: <LogoutIcon /> }
 ];
 
 export const ProfileNavigation = ({ open, handleClose }) => {
   const isSmallScreen = useMediaQuery("(max-width:1080px)");
   const navigate = useNavigate();
-  const dispatch =useDispatch();
+  const dispatch = useDispatch();
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   const handleNavigate = (item) => {
-    if(item.title==="Logout"){
-        dispatch(logout());
-        navigate("/")
+    if (item.title === "Logout") {
+      dispatch(logout());
+      navigate("/");
+    } else {
+      navigate(`/my-profile/${item.title.toLowerCase()}`);
     }
-    else
-    navigate(`/my-profile/${item.title.toLowerCase()}`);
   };
 
   return (
@@ -42,19 +48,33 @@ export const ProfileNavigation = ({ open, handleClose }) => {
       onClose={handleClose}
       open={open}
       anchor="left"
-      sx={{ zIndex: -1, position: "sticky" }}
+      sx={{ zIndex: 1300, position: 'fixed' }}
     >
-      <div style={{ width: isSmallScreen ? '50vw' : '20vw', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', fontSize: '1.25rem', gap: '2rem', padding: '1rem' }}>
+      <div style={{ 
+        width: isSmallScreen ? '60vw' : '240px',
+        height: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'flex-start', 
+        fontSize: '1.25rem', 
+        gap: '1rem',
+        marginTop: '4rem'
+      }}>
         {menu.map((item, i) => (
           <React.Fragment key={i}>
             <div 
-              onClick={() => handleNavigate(item)} 
+              onClick={() => handleNavigate(item)}
+              onMouseEnter={() => setHoveredItem(i)}
+              onMouseLeave={() => setHoveredItem(null)}
               style={{ 
-                padding: i === 0 ? '2rem 1.25rem 0 1.25rem' : '0 1.25rem', // Increase top padding for the first item
+                padding: '0.5rem 1.5rem',
                 display: 'flex', 
                 alignItems: 'center', 
-                gap: '1.25rem', 
-                cursor: 'pointer' 
+                gap: '1rem', 
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                backgroundColor: hoveredItem === i ? '#494646' : 'transparent', // Change color on hover
+                boxShadow: hoveredItem === i ? '0 4px 8px rgba(0, 0, 0, 0.1)' : 'none' // Add shadow on hover
               }}
             >
               {item.icon}

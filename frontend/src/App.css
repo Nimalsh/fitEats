@@ -47,7 +47,7 @@
   --text-color: #fff;
   --text-color-inverted: #000;
   --add-color: #FDDA0D;
-  --update-color: #2b9348;
+  --update-color: #3A3A3A;
   --delete-color: #541116;
   --search-color: #541116;
   --invalid-color: #ff5733;
@@ -170,8 +170,8 @@ textarea {
 
 .details-button { 
   height: 50px;
-  color: #000000;
-  background-color: #95CD41; 
+  color: #FFFFFF;
+  background-color: #777525; 
   border-radius: 15px; 
   display: flex;
   justify-content: center;
@@ -197,7 +197,7 @@ textarea {
 }
 
 .view-button {
-  background-color: #165411;
+  background-color: #777525;
   color: var(--text-color);
 }
 

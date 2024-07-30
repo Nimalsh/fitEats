@@ -29,6 +29,9 @@ import Paidothergoalform from './Paidothergoalform'
 import Goalselectfree from './Goalselectfree';
 import Freeweightgainform from './Freeweightgainform';
 import Freeweightlossform from './Freeweightlossform';
+import Dashboard from './Dashboard';
+import Complain from './ComplaintForm';
+import ComplaintForm from './ComplaintForm';
 import Completedplans from './Completedplans';
 
 
@@ -43,7 +46,9 @@ const Profile = () => {
       </div>
       <div className='lg:w-[80%]'>
         <Routes>
-          <Route path="/" element={<Food />} />
+          <Route path="/" element={<UserProfile />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/restaurant" element={<Food />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
@@ -55,6 +60,7 @@ const Profile = () => {
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Goalselect/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
+          <Route path="/complain" element={<ComplaintForm/>} />
 
           <Route path="/meal-plan" element={<MealPlansPage />} />
           <Route path="/menu-suggest" element={<MenuSuggest/>} />
