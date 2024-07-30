@@ -16,7 +16,7 @@ export const EventDetails = () => {
   const event = events.find(event => event.id === parseInt(eventId));
 
   if (!event) {
-    return <Typography variant="h4">Event Not Found</Typography>;
+    return <Typography variant="h4">Offer Not Found</Typography>;
   }
 
   return (

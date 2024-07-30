@@ -9,6 +9,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider, Drawer, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import plateImage from './logo.png'; // Ensure this path is correct
+import { useDispatch } from 'react-redux';
+import { logout } from '../../component/State/Authentication/Action'
 
 const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/" },
@@ -17,8 +19,8 @@ const menu = [
   { title: "Meal Requests", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "FoodCategory", icon: <CategoryIcon />, path: "/category" },
   { title: "Ingredients", icon: <FastfoodIcon />, path: "/ingredients" },
-  { title: "Events", icon: <EventIcon />, path: "/events" },
-  { title: "Details", icon: <AdminPanelSettingsIcon />, path: "/details" },
+  { title: "Offers", icon: <EventIcon />, path: "/events" },
+  { title: "My Profile", icon: <AdminPanelSettingsIcon />, path: "/details" },
   { title: "Logout", icon: <LogoutIcon />, path: "/" },
 ];
 
@@ -26,9 +28,15 @@ export const AdminSideBar = ({ handleClose }) => {
   const isSmallScreen = useMediaQuery("(max-width:1080px)");
   const navigate = useNavigate();
   const [hoverIndex, setHoverIndex] = useState(null);
+  const dispatch = useDispatch();
 
   const handleNavigate = (item) => {
-    navigate(`/admin/restaurants${item.path}`);
+    navigate(`/admin/restaurant${item.path}`);
+    if(item.title === "Logout") {
+      navigate("/")
+      dispatch(logout())
+      handleClose()
+    }
   };
 
   return (
@@ -50,9 +58,7 @@ export const AdminSideBar = ({ handleClose }) => {
           backgroundColor: 'black', // Background color changed to black
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
-            <img src={plateImage} alt="Logo" style={{ width: '40%' }} />
-          </div>
+ 
           {menu.map((item, i) => (
             <React.Fragment key={i}>
               <div

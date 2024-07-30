@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Box, CardHeader, TextField, Button, IconButton, Grid, CircularProgress } from '@mui/material';
-import BackgroundImage from '../../assets/images/Add.jpg'; 
+import BackgroundImage from '../../assets/images/item.png'; 
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear'; 
 import { useFormik } from 'formik'
 import CloseIcon from "@mui/icons-material/Close"
 import { uploadImageToCloudinary } from '../util/UploadToCloudinary';
 import { AddPhotoAlternate } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import { createCategoryAction } from '../../component/State/Restaurant/Action';
 
 const initialValues = {
   categoryName: '', 
@@ -14,7 +16,10 @@ const initialValues = {
   restaurantId:''
 }
 
-export const AddFoodCategory = () => {
+export const CreateFoodCategory = () => {
+
+  const {restaurant} = useSelector((store) => store);
+  const dispatch = useDispatch()
  
   const [uploadImages,setUploadImage] = useState(false);
 
@@ -28,7 +33,8 @@ export const AddFoodCategory = () => {
               id : 1,
             },
           };
-
+          
+          dispatch(createCategoryAction({reqData:data,jwt:localStorage.getItem("jwt")}))
           console.log("data ---",data)
     }
   })  
