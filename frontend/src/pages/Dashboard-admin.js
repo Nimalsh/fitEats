@@ -108,6 +108,7 @@ const Dashboard = () => {
                 <Tab value={2} label={<Typography fontSize="18px" fontWeight="300" color="primary">Restaurants</Typography>}/>
                 <Tab value={3} label={<Typography fontSize="18px" fontWeight="300" color="primary">Transactions</Typography>}/>
                 <Tab value={4} label={<Typography fontSize="18px" fontWeight="300" color="primary">Complaints</Typography>}/>
+                <Tab value={5} label={<Typography fontSize="18px" fontWeight="300" color="primary">Logout</Typography>}/>
             </Tabs>
     
     );
