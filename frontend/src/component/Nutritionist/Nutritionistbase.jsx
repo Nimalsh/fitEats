@@ -11,6 +11,8 @@ import WeightGain from './Weightgain';
 import Weightloss from './Weightloss';
 import Othergoal from './Othergoal';
 import Plangeneration from './Plangeneration';
+import Dashboard from './Dashboard';
+import Completedplans from './Completedplans';
 
 
 
@@ -26,7 +28,7 @@ const Nutritionistbase = () => {
         </div>
         <div className='lg:w-[80%]'>
           <Routes>
-            <Route path="/" element={<Requests />} />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/menus" element={<Menus />} />
             <Route path="/queries" element={<Query />} /> 
             <Route path="/articles" element={<Articles />} />
@@ -38,6 +40,7 @@ const Nutritionistbase = () => {
             <Route path="/other/view/proceed" element={<Plangeneration />} />
             <Route path="/weightloss/view/proceed" element={<Plangeneration />} />
             <Route path="/weightgain/view/proceed" element={<Plangeneration />} />
+            <Route path="requests/view/completed" element={<Completedplans/>} />
           </Routes>
         </div>
       </div>

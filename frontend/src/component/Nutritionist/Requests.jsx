@@ -1,7 +1,11 @@
-import { Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase } from '@mui/material';
+import {
+  Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase
+} from '@mui/material';
 import React, { useState } from 'react';
 import { Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+
 const orders = [
   { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Pending' },
   { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Finished' },
@@ -14,7 +18,7 @@ const orders = [
 const getStatusColor = (status) => {
   switch (status) {
     case 'Pending':
-      return '#f44336'; // Orange
+      return '#f44336'; // Red
     case 'Finished':
       return '#4caf50'; // Green
     default:
@@ -24,30 +28,33 @@ const getStatusColor = (status) => {
 
 function Requests() {
   const navigate = useNavigate();
+  const [clickedUser, setClickedUser] = useState(null);
 
-  const handleViewClick = (title) => {
-    switch (title) {
-      case 'Weight Loss':
-        navigate('/nutri/weightloss/view');
-        break;
-      case 'Weight Gain':
-        navigate('/nutri/weightgain/view');
-        break;
-      case 'Other':
-      case 'Others':
-        navigate('/nutri/other/view');
-        break;
-      default:
-        navigate('/nutri/queries/reply'); // Fallback route
-        break;
+  const handleViewClick = (title, status) => {
+    if (status === 'Finished') {
+      navigate('view/completed');
+    } else {
+      switch (title) {
+        case 'Weight Loss':
+          navigate('/nutri/weightloss/view');
+          break;
+        case 'Weight Gain':
+          navigate('/nutri/weightgain/view');
+          break;
+        case 'Other':
+        case 'Others':
+          navigate('/nutri/other/view');
+          break;
+        default:
+          navigate('/nutri/queries/reply'); // Fallback route
+          break;
+      }
     }
   };
-  const [clickedUser, setClickedUser] = useState(null);
 
   const handleUserClick = (user) => {
     setClickedUser(user);
     console.log(`Clicked on user: ${user}`);
-    // Implement any other logic for user click, e.g., navigation or modal popup
   };
 
   return (
@@ -61,12 +68,11 @@ function Requests() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>id</TableCell>
-                <TableCell align="center">User</TableCell>
+                <TableCell align="left">User</TableCell>
                 <TableCell align="center">Request Date</TableCell>
                 <TableCell align="center">Title</TableCell>
                 <TableCell align="center">Status</TableCell>
-             
+                <TableCell align="center"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -75,10 +81,7 @@ function Requests() {
                   key={index} // Use index as a key since row has no unique property
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="left">
                     <ButtonBase onClick={() => handleUserClick(row.user)}>
                       <Box display="flex" alignItems="center" justifyContent="center">
                         <IconButton>
@@ -88,16 +91,16 @@ function Requests() {
                           variant="body2"
                           sx={{ marginLeft: 1, textDecoration: clickedUser === row.user ? 'underline' : 'none' }}
                         >
-                          {row.user} {/* Display the actual user name */}
+                          {row.user}
                         </Typography>
                       </Box>
                     </ButtonBase>
                   </TableCell>
                   <TableCell align="center">
-                    {row.requestDate} {/* Display the request date */}
+                    {row.requestDate}
                   </TableCell>
                   <TableCell align="center">
-                    {row.title} {/* Display the order title */}
+                    {row.title}
                   </TableCell>
                   <TableCell align="center">
                     <Box
@@ -113,7 +116,11 @@ function Requests() {
                     </Box>
                   </TableCell>
                   <TableCell align="center" sx={{ marginRight: 10 }}>
-                    <Button variant="contained" color="primary"onClick={() => handleViewClick(row.title)}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleViewClick(row.title, row.status)}
+                    >
                       View
                     </Button>
                   </TableCell>

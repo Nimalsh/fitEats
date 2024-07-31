@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Box, Typography, IconButton, Grid, Card, CardContent, Button, TextField
+  Box, Typography, Grid, Card, CardContent, Button, TextField
 } from '@mui/material';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const Plangeneration = () => {
   const [startDay, setStartDay] = useState(1);
@@ -20,14 +19,6 @@ const Plangeneration = () => {
     Dinner: '',
     Snacks: ''
   });
-
-  const handleNextDay = () => {
-    setStartDay(prevStartDay => prevStartDay + 1);
-  };
-
-  const handlePrevDay = () => {
-    setStartDay(prevStartDay => Math.max(prevStartDay - 1, 1));
-  };
 
   const handleDateClick = (day) => {
     setSelectedDate(day);
@@ -71,84 +62,40 @@ const Plangeneration = () => {
     }));
   };
 
-  const formatDate = (day) => {
-    const date = new Date();
-    date.setDate(date.getDate() + (day - 1));
-    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const handlePublishClick = () => {
+    console.log('Plan Published', mealPlans);
+    // Add your publish logic here
   };
+
+  const formatDate = (day) => {
+    const suffix = (day) => {
+      if (day === 1) return 'st';
+      if (day === 2) return 'nd';
+      if (day === 3) return 'rd';
+      return 'th';
+    };
+    return `${day}${suffix(day)} day of duration`;
+  };
+
+   
+  const [age, setAge] = useState(30); 
+const [height, setHeight] = useState(170); 
+const [gender, setGender] = useState('Male');
+const [activityLevel, setActivityLevel] = useState('Moderately Active'); // Activity Level: 'Sedentary', 'Lightly Active', 'Moderately Active', 'Very Active', 'Super Active'
+const [dietaryPreferences, setDietaryPreferences] = useState('Vegetarian'); // Dietary Preferences: 'Vegetarian', 'Vegan', 'Gluten-free', 'Lactose intolerant', etc.
+const [dietaryRestrictions, setDietaryRestrictions] = useState('None'); // Dietary Restrictions: 'None', 'Gluten-free', 'Lactose intolerant', 'Nut-free', etc.
+const [mealsPerDay, setMealsPerDay] = useState(3); 
+const [weight, setWeight] = useState(70);
+const [bmi, setbmi] = useState(24.2); 
+const [calory, setCalory] = useState(2500); 
+
 
   return (
     <Box sx={{ padding: '20px' }}>
-      {/* Upper Part */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginBottom: '20px'
-        }}
-      >
-        <Typography variant="h4">Daily Food Log</Typography>
-        <Typography variant="body1">Plan or log what you eat.</Typography>
-
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px',
-            marginTop: '30px',
-            justifyContent: 'center',
-            overflowX: 'auto',
-            whiteSpace: 'nowrap',
-            padding: '10px 0',
-            height: '80px',
-            border: '1px solid #88891D',
-            borderRadius: '8px'
-          }}
-        >
-          <IconButton onClick={handlePrevDay}>
-            <Typography variant="h6">{"<"}</Typography>
-          </IconButton>
-          {[...Array(7)].map((_, index) => {
-            const day = startDay + index;
-            return (
-              <Button
-                key={index}
-                variant={day === selectedDate ? 'contained' : 'outlined'}
-                onClick={() => handleDateClick(day)}
-                sx={{
-                  borderRadius: '50%',
-                  minWidth: '50px',
-                  height: '50px',
-                  margin: '0 10px',
-                  width: '100%'
-                }}
-              >
-                {day}
-              </Button>
-            );
-          })}
-          <IconButton onClick={handleNextDay}>
-            <Typography variant="h6">{">"}</Typography>
-          </IconButton>
-          <IconButton sx={{ ml: 5 }}>
-            <CalendarTodayIcon />
-          </IconButton>
-          
-        </Box>
-        <Button
-        variant="contained"
-        sx={{ marginTop: '20px' }} >
-            Publish the plan
-        </Button>
-       
-      </Box>
-
-      {/* Lower Part */}
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {/* Left Hand Side Tile */}
-        <Grid item xs={12} md={8}>
-          <Card sx={{ width: '600px' }}>
+        <Grid item xs={12} md={7}>
+          <Card sx={{ width: '80%' }}>
             <CardContent>
               <Typography variant="h6">{formatDate(selectedDate)}</Typography>
               {['Breakfast', 'Lunch', 'Dinner', 'Snacks'].map(meal => (
@@ -183,7 +130,7 @@ const Plangeneration = () => {
                       </Box>
                     )}
                     {!editableStates[meal] && mealPlans[selectedDate] && mealPlans[selectedDate][meal] && (
-                      <Typography variant="body1" sx={{ marginTop: '10px' }}>
+                      <Typography variant="body1" sx={{ marginTop: '10px', whiteSpace: 'pre-line' }}>
                         {mealPlans[selectedDate][meal]}
                       </Typography>
                     )}
@@ -193,10 +140,141 @@ const Plangeneration = () => {
             </CardContent>
           </Card>
         </Grid>
+        {/* Right Hand Side Tile */}
+        <Grid item xs={12} md={5}>
+          <Card sx={{ width: '100%' }}>
+            <CardContent>
+              <Typography variant="h6"></Typography>
+              <Box sx={{ border: '1px solid gray', borderRadius: '8px', padding: '16px', marginTop: '20px' }}>
+                <Typography variant="h6">Plan Duration</Typography>
+                <Grid container spacing={2} sx={{ marginTop: '10px' }}>
+                  {[1, 2, 3, 4, 5, 6, 7].map(day => (
+                    <Grid item xs={3} key={day}>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderRadius: '50%',
+                          width: '40px',
+                          height: '40px',
+                          minWidth: '40px',
+                          backgroundColor: selectedDate === day ? 'primary.main' : 'transparent',
+                          color: selectedDate === day ? 'white' : 'text.primary',
+                          border: '1px solid gray'
+                        }}
+                        onClick={() => handleDateClick(day)}
+                      >
+                        {day}
+                      </Button>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+              <form noValidate autoComplete="off">
+              <TextField
+                  label="Gender"
+                  fullWidth
+                  margin="normal"
+                  type="text"
+                  name="Gender"
+                  value={gender}
+                  disabled // Make the field disabled
+                />
+                <TextField
+                  label="Age"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="Age"
+                  value={age}
+                  disabled // Make the field disabled
+                />
+                  <TextField
+                  label="Daily calorie limit(cal) "
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="calory"
+                  value={calory}
+                  disabled // Make the field disabled
+                />
+                  <TextField
+                  label="Weight"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="weight"
+                  value={weight}
+                  disabled // Make the field disabled
+                />
+                <TextField
+                  label="Height"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="Height"
+                  value={height}
+                  disabled // Make the field disabled
+                />
+                  <TextField
+                  label="BMI"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="bmi"
+                  value={bmi}
+                  disabled // Make the field disabled
+                />
+              
+                <TextField
+                  label="Activity Level"
+                  fullWidth
+                  margin="normal"
+                  type="text"
+                  name="activitylevel"
+                  value={activityLevel}
+                  disabled // Make the field disabled
+                />
+                <TextField
+                  label="Dietary Preferences"
+                  fullWidth
+                  margin="normal"
+                  type="text"
+                  name="dietaryPreferences"
+                  value={dietaryPreferences}
+                  disabled // Make the field disabled
+                />
+                <TextField
+                  label="Dietary Restrictions"
+                  fullWidth
+                  margin="normal"
+                  type="text"
+                  name="dietaryRestrictions"
+                  value={dietaryRestrictions}
+                  disabled // Make the field disabled
+                />
+                <TextField
+                  label="Meals per day"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="mealsPerDay"
+                  value={mealsPerDay}
+                  disabled // Make the field disabled
+                />
+              </form>
+              <Button
+                variant="contained"
+                sx={{ marginTop: '20px' }}
+                onClick={handlePublishClick}
+              >
+                Publish the Plan
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
     </Box>
   );
 };
 
 export default Plangeneration;
-  

@@ -4,7 +4,7 @@ import MenuCard from './MenuCard';
 import Newmenuform from './Newmenuform';
 const menusData = [
   {
-    name: 'Menu 1',
+    name: 'Veggie loaded frittatas',
     image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
     ingredients: [
       { name: 'Ingredient 1', quantity: '100g' },
@@ -22,7 +22,7 @@ const menusData = [
     benefits: ['Weight Loss', 'Diabetes-Friendly'],
   },
   {
-    name: 'Menu 2',
+    name: 'Loaded brown rice pasta',
     image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
     ingredients: [
       { name: 'Ingredient 1', quantity: '150g' },
@@ -40,7 +40,7 @@ const menusData = [
     benefits: ['High Energy', 'Vegan'],
   },
   {
-    name: 'Menu 2',
+    name: 'Greek Yogurt Parfait',
     image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
     ingredients: [
       { name: 'Ingredient 1', quantity: '150g' },
@@ -58,7 +58,7 @@ const menusData = [
     benefits: ['High Energy', 'Vegan'],
   },
   {
-    name: 'Menu 2',
+    name: 'Quinoa Bowl with Roasted Vegetables',
     image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
     ingredients: [
       { name: 'Ingredient 1', quantity: '150g' },

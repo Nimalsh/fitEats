@@ -12,7 +12,7 @@ const Header = ({ onTabChange }) => {
   };
 
   const handleSuggestMenuClick = () => {
-    navigate('/my-profile/meal-plan'); // Navigate to MenuSuggest
+    navigate('/my-profile/custormize-order'); // Navigate to MenuSuggest
   };
 
   return (
@@ -50,13 +50,7 @@ const Header = ({ onTabChange }) => {
           <Tab label="Dinner" />
         </Tabs>
         <Box sx={{ marginLeft: 'auto' }}>
-          <Button 
-            variant="contained" 
-            style={{ whiteSpace: 'nowrap' }} 
-            onClick={handleSuggestMenuClick} // Add onClick handler
-          >
-            Suggest Menu
-          </Button>
+         
         </Box>
       </Toolbar>
     </AppBar>
