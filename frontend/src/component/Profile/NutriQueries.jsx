@@ -14,12 +14,12 @@ import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 const orders = [
-  { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Not Replied', description: 'A program for losing weight', answer: 'Answer for weight loss', userImage: 'https://media.istockphoto.com/id/180866257/photo/design-is-his-passion.jpg?s=2048x2048&w=is&k=20&c=4Jmxxt1oo1bQdOooPl5anov8ZCcyLK1bDoz-FJaLxZ4=' },
-  { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Replied', description: 'Nutrition plan for gaining muscle mass', answer: 'Answer for weight gain', userImage: 'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg' },
-  { id: 3, user: 'User3', requestDate: '2024-07-13', title: 'Other', status: 'Replied', description: 'Customized dietary requirements', answer: 'Answer for other requirements', userImage: 'https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg' },
-  { id: 4, user: 'User4', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Not Replied', description: 'Weight gain strategy', answer: 'Answer for weight gain strategy', userImage: 'https://sources.roboflow.com/dzuGOec8v6bRLhxo590fQ69a22N2/cNc6Q78185vhZDZhqEdS/original.jpg' },
-  { id: 5, user: 'User5', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Replied', description: 'Building muscle mass plan', answer: 'Answer for muscle gain', userImage: 'https://t4.ftcdn.net/jpg/03/03/11/75/360_F_303117590_NNmo6BS2fOBEmDp8uKs2maYmt03t8fSL.jpg' },
-  { id: 6, user: 'User6', requestDate: '2024-07-10', title: 'Others', status: 'Not Replied', description: 'General nutrition advice', answer: 'Answer for general advice', userImage: 'https://via.placeholder.com/150/6' },
+  { id: 1, user: 'Alexander William', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Not Replied', description: 'A program for losing weight', answer: 'Answer for weight loss', userImage: 'https://media.istockphoto.com/id/180866257/photo/design-is-his-passion.jpg?s=2048x2048&w=is&k=20&c=4Jmxxt1oo1bQdOooPl5anov8ZCcyLK1bDoz-FJaLxZ4=' },
+  { id: 2, user: 'Liam Daniel', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Replied', description: 'Nutrition plan for gaining muscle mass', answer: 'Answer for weight gain', userImage: 'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg' },
+  { id: 3, user: 'Ava Lily ', requestDate: '2024-07-13', title: 'Other', status: 'Replied', description: 'Customized dietary requirements', answer: 'Answer for other requirements', userImage: 'https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg' },
+  { id: 4, user: 'Ethan James', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Not Replied', description: 'Weight gain strategy', answer: 'Answer for weight gain strategy', userImage: 'https://sources.roboflow.com/dzuGOec8v6bRLhxo590fQ69a22N2/cNc6Q78185vhZDZhqEdS/original.jpg' },
+  { id: 5, user: 'Luna Belle', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Replied', description: 'Building muscle mass plan', answer: 'Answer for muscle gain', userImage: 'https://t4.ftcdn.net/jpg/03/03/11/75/360_F_303117590_NNmo6BS2fOBEmDp8uKs2maYmt03t8fSL.jpg' },
+  { id: 6, user: 'Zoe Madison', requestDate: '2024-07-10', title: 'Others', status: 'Not Replied', description: 'General nutrition advice', answer: 'Answer for general advice', userImage: 'https://via.placeholder.com/150/6' },
 ];
 
 const getStatusColor = (status) => {

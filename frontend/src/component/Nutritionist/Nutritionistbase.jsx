@@ -13,6 +13,7 @@ import Othergoal from './Othergoal';
 import Plangeneration from './Plangeneration';
 import Dashboard from './Dashboard';
 import Completedplans from './Completedplans';
+import Queryreplied from './Queryreplied';
 
 
 
@@ -41,6 +42,9 @@ const Nutritionistbase = () => {
             <Route path="/weightloss/view/proceed" element={<Plangeneration />} />
             <Route path="/weightgain/view/proceed" element={<Plangeneration />} />
             <Route path="requests/view/completed" element={<Completedplans/>} />
+            <Route path="/queries/replied" element={<Queryreplied />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+             
           </Routes>
         </div>
       </div>

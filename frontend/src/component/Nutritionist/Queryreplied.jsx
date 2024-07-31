@@ -17,6 +17,7 @@ const Queryanswer = () => {
   const [replyText, setReplyText] = useState(''); // State to manage reply text
   const [weight, setWeight] = useState('55');
   const userName = 'John Doe';
+  const [reply, setReply] = useState('Vegetarian Protein Sources: Lentils, chickpeas, Greek yogurt, eggs, nuts, seeds, and soy products like tofu and tempeh.');
 
   
   const handleReplyClick = () => {
@@ -67,29 +68,24 @@ const Queryanswer = () => {
                       sx={{ width: '100%', marginLeft: '15px' }} 
                     />
                   </form>
-                  <Box display="flex" justifyContent="flex-end" mt={2}>
-                    <Button variant="contained" onClick={handleReplyClick}>Reply</Button>
-                  </Box>
-                  {replyVisible && (
-                    <>
-                      <TextField
-                        label="Reply"
-                        fullWidth
-                        margin="normal"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        type="text"
-                        name="reply"
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        sx={{ width: '100%', mt: 2 }}
-                      />
-                      <Box display="flex" justifyContent="flex-end" mt={2}>
-                        <Button variant="contained" onClick={handleSaveReply}>Save</Button>
-                      </Box>
-                    </>
-                  )}
+                  <form noValidate autoComplete="off">
+                    <TextField
+                      label="Reply"
+                      fullWidth
+                      margin="normal"
+                      multiline
+                      rows={4}
+                      variant="outlined"
+                      type="text"
+                      name="reply"
+                      value={reply}
+                      onChange={(e) => setQuery(e.target.value)}
+                      disabled // Make the field disabled
+                      sx={{ width: '100%', marginLeft: '15px' }} 
+                    />
+                  </form>
+                 
+               
                 </Box>
               </Box>
             </Paper>
