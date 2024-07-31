@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ViewIcon from '@mui/icons-material/CalendarViewDay';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Dummy data for demonstration purposes
 const orders = [
@@ -23,6 +24,10 @@ const orders = [
 ];
 
 const FoodCategoryTile = ({ category }) => {
+
+  const { restaurant } = useSelector((store) => store)
+  const dispatch = useDispatch();
+
   const [open, setOpen] = useState(false);
 
   const handleDelete = () => {
@@ -37,6 +42,8 @@ const FoodCategoryTile = ({ category }) => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  console.log("Restaurant Details", restaurant)
 
   return (
     <Box

@@ -1,28 +1,22 @@
-import { Box, Card, CardHeader, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, Select } from '@mui/material';
+import { Box, Card, CardHeader, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React, { useState } from 'react';
-import './Table.css';
 import { Link } from 'react-router-dom';
+import './Table.css';
 
 // Dummy data for demonstration purposes
 const initialOrders = [
-  { id: 1, customer: "John Doe", totalPrice: "LKR 250.00", date: "2024-07-10", status: "Completed" },
+  { id: 1, customer: "John Doe", totalPrice: "LKR 250.00", date: "2024-07-10", status: "Pending" },
   { id: 2, customer: "Jane Smith", totalPrice: "LKR 500.00", date: "2024-07-11", status: "Pending" },
   { id: 3, customer: "Bob Johnson", totalPrice: "LKR 750.00", date: "2024-07-12", status: "Cancelled" },
   { id: 4, customer: "Alice Brown", totalPrice: "LKR 1000.00", date: "2024-07-13", status: "Completed" },
   { id: 5, customer: "Chris Davis", totalPrice: "LKR 15000.00", date: "2024-07-14", status: "Pending" },
   { id: 6, customer: "Patricia Miller", totalPrice: "LKR 200.00", date: "2024-07-15", status: "On Delivery" },
-  { id: 7, customer: "Patricia Miller", totalPrice: "LKR 5000.00", date: "2024-07-15", status: "On Delivery" }
+  { id: 7, customer: "Patricia Miller", totalPrice: "LKR 5000.00", date: "2024-07-15", status: "On Delivery" },
+  { id: 8, customer: "Patricia Miller", totalPrice: "LKR 5000.00", date: "2024-07-15", status: "Completed" }
 ];
 
 export const OrderTable = ({ filterValue }) => {
   const [orders, setOrders] = useState(initialOrders);
-
-  const handleStatusChange = (id, newStatus) => {
-    const updatedOrders = orders.map(order => 
-      order.id === id ? { ...order, status: newStatus } : order
-    );
-    setOrders(updatedOrders);
-  };
 
   const filteredOrders = orders.filter(order => 
     filterValue === "ALL" || order.status.toLowerCase() === filterValue.toLowerCase()
@@ -66,19 +60,7 @@ export const OrderTable = ({ filterValue }) => {
                   <TableCell align="center">{order.customer}</TableCell>
                   <TableCell align="center">{order.totalPrice}</TableCell>
                   <TableCell align="center">{order.date}</TableCell>
-                  <TableCell align="center">
-                    <Select
-                      value={order.status}
-                      onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                      displayEmpty
-                      className="button table-status-select"
-                      inputProps={{ 'aria-label': 'Without label' }} > 
-                      <MenuItem value="Pending">Pending</MenuItem>
-                      <MenuItem value="Completed">Completed</MenuItem>
-                      <MenuItem value="Cancelled">Cancelled</MenuItem>
-                      <MenuItem value="On Delivery">On Delivery</MenuItem>
-                    </Select> 
-                  </TableCell>
+                  <TableCell align="center">{order.status}</TableCell>
                   <TableCell align="center">
                     <Link to={`../order/${order.id}`}>
                       <button className="table-view-button">View</button>

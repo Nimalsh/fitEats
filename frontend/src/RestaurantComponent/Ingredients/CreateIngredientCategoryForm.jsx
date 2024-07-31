@@ -1,7 +1,7 @@
-import { Button, FormControl, InputLabel, Select } from '@mui/material';
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useState } from 'react'
 
-export const CreateIngredientForm = () => {
+export const CreateIngredientCategoryForm = () => {
 
     const [formData, setFormData] = useState({
         name:"", 
@@ -27,7 +27,7 @@ export const CreateIngredientForm = () => {
             </h1>
 
             <form className='space-y-5' onSubmit={handleSubmit}>
-                <TestField
+                <TextField
                 fullwidth
                 id="name"
                 name="name"
@@ -35,9 +35,9 @@ export const CreateIngredientForm = () => {
                 variant="outlined"
                 onChange={handleInputChange}
                 value={formData.name}>
-                </TestField>
+                </TextField>
 
-                <Grid  item xs={12} lg={3}>
+                <Grid item xs={12} lg={3}>
 <FormControl fullWidth>
   <InputLabel id="demo-simple-select-label">Category</InputLabel>
   <Select

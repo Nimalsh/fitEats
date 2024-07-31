@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, CardHeader, TextField, Button, IconButton, Grid, CircularProgress } from '@mui/material';
-import BackgroundImage from '../../assets/images/Add.jpg'; 
+import BackgroundImage from '../../assets/images/item.png'; 
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear'; 
 import { Formik, useFormik } from 'formik';
@@ -98,7 +98,7 @@ export const AddEvent = () => {
         }}
       >
         <CardHeader
-          title="Add New Promotion"
+          title="Add New Offer"
           sx={{ pt: 2, alignItems: 'center', color: 'white' }}
         />
         
@@ -144,7 +144,7 @@ export const AddEvent = () => {
           <TextField fullWidth
             id="name"
             name="name"
-            label="Event Name"
+            label="Offer Name"
             variant="outlined" 
             onChange={formik.handleChange}
             value={formik.values.name} 

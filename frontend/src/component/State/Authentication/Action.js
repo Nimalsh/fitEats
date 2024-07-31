@@ -16,7 +16,7 @@ export const registerUser = (reqData) => async (dispatch) => {
     } else if (data.role === "ROLE_NUTRITION") {
       reqData.navigate("/nutri");
     } else {
-      reqData.navigate("/");
+      reqData.navigate("/my-profile/dashboard");
     }
     dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
     console.log("Register success", data);
@@ -34,7 +34,7 @@ export const loginUser=(reqData)=>async(dispatch)=>{
     if(data.role==="ROLE_RESTAURANT_OWNER"){
       reqData.navigate("/admin/restaurant")
     }else{
-      reqData.navigate("/")
+      reqData.navigate("/my-profile/dashboard")
     }
     dispatch({type:LOGIN_SUCCESS,payload:data.jwt})
     console.log("login success",data)

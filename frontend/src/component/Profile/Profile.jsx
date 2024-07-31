@@ -30,6 +30,13 @@ import Goalselectfree from './Goalselectfree';
 import Freeweightgainform from './Freeweightgainform';
 import Freeweightlossform from './Freeweightlossform';
 import Dashboard from './Dashboard';
+import Complain from './ComplaintForm';
+import ComplaintForm from './ComplaintForm';
+
+import Completedplans from './Completedplans';
+
+import CustormizeOrder from './CustormizeOrder';
+
 
 
 
@@ -43,13 +50,13 @@ const Profile = () => {
       </div>
       <div className='lg:w-[80%]'>
         <Routes>
-          <Route path="/" element={<Food />} />
+          <Route path="/" element={<UserProfile />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/restaurant" element={<Food />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/nutrigoals" element={<Nutrigoals />} /> 
           <Route path="/favorites" element={<Favorites />} />
-          <Route path="/events" element={<Events />} />
+          <Route path="/offers" element={<Events />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/BMI" element={<BMI />} />
           <Route path="/lose-weight" element={<Goalselectfree/>} />
@@ -57,10 +64,13 @@ const Profile = () => {
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Goalselect/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
+          <Route path="/complain" element={<ComplaintForm/>} />
 
           <Route path="/meal-plan" element={<MealPlansPage />} />
           <Route path="/menu-suggest" element={<MenuSuggest/>} />
           <Route path="/auto-suggest-restaurant" element={<AutoSuggestRes/>} />
+
+          <Route path="/custormize-order" element={<CustormizeOrder/>} />
           
 
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />
@@ -71,6 +81,7 @@ const Profile = () => {
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
           <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
           <Route path="/lose-weight/weightloss" element={<Freeweightlossform/>} />
+          <Route path="/completed" element={<Completedplans/>} />
 
         </Routes>
       </div>
