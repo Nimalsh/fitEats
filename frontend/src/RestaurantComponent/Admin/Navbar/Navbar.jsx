@@ -44,13 +44,13 @@ export const Navbar = () => {
             </IconButton>
           )}
         </div>
-        <div>
+        {/* <div>
           <IconButton>
             <Badge color="primary" badgeContent={3}>
               <ShoppingCartTwoToneIcon sx={{ fontSize: '1.5rem' }} />
             </Badge>
           </IconButton>
-        </div>
+        </div> */}
       </div>
     </Box>
   );
