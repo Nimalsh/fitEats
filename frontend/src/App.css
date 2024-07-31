@@ -170,8 +170,8 @@ textarea {
 
 .details-button { 
   height: 50px;
-  color: #FFFFFF;
-  background-color: #777525; 
+  color: #000000;
+  background-color: #95CD41; 
   border-radius: 15px; 
   display: flex;
   justify-content: center;

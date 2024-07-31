@@ -5,7 +5,7 @@ import './Table.css';
 
 // Dummy data for demonstration purposes
 const initialOrders = [
-  { id: 1, customer: "John Doe", totalPrice: "LKR 250.00", date: "2024-07-10", status: "Completed" },
+  { id: 1, customer: "John Doe", totalPrice: "LKR 250.00", date: "2024-07-10", status: "Pending" },
   { id: 2, customer: "Jane Smith", totalPrice: "LKR 500.00", date: "2024-07-11", status: "Pending" },
   { id: 3, customer: "Bob Johnson", totalPrice: "LKR 750.00", date: "2024-07-12", status: "Cancelled" },
   { id: 4, customer: "Alice Brown", totalPrice: "LKR 1000.00", date: "2024-07-13", status: "Completed" },
