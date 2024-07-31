@@ -13,7 +13,7 @@ import { FoodItemsByCategory } from '../RestaurantComponent/FoodCategory/FoodIte
 import { UpdateFoodItem } from '../RestaurantComponent/FoodCategory/UpdateFoodItem';
 import { Drivers } from '../RestaurantComponent/IncomingOrders/Drivers';
 import { InOrderDetails } from '../RestaurantComponent/IncomingOrders/InOrderDetails';
-import { MenuPlans } from '../RestaurantComponent/Menu/MenuPlans';
+//import { MenuPlans } from '../RestaurantComponent/Menu/MenuPlans';
 import { OrderDetails } from '../RestaurantComponent/Orders/OrderDetails';
 import { CreateIngredientCategoryForm }  from '../RestaurantComponent/Ingredients/CreateIngredientCategoryForm';
 
@@ -35,7 +35,7 @@ export const RestaurantRoute = () => {
         <Route path="/event/:eventId" element={<EventDetails />} />
         <Route path="/incoming-order/:orderId" element={<InOrderDetails />} />
         <Route path="/drivers" element={<Drivers />} />
-        <Route path="/menu-plan/:id" element={<MenuPlans />} />
+        {/* <Route path="/menu-plan/:id" element={<MenuPlans />} /> */}
         <Route path="/ingredientcategory/add" element={<CreateIngredientCategoryForm />} />
         {/* <Route path="/ingredientCategory/add/:restaurantId" element={<Crea />} /> */}
       </Routes>

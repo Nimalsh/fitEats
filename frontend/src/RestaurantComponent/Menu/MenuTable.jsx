@@ -1,20 +1,15 @@
+import { Box, CardHeader, Dialog, DialogActions, DialogTitle, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Box, CardHeader, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
-import MenuImage from '../../assets/images/weight-loss.webp';
-import HealthyImage from '../../assets/images/healthy.webp';
 import BackgroundImage from '../../assets/images/Background_image.png';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ViewIcon from '@mui/icons-material/CalendarViewDay';
-import { Link, useNavigate } from 'react-router-dom';
 
 const menuItems = [
-  { id: 1, name: "Scrumbled Egg", amount:3, description: "Medically reviewed by Melizza Rifkin." },
-  { id: 2, name: "Grilled Chicken wedges", amount:2,  description: "Medically reviewed by Melizza Rifkin." },
+  { id: 1, name: "Scrumbled Egg", amount: 3, description: "Medically reviewed by Melizza Rifkin." },
+  { id: 2, name: "Grilled Chicken wedges", amount: 2, description: "Medically reviewed by Melizza Rifkin." },
 ];
 
 const MenuItemTile = ({ item }) => {
   const [open, setOpen] = useState(false);
+  const [accepted, setAccepted] = useState(false); // Track acceptance state
 
   const handleDelete = () => {
     console.log(`Deleting item ${item.id}`);
@@ -29,7 +24,16 @@ const MenuItemTile = ({ item }) => {
     setOpen(true);
   };
 
-  const navigate = useNavigate();
+  const handleAccept = () => {
+    // Handle the acceptance logic here
+    setAccepted(true); // Update state to show pending button
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    // Handle the submission logic here
+    setOpen(false);
+  };
 
   return (
     <Box
@@ -48,28 +52,39 @@ const MenuItemTile = ({ item }) => {
         padding: 2,
       }}
     >
-      <img
-        src={item.image}
-        alt={item.name}
-        style={{ width: 350, height: 80, borderRadius: '50px', boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)' }}
-      /> 
+<div
+  style={{
+    width: 200,
+    height: 80,
+    borderRadius: '50px',
+    boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent', // Keep the background transparent
+  }}
+>
+  <Typography variant="h6" sx={{ margin: 0, color: 'white' }}>
+    {item.name}
+  </Typography>
+</div>
+
+
       <Typography variant="h6" sx={{ marginTop: 1 }}>
-        Amount of items:  {item.amount}
+        Amount of items: {item.amount}
       </Typography>
       <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
         {item.description}
       </Typography>
 
-      {/* <button type="button" className="button details-button" sx={{ width: '70%' }}>
-        <Link to={`../food-item/${item.id}`}>View Details</Link>
-      </button> */}
-
       <div className="button-container mt-5">
-        <Link to={`../menu-plan/${item.id}`} className="button view-button">
-           Accept
-        </Link>
-        <button type="button" className="button delete-button" onClick={handleClickOpen}>
-           Reject 
+        {!accepted && (
+          <button type="button" className="button add-button" onClick={handleClickOpen}>
+            Accept
+          </button>
+        )}
+        <button type="button" className="button delete-button" onClick={handleDelete}>
+          Reject
         </button>
 
         <Dialog open={open} onClose={handleClose}>
@@ -83,7 +98,21 @@ const MenuItemTile = ({ item }) => {
             </button>
           </DialogActions>
         </Dialog>
+
+        <Dialog open={open} onClose={handleSubmit}>
+          <DialogTitle>Accept</DialogTitle>
+          <DialogActions>
+            <TextField label="Enter Price" fullWidth />
+            <button type='button' className='button add-button' onClick={handleAccept}>Submit</button>
+          </DialogActions>
+        </Dialog>
       </div>
+
+      {accepted && (
+        <button type="button" className="button details-button" style={{ width: '70%' }}>
+          Pending
+        </button>
+      )}
     </Box>
   );
 };
@@ -99,7 +128,7 @@ export const MenuTable = () => {
         padding: 2,
       }}
     >
-      <CardHeader 
+      <CardHeader
         title="Menu"
         sx={{ pt: 2, alignItems: "center" }}
       />
@@ -119,3 +148,4 @@ export const MenuTable = () => {
     </Box>
   );
 };
+
