@@ -1,18 +1,18 @@
 import {
   Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase
+  TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase, Tabs, Tab
 } from '@mui/material';
 import React, { useState } from 'react';
 import { Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const orders = [
-  { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Pending' },
-  { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Finished' },
-  { id: 3, user: 'User3', requestDate: '2024-07-13', title: 'Other', status: 'Finished' },
-  { id: 4, user: 'User4', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Pending' },
-  { id: 5, user: 'User5', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Finished' },
-  { id: 6, user: 'User6', requestDate: '2024-07-10', title: 'Others', status: 'Pending' },
+  { id: 1, user: 'Anne Smith', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Pending' },
+  { id: 2, user: 'Charlotte Grace', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Finished' },
+  { id: 3, user: 'Zoe Madison', requestDate: '2024-07-13', title: 'Other', status: 'Finished' },
+  { id: 4, user: 'Ava Lily', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Pending' },
+  { id: 5, user: 'James Taylor', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Finished' },
+  { id: 6, user: 'Jacob Miller', requestDate: '2024-07-10', title: 'Others', status: 'Pending' },
 ];
 
 const getStatusColor = (status) => {
@@ -29,6 +29,7 @@ const getStatusColor = (status) => {
 function Requests() {
   const navigate = useNavigate();
   const [clickedUser, setClickedUser] = useState(null);
+  const [selectedTab, setSelectedTab] = useState('All');
 
   const handleViewClick = (title, status) => {
     if (status === 'Finished') {
@@ -57,6 +58,14 @@ function Requests() {
     console.log(`Clicked on user: ${user}`);
   };
 
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+
+  const filteredOrders = orders.filter(order => 
+    selectedTab === 'All' || order.status === selectedTab
+  );
+
   return (
     <Box>
       <Card className='mt-1'>
@@ -64,6 +73,11 @@ function Requests() {
           title={"Requests"}
           sx={{ pt: 2, alignItems: "center" }}
         />
+        <Tabs value={selectedTab} onChange={handleTabChange} aria-label="status tabs">
+          <Tab label="All" value="All" />
+          <Tab label="Pending" value="Pending" />
+          <Tab label="Finished" value="Finished" />
+        </Tabs>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -76,7 +90,7 @@ function Requests() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((row, index) => (
+              {filteredOrders.map((row, index) => (
                 <TableRow
                   key={index} // Use index as a key since row has no unique property
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

@@ -91,12 +91,12 @@ const Dashboard = () => {
                     <Divider sx={{ my: 2 }} />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box sx={{ textAlign: 'center' }}>
-                        <Typography variant="body2">Planned Meals</Typography>
+                        <Typography variant="body2">logged Meals</Typography>
                         <Typography variant="h6">43</Typography>
                       </Box>
                       <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
                       <Box sx={{ textAlign: 'center' }}>
-                        <Typography variant="body2">Logged Meals</Typography>
+                        <Typography variant="body2">Planned Meals</Typography>
                         <Typography variant="h6">56</Typography>
                       </Box>
                     </Box>
@@ -182,10 +182,10 @@ const topTiles = [
   },
   {
     icon: 'up',
-    percentage: '100.00%',
+    percentage: '20.00%',
     title: 'Plans Revenue',
     currentMonth: '$891,700',
-    lastMonth: '$0',
+    lastMonth: '$800,000',
   },
   {
     icon: 'up',
