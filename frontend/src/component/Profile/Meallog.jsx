@@ -24,6 +24,8 @@ const Meallog = () => {
   const [mealType, setMealType] = useState('');
   const [editableStates, setEditableStates] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
+  const [mealLogs, setMealLogs] = useState({});
+
 
   const handleNextDay = () => {
     setStartDay(prevStartDay => prevStartDay + 1);
@@ -155,6 +157,24 @@ const Meallog = () => {
 
   const COLORS = ['#61f4de', '#577590', '#90be6d', '#68b6ef', '#6aa1f4', '#43AA8B', '#6e78ff'];
 
+  const handleSave = () => {
+    setMealLogs(prevLogs => ({
+      ...prevLogs,
+      [startDay]: selectedFoods
+    }));
+  };
+  
+  const loadMealsForDay = (day) => {
+    setSelectedFoods(mealLogs[day] || []);
+    setEditableStates((mealLogs[day] || []).map(() => false));
+  };
+  const handleDayClick = (day) => {
+    setStartDay(day);
+    loadMealsForDay(day);
+  };
+  
+  
+
   return (
     <Box sx={{ padding: '20px' }}>
       {/* Upper Part */}
@@ -188,20 +208,21 @@ const Meallog = () => {
             <Typography variant="h6">{"<"}</Typography>
           </IconButton>
           {[...Array(7)].map((_, index) => (
-            <Button
-              key={index}
-              variant={index === 0 ? 'contained' : 'outlined'}
-              sx={{
-                borderRadius: '50%',
-                minWidth: '50px',
-                height: '50px',
-                margin: '0 10px',
-                width: '100%'
-              }}
-            >
-              {startDay + index}
-            </Button>
-          ))}
+  <Button
+    key={index}
+    variant={index === 0 ? 'contained' : 'outlined'}
+    sx={{
+      borderRadius: '50%',
+      minWidth: '50px',
+      height: '50px',
+      margin: '0 10px',
+      width: '100%'
+    }}
+    onClick={() => handleDayClick(startDay + index)}
+  >
+    {startDay + index}
+  </Button>
+))}
           <IconButton onClick={handleNextDay}>
             <Typography variant="h6">{">"}</Typography>
           </IconButton>
@@ -214,7 +235,7 @@ const Meallog = () => {
       {/* Lower Part */}
       <Grid container spacing={2}>
         {/* Left Hand Side Tile */}
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={7}>
           <Card sx={{ width: '100%' }}>
             <CardContent>
               <Typography variant="h6">Thursday, July 4</Typography>
@@ -273,7 +294,16 @@ const Meallog = () => {
                   </CardContent>
                 </Card>
               ))}
+              <Button
+  variant="contained"
+  color="primary"
+  sx={{ marginLeft: '550px', marginTop: '8px' }}
+  onClick={handleSave}
+>
+  Save
+</Button>
             </CardContent>
+             
           </Card>
         </Grid>
 
