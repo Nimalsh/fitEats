@@ -15,12 +15,12 @@ import { logout } from '../../component/State/Authentication/Action'
 const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/" },
   { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
-  { title: "Incoming Orders", icon: <ShoppingBag />, path: "/incomingorders" },
   { title: "Meal Requests", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "FoodCategory", icon: <CategoryIcon />, path: "/category" },
   { title: "Ingredients", icon: <FastfoodIcon />, path: "/ingredients" },
   { title: "Offers", icon: <EventIcon />, path: "/events" },
   { title: "My Profile", icon: <AdminPanelSettingsIcon />, path: "/details" },
+  { title: "Complains", icon: <ShoppingBag />, path: "/complains" },
   { title: "Logout", icon: <LogoutIcon />, path: "/" },
 ];
 

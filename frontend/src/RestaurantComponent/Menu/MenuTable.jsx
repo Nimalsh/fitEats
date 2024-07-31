@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import BackgroundImage from '../../assets/images/Background_image.png';
 
 const menuItems = [
-  { id: 1, name: "Scrumbled Egg", amount: 3, description: "Medically reviewed by Melizza Rifkin." },
-  { id: 2, name: "Grilled Chicken wedges", amount: 2, description: "Medically reviewed by Melizza Rifkin." },
+  { id: 1, name: "Scrumbled Egg", amount: 3, description: "Medically reviewed by Melizza Rifkin.", username:'Kasuni Amanda', tel:'0712345678' },
+  { id: 2, name: "Grilled Chicken wedges", amount: 2, description: "Medically reviewed by Melizza Rifkin.", username:'Kasuni Amanda', tel:'0711234567' },
 ];
 
 const MenuItemTile = ({ item }) => {
@@ -75,6 +75,12 @@ const MenuItemTile = ({ item }) => {
       </Typography>
       <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
         {item.description}
+      </Typography>
+      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
+        User Name : {item.username}
+      </Typography>
+      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
+        Telphone : {item.tel}
       </Typography>
 
       <div className="button-container mt-5">
