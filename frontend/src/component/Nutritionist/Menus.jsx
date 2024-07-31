@@ -7,8 +7,8 @@ const menusData = [
     name: 'Veggie loaded frittatas',
     image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
     ingredients: [
-      { name: 'Ingredient 1', quantity: '100g' },
-      { name: 'Ingredient 2', quantity: '200ml' },
+      { name: 'Milk (or dairy-free alternative)', quantity: '250ml' },
+      { name: 'Eggs', quantity: '3' }, 
     ],
     nutrition: [
       { name: 'Calories', quantity: '250 kcal' },
@@ -23,10 +23,10 @@ const menusData = [
   },
   {
     name: 'Loaded brown rice pasta',
-    image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
+    image: 'https://cdn.pixabay.com/photo/2023/09/22/18/53/ai-generated-8269635_640.jpg',
     ingredients: [
-      { name: 'Ingredient 1', quantity: '150g' },
-      { name: 'Ingredient 2', quantity: '250ml' },
+      { name: 'Brown Rice Pasta', quantity: '8 ounces' },
+      { name: 'Olive Oil:', quantity: '2 tablespoons' },
     ],
     nutrition: [
       { name: 'Calories', quantity: '300 kcal' },
@@ -41,10 +41,10 @@ const menusData = [
   },
   {
     name: 'Greek Yogurt Parfait',
-    image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
+    image: 'https://cdn.pixabay.com/photo/2024/05/18/16/52/cheese-8770656_640.png',
     ingredients: [
-      { name: 'Ingredient 1', quantity: '150g' },
-      { name: 'Ingredient 2', quantity: '250ml' },
+      { name: 'Greek Yogurt', quantity: '1 cup(100g)' },
+      { name: 'Granola', quantity: '1/2 cup(100g)' },
     ],
     nutrition: [
       { name: 'Calories', quantity: '300 kcal' },
@@ -59,10 +59,10 @@ const menusData = [
   },
   {
     name: 'Quinoa Bowl with Roasted Vegetables',
-    image: 'https://cdn.pixabay.com/photo/2023/10/05/11/47/sweet-potatoes-8295778_1280.jpg',
+    image: 'https://cdn.pixabay.com/photo/2024/02/15/09/30/schnitzel-8575036_1280.png',
     ingredients: [
-      { name: 'Ingredient 1', quantity: '150g' },
-      { name: 'Ingredient 2', quantity: '250ml' },
+      { name: 'Vegetables(sweet potatoes, bell peppers, broccoli, zucchini)', quantity: '150g' },
+      { name: 'Quinoa', quantity: '1 cup' },
     ],
     nutrition: [
       { name: 'Calories', quantity: '300 kcal' },

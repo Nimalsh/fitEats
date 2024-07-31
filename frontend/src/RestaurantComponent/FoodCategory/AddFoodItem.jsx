@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, CardHeader, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import BackgroundImage from '../../assets/images/hodai.jpg';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
+import { Box, Button, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import BackgroundImage from '../../assets/images/hodai.jpg';
 
 const ingredientCategories = ["Vegetables", "Fruits", "Meats", "Dairy", "Spices"];
 
@@ -15,31 +15,25 @@ const ingredientItemsMap = {
   Spices: ["Salt", "Pepper", "Cumin", "Turmeric", "Paprika"]
 };
 
-
-
 export const AddFoodItem = () => {
   const { categoryId } = useParams();
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-
   const [ingredientData, setIngredientData] = useState(
     Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] }))
   );
+  
+  // State for dialogs
+  const [openIngredientDialog, setOpenIngredientDialog] = useState(false);
+  const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
+  const [newIngredient, setNewIngredient] = useState('');
+  const [newCategory, setNewCategory] = useState('');
 
-  const handleFoodNameChange = (event) => {
-    setFoodName(event.target.value);
-  };
-
-  const handlePriceChange = (event) => {
-    setPrice(event.target.value);
-  };
-
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
-
+  const handleFoodNameChange = (event) => setFoodName(event.target.value);
+  const handlePriceChange = (event) => setPrice(event.target.value);
+  const handleDescriptionChange = (event) => setDescription(event.target.value);
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]));
@@ -50,28 +44,15 @@ export const AddFoodItem = () => {
     const newData = [...ingredientData];
     newData[index][field] = value;
     
-    // Update ingredientItems when category changes
     if (field === 'category') {
       newData[index].items = ingredientItemsMap[value] || [];
-      newData[index].item = ''; // Reset item when category changes
+      newData[index].item = '';
     }
 
     setIngredientData(newData);
   };
 
-  const categoryNames = {
-    1: 'Pizza',
-    2: 'Bakery',
-    3: 'Burgers',
-    4: 'Drinks',
-    5: 'Sea Food',
-    6: 'Breakfast'
-  };
-
-  const categoryName = categoryNames[categoryId];
-
   const handleAddFoodItem = () => {
-    // Add food item logic
     console.log('Food Item Added:', foodName, price, description, image, categoryId, ingredientData);
     setFoodName('');
     setPrice('');
@@ -87,6 +68,35 @@ export const AddFoodItem = () => {
     setImage(null);
     setIngredientData(Array.from({ length: 10 }, () => ({ category: '', item: '', amount: '', items: [] })));
   };
+
+  const handleClickOpenIngredientDialog = () => setOpenIngredientDialog(true);
+  const handleCloseIngredientDialog = () => setOpenIngredientDialog(false);
+  const handleAddIngredient = () => {
+    console.log('New Ingredient:', newIngredient);
+    // Add new ingredient to the ingredientItemsMap or handle as needed
+    setOpenIngredientDialog(false);
+    setNewIngredient('');
+  };
+
+  const handleClickOpenCategoryDialog = () => setOpenCategoryDialog(true);
+  const handleCloseCategoryDialog = () => setOpenCategoryDialog(false);
+  const handleAddCategory = () => {
+    console.log('New Category:', newCategory);
+    // Add new category to ingredientCategories and update the ingredientItemsMap as needed
+    setOpenCategoryDialog(false);
+    setNewCategory('');
+  };
+
+  const categoryNames = {
+    1: 'Pizza',
+    2: 'Bakery',
+    3: 'Burgers',
+    4: 'Drinks',
+    5: 'Sea Food',
+    6: 'Breakfast'
+  };
+
+  const categoryName = categoryNames[categoryId];
 
   return (
     <Box
@@ -227,6 +237,42 @@ export const AddFoodItem = () => {
           <CardHeader
             title="Ingredients of the Food Item"
             sx={{ pt: 2, alignItems: 'center', color: 'white' }}
+            action={
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  alignItems: 'center',
+                }}
+              >
+                <button
+                  className='button add-button'
+                  variant="contained"
+                  color="success"
+                  onClick={handleClickOpenIngredientDialog}
+                  sx={{
+                    borderRadius: '20px',
+                    backgroundColor: '#95CD41',
+                    '&:hover': { backgroundColor: '#7aad33' },
+                  }}
+                >
+                  <AddIcon /> Add Ingredient
+                </button>
+                <button
+                  className='button add-button'
+                  variant="contained"
+                  color="success"
+                  onClick={handleClickOpenCategoryDialog}
+                  sx={{
+                    borderRadius: '20px',
+                    backgroundColor: '#95CD41',
+                    '&:hover': { backgroundColor: '#7aad33' },
+                  }}
+                >
+                  <AddIcon /> Add Category
+                </button>
+              </Box>
+            }
           />
 
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
@@ -323,6 +369,51 @@ export const AddFoodItem = () => {
           </Box>
         </Box>
       </div>
+
+      {/* Ingredient Dialog */}
+      <Dialog open={openIngredientDialog} onClose={handleCloseIngredientDialog}>
+        <DialogTitle>Add New Ingredient</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="ingredient"
+            label="New Ingredient"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newIngredient}
+            onChange={(e) => setNewIngredient(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <button className='button add-button' onClick={handleAddIngredient}>Add</button>
+          <button className='button delete-button' onClick={handleCloseIngredientDialog}>Cancel</button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Category Dialog */}
+      <Dialog open={openCategoryDialog} onClose={handleCloseCategoryDialog}>
+        <DialogTitle>Add New Category</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="category"
+            label="New Category"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <button className='button add-button' onClick={handleAddCategory}>Add</button>
+          <button className='button delete-button' onClick={handleCloseCategoryDialog}>Cancel</button>
+
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

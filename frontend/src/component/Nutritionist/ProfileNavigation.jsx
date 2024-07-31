@@ -15,13 +15,15 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import ArticleIcon from '@mui/icons-material/Article';
 import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 const menu = [
+  { title: "Dashboard", icon: <DashboardIcon /> },
   { title: "Requests", icon: <SummarizeIcon /> },
   { title: "Menus", icon: <ViewListIcon/> },
   { title: "Articles", icon: <ArticleIcon /> },
   { title: "Queries", icon: <PsychologyAltIcon  /> },
   { title: "Notification", icon: <NotificationsIcon /> },
-  { title: "Event", icon: <EventIcon /> },
+ 
   { title: "Logout", icon: <LogoutIcon /> }
 ];
 
