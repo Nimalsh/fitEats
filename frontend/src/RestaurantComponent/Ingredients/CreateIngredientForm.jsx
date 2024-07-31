@@ -1,6 +1,15 @@
 import { Button, FormControl, InputLabel, Select } from '@mui/material';
 import React, { useState } from 'react'
 
+const ingredientCategories = [
+    { id: 1, name: "Vegetables", ingredients: ["Tomato", "Onion", "Pepper", "Carrot", "Broccoli"] },
+    { id: 2, name: "Fruits", ingredients: ["Apple", "Banana", "Orange", "Strawberry", "Grapes"] },
+    { id: 3, name: "Dairy", ingredients: ["Milk", "Cheese", "Butter", "Yogurt", "Cream"] },
+    { id: 4, name: "Meat", ingredients: ["Chicken", "Beef", "Pork", "Lamb", "Turkey"] },
+    { id: 5, name: "Cerals", ingredients: ["Salt", "Pepper", "Cumin", "Turmeric", "Paprika"] } 
+  ];
+  
+
 export const CreateIngredientForm = () => {
 
     const [formData, setFormData] = useState({

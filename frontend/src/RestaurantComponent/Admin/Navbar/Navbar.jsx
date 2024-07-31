@@ -6,7 +6,8 @@ import { pink } from '@mui/material/colors';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import './Navbar.css'; 
+import logo from '../../../assets/images/logo_remove_blackground.png'
 
 export const Navbar = () => {
   const { auth } = useSelector(store => store);
@@ -23,6 +24,7 @@ export const Navbar = () => {
   return (
     <Box className='navbar'>
       <div className='lg:mr-10 cursor-pointer flex items-center space-x-4'>
+      <img src={logo} alt="FitEats Logo" className='h-11' /> {/* Add the image */}
         <li onClick={() => navigate("/")} className='logo font-semibold text-gray-300 text-2xl'>
           FitEats
         </li>

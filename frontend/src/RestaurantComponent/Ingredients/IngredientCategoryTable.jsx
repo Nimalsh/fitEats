@@ -1,8 +1,7 @@
+import AddIcon from '@mui/icons-material/Add';
+import { Box, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Box, CardHeader, Typography } from '@mui/material'; 
 import BackgroundImage from '../../assets/images/Background_image.png';
-import { Link, useParams } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add'; 
 
 // Dummy data for demonstration purposes
 const ingredientCategories = [
@@ -14,7 +13,6 @@ const ingredientCategories = [
 ];
 
 const IngredientCategoryTile = ({ ingredientcategory }) => {
-  const { ingredientCategoryId } = useParams();
   return (
     <Box
       sx={{
@@ -45,6 +43,43 @@ const IngredientCategoryTile = ({ ingredientcategory }) => {
 };
 
 export const IngredientCategoryTable = () => {
+  const [openIngredientDialog, setOpenIngredientDialog] = useState(false);
+  const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
+  const [newIngredient, setNewIngredient] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+
+  const handleClickOpenIngredientDialog = () => {
+    setOpenIngredientDialog(true);
+  };
+
+  const handleCloseIngredientDialog = () => {
+    setOpenIngredientDialog(false);
+  };
+
+  const handleAddIngredient = () => {
+    // Handle the logic to add the new ingredient here
+    console.log('New Ingredient:', newIngredient, 'Category:', selectedCategory);
+    setOpenIngredientDialog(false);
+    setNewIngredient('');
+    setSelectedCategory('');
+  };
+
+  const handleClickOpenCategoryDialog = () => {
+    setOpenCategoryDialog(true);
+  };
+
+  const handleCloseCategoryDialog = () => {
+    setOpenCategoryDialog(false);
+  };
+
+  const handleAddCategory = () => {
+    // Handle the logic to add the new category here
+    console.log('New Category:', newCategory);
+    setOpenCategoryDialog(false);
+    setNewCategory('');
+  };
+
   return (
     <Box
       sx={{
@@ -56,23 +91,52 @@ export const IngredientCategoryTable = () => {
       }}
     >
       <CardHeader 
-                action={
-                  <>
-                  <Link to='../ingredientcategory/add'>
-                    <button className="button add-button">
-                      <AddIcon /> Add Category
-                    </button>
-                  </Link>
-                  {/* <Link to= {`../ingredient/add/${ingredientCategoryId}`}>  
-                    <button className="button add-button">
-                      <AddIcon /> Add Ingredient
-                    </button>
-                  </Link> */}
-                  </>
-                }
+        action={
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2, // Space between buttons
+              alignItems: 'center', // Align items vertically
+            }}
+          >
+            <button 
+              className="button add-button" 
+              onClick={handleClickOpenIngredientDialog}
+              sx={{
+                backgroundColor: '#95CD41',
+                color: '#fff',
+                '&:hover': {
+                  backgroundColor: '#7baf30',
+                },
+                borderRadius: '20px',
+                padding: '10px 20px',
+                width: '150px', // Adjust width as needed
+              }}
+            >
+              <AddIcon /> Add Ingredient
+            </button>
+            <button 
+              className="button add-button"
+              onClick={handleClickOpenCategoryDialog}
+              sx={{
+                backgroundColor: '#95CD41',
+                color: '#fff',
+                '&:hover': {
+                  backgroundColor: '#7baf30',
+                },
+                borderRadius: '20px',
+                padding: '10px 20px',
+                width: '150px', // Adjust width as needed
+              }}
+            >
+              <AddIcon /> Add Category
+            </button>
+          </Box>
+        }
         title="Ingredients"
         sx={{ pt: 2, textAlign: "left" }}
       />
+
       <Box
         sx={{
           display: 'flex',
@@ -85,6 +149,63 @@ export const IngredientCategoryTable = () => {
           <IngredientCategoryTile key={ingredientcategory.id} ingredientcategory={ingredientcategory} />
         ))}
       </Box>
+
+      {/* Dialog for Adding New Ingredient */}
+      <Dialog open={openIngredientDialog} onClose={handleCloseIngredientDialog}>
+        <DialogTitle>Add New Ingredient</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth variant="standard" sx={{ mt: 2 }}>
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              {ingredientCategories.map((category) => (
+                <MenuItem key={category.id} value={category.name}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="new-ingredient"
+            label="New Ingredient"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newIngredient}
+            onChange={(e) => setNewIngredient(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <button className='button add-button' onClick={handleAddIngredient}>Add</button>
+          <button className='button delete-button' onClick={handleCloseIngredientDialog}>Cancel</button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog for Adding New Category */}
+      <Dialog open={openCategoryDialog} onClose={handleCloseCategoryDialog}>
+        <DialogTitle>Add New Category</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="new-category"
+            label="New Category"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <button className='button add-button' onClick={handleAddCategory}>Add</button>
+          <button className='button delete-button' onClick={handleCloseCategoryDialog}>Cancel</button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
