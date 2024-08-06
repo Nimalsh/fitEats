@@ -130,6 +130,9 @@ export const createRestaurant = (reqData) => {
   };
 };
 
+
+
+
 export const updateRestaurant = ({ restaurantId, restaurantData, jwt }) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_RESTAURANT_STATUS_REQUEST });

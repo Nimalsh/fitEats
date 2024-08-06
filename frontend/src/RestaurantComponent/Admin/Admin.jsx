@@ -10,6 +10,7 @@ import { Orders } from '../Orders/Orders';
 import { AdminSideBar } from './AdminSideBar';
 import { Navbar } from './Navbar/Navbar';
 import { RestuarantDetails } from './RestuarantDetails';
+import ComplaintPage from '../Complains/ComplaintForm';
 
 export const Admin = () => {
   const handleClose = () => {};
@@ -23,12 +24,12 @@ export const Admin = () => {
           <Routes>
             <Route path='/' element={<Dashboard />} />
             <Route path='/orders' element={<Orders />} />
-            <Route path='/incomingorders' element={<IncomingOrders />} />
             <Route path='/menu' element={<Menu />} />
             <Route path='/category' element={<FoodCategory />} />
             <Route path='/ingredients' element={<Ingredients />} />
             <Route path='/events' element={<Events />} />
             <Route path='/details' element={<RestuarantDetails />} />
+            <Route path='/complains' element={<ComplaintPage />} />
           </Routes>
         </div>
       </div>
