@@ -40,8 +40,8 @@ public class Food {
     private boolean isVegetarian;
     private boolean isSeasonal;
 
-    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
-    private List<foodIngredient> foodIngredients = new ArrayList<>();
+    @ManyToMany
+    private List<IngredientsItem> ingredients=new ArrayList<>();
 
     private Date creationDate;
 }
