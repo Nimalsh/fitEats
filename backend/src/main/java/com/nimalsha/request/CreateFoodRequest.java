@@ -19,11 +19,5 @@ public class CreateFoodRequest {
     private Long restaurantId;
     private boolean vegetarian;
     private boolean seasonal;
-    private List<IngredientDTO> ingredients;
-
-    @Data
-    public static class IngredientDTO {
-        private String ingredientName;
-        private double quantity;
-    }
+    private List<IngredientsItem> ingredients;
 }
