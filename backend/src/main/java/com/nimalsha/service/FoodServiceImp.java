@@ -2,7 +2,6 @@ package com.nimalsha.service;
 
 import com.nimalsha.model.Category;
 import com.nimalsha.model.Food;
-import com.nimalsha.model.foodIngredient;
 import com.nimalsha.model.IngredientsItem;
 import com.nimalsha.model.Restaurant;
 import com.nimalsha.repository.FoodRepository;
@@ -35,29 +34,14 @@ public class FoodServiceImp implements FoodService {
         food.setImages(req.getImages());
         food.setName(req.getName());
         food.setPrice(req.getPrice());
-       
+        food.setIngredients(req.getIngredients());
         food.setSeasonal(req.isSeasonal());
         food.setVegetarian(req.isVegetarian());
-         List<foodIngredient> foodIngredients = new ArrayList<>();
-        for (CreateFoodRequest.IngredientDTO ingredientDTO : req.getIngredients()) {
-            IngredientsItem ingredient = ingredientItemRepository.findByName(ingredientDTO.getIngredientName())
-                    .orElseThrow(() -> new RuntimeException("Ingredient not found"));
 
-            foodIngredient foodIngredient = new foodIngredient();
-            foodIngredient.setFood(food);
-            foodIngredient.setIngredient(ingredient);
-            foodIngredient.setQuantity(ingredientDTO.getQuantity());
-
-            foodIngredients.add(foodIngredient);
-        }
-
-
-        food.setFoodIngredients(foodIngredients);
         Food savedFood=foodRepository.save(food);
         restaurant.getFoods().add(savedFood);
         return savedFood;
     }
-
     @Override
     public void deleteFood(Long foodId) throws Exception {
         Food food= findFoodById(foodId);
