@@ -11,6 +11,7 @@ import BMI from '../component/Profile/BMI';
 import NutritionInfo from '../component/Profile/Nutricontent';
 
 import Nutritionistbase from '../component/Nutritionist/Nutritionistbase';
+import Nutricontent from '../component/Profile/Nutricontent';
 
 export default function CustomRoutes() {
   return (
@@ -22,7 +23,7 @@ export default function CustomRoutes() {
         <Route path='/restaurant/:city/:title/:id' element={<RestaurantDetails />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/my-profile/*' element={<Profile />} />
-        <Route path="/nutrition-content" element={<NutritionInfo />} />
+        <Route path="/nutrition-content/:foodName" element={<Nutricontent />} />
 
         <Route path='/nutri/*' element={<Nutritionistbase />} />
         

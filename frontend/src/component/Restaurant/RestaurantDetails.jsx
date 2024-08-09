@@ -6,14 +6,9 @@ import MenuCard from "./MenuCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getRestaurantById, getRestaurantsCategory } from "../State/Restaurant/Action";
+import { getMenuItemsByRestaurantId } from "../State/Menu/Action";
 
-const categories = [
-  "pizza",
-  "biriyani",
-  "burger",
-  "chicken",
-  "rice"
-];
+
 
 const foodTypes = [
   { label: "All", value: "all" },
@@ -30,7 +25,7 @@ const RestaurantDetails = () => {
   const navigate = useNavigate();
   const dispatch=useDispatch();
   const jwt=localStorage.getItem("jwt")
-  const {auth,restaurant}=useSelector(store=>store)
+  const {auth,restaurant,menu}=useSelector(store=>store)
   const {id,city}=useParams();
 
 
@@ -43,6 +38,7 @@ const RestaurantDetails = () => {
   useEffect(()=>{
     dispatch(getRestaurantById({jwt,restaurantId:id}))
     dispatch(getRestaurantsCategory({jwt,restaurantId:id}))
+    dispatch(getMenuItemsByRestaurantId({jwt,restaurantId:id,vagetarian:false,nonveg:false,seasonal:false,foodCategory:""}))
   },[])
 
   return (
@@ -132,13 +128,13 @@ const RestaurantDetails = () => {
 
               <FormControl className="py-10 space-y-5" component={"fieldset"}>
                 <RadioGroup onChange={handleFilter} name="food_type" value={foodType}>
-                  {categories.map((item) => (
+                  {restaurant.categories.map((item) => (
                     <FormControlLabel
-                      key={item}
-                      value={item}
-                      control={<Radio />}
-                      label={item}
-                    />
+                    key={item.value}
+                    value={item.value}
+                    control={<Radio />}
+                    label={item.name}
+                  />
                   ))}
                 </RadioGroup>
               </FormControl>
@@ -147,7 +143,7 @@ const RestaurantDetails = () => {
         </div>
 
         <div className="space-y-5 lg:w-[80%] lg:pl-10">
-          {menu.map((item)=><MenuCard/>)}
+          {menu.menuItems.map((item)=><MenuCard item={item}/>)}
         </div>
       </section>
     </div>

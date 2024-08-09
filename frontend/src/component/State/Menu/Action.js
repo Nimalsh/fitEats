@@ -1,5 +1,6 @@
-import { api } from "../../../config/api";
 
+
+import { api } from "../../config/api";
 import {
   CREATE_MENU_ITEM_REQUEST,
   CREATE_MENU_ITEM_SUCCESS,
@@ -41,7 +42,7 @@ export const getMenuItemsByRestaurantId = (reqData) => {
     dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST });
     try {
       const { data } = await api.get(
-        `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}
+        `/api/food/restaurant/${reqData.restaurantId}?vagetarian=${reqData.vegetarian}
         &nonveg=${reqData.nonveg}
         &seasonal=${reqData.seasonal}
         &food_category=${reqData.foodCategory}`,
