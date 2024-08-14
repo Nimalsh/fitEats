@@ -1,157 +1,141 @@
-import { Box, CardHeader, Dialog, DialogActions, DialogTitle, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import BackgroundImage from '../../assets/images/Background_image.png';
+// import { Box, Card, CardHeader, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+// import React, { useState } from 'react';
+// import { Link } from 'react-router-dom';
+// import './Table.css';
 
-const menuItems = [
-  { id: 1, name: "Scrumbled Egg", amount: 3, description: "Medically reviewed by Melizza Rifkin.", username:'Kasuni Amanda', tel:'0712345678' },
-  { id: 2, name: "Grilled Chicken wedges", amount: 2, description: "Medically reviewed by Melizza Rifkin.", username:'Kasuni Amanda', tel:'0711234567' },
-];
+// // Dummy data for demonstration purposes
+// const initialOrders = [
+//   { id: 1, customer: "John Doe", totalPrice: "LKR 250.00", date: "2024-07-10", status: "Pending" },
+//   { id: 2, customer: "Jane Smith", totalPrice: "LKR 500.00", date: "2024-07-11", status: "Pending" },
+//   { id: 3, customer: "Bob Johnson", totalPrice: "LKR 750.00", date: "2024-07-12", status: "Cancelled" },
+//   { id: 4, customer: "Alice Brown", totalPrice: "LKR 1000.00", date: "2024-07-13", status: "Completed" },
+//   { id: 5, customer: "Chris Davis", totalPrice: "LKR 15000.00", date: "2024-07-14", status: "Pending" },
+//   { id: 6, customer: "Patricia Miller", totalPrice: "LKR 200.00", date: "2024-07-15", status: "On Delivery" },
+//   { id: 7, customer: "Patricia Miller", totalPrice: "LKR 5000.00", date: "2024-07-15", status: "On Delivery" },
+//   { id: 8, customer: "Patricia Miller", totalPrice: "LKR 5000.00", date: "2024-07-15", status: "Completed" }
+// ];
 
-const MenuItemTile = ({ item }) => {
-  const [open, setOpen] = useState(false);
-  const [accepted, setAccepted] = useState(false); // Track acceptance state
+// export const OrderTable = ({ filterValue }) => {
+//   const [orders, setOrders] = useState(initialOrders);
 
-  const handleDelete = () => {
-    console.log(`Deleting item ${item.id}`);
-    setOpen(false);
-  };
+//   const filteredOrders = orders.filter(order => 
+//     filterValue === "ALL" || order.status.toLowerCase() === filterValue.toLowerCase()
+//   );
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+//   return (
+//     <Box>
+//       <Card className='mt-1'>
+//         <CardHeader
+//           title={"All Orders"}
+//           sx={{ pt: 2, alignItems: "center" }}
+//         />
+//         <TableContainer component={Paper}>
+//           <Table sx={{ minWidth: 650 }} aria-label="simple table">
+//             <TableHead>
+//               <TableRow>
+//                 <TableCell align="center">
+//                   <button className="table-button">Order Id</button>
+//                 </TableCell> 
+//                 <TableCell align="center">
+//                   <button className="table-button">Customer</button>
+//                 </TableCell>
+//                 <TableCell align="center">
+//                   <button className="table-button">Total Price</button>
+//                 </TableCell>
+//                 <TableCell align="center">
+//                   <button className="table-button">Date</button>
+//                 </TableCell>
+//                 <TableCell align="center">
+//                   <button className="table-button">Status</button>
+//                 </TableCell>
+//                 <TableCell align="center">
+//                   <button className="table-button">View</button>
+//                 </TableCell>
+//               </TableRow>
+//             </TableHead>
+//             <TableBody>
+//               {filteredOrders.map((order) => (
+//                 <TableRow key={order.id}>
+//                   <TableCell align="center">{order.id}</TableCell>
+//                   <TableCell align="center">{order.customer}</TableCell>
+//                   <TableCell align="center">{order.totalPrice}</TableCell>
+//                   <TableCell align="center">{order.date}</TableCell>
+//                   <TableCell align="center">{order.status}</TableCell>
+//                   <TableCell align="center">
+//                     <Link to={`../order/${order.id}`}>
+//                       <button className="table-view-button">View</button>
+//                     </Link>
+//                   </TableCell>
+//                 </TableRow>
+//               ))}
+//             </TableBody>
+//           </Table>
+//         </TableContainer>
+//       </Card>
+//     </Box>
+//   );
+// }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+import { Delete, MoreVert } from '@mui/icons-material'
+import { Box, Card, CardActions, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import React from 'react'
+import CreateIcon from '@mui/icons-material/Create'
 
-  const handleAccept = () => {
-    // Handle the acceptance logic here
-    setAccepted(true); // Update state to show pending button
-    setOpen(false);
-  };
-
-  const handleSubmit = () => {
-    // Handle the submission logic here
-    setOpen(false);
-  };
-
-  return (
-    <Box
-      sx={{
-        width: 300,
-        height: 350,
-        margin: 2,
-        borderRadius: 10,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        backgroundColor: 'rgba(64, 64, 64, 0.8)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: 2,
-      }}
-    >
-<div
-  style={{
-    width: 200,
-    height: 80,
-    borderRadius: '50px',
-    boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent', // Keep the background transparent
-  }}
->
-  <Typography variant="h6" sx={{ margin: 0, color: 'white' }}>
-    {item.name}
-  </Typography>
-</div>
-
-
-      <Typography variant="h6" sx={{ marginTop: 1 }}>
-        Amount of items: {item.amount}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        {item.description}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        User Name : {item.username}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        Telphone : {item.tel}
-      </Typography>
-
-      <div className="button-container mt-5">
-        {!accepted && (
-          <button type="button" className="button add-button" onClick={handleClickOpen}>
-            Accept
-          </button>
-        )}
-        <button type="button" className="button delete-button" onClick={handleDelete}>
-          Reject
-        </button>
-
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Are you sure you want to delete {item.name}?</DialogTitle>
-          <DialogActions>
-            <button type="button" className="button add-button mb-5 mr-5" onClick={handleDelete} autoFocus>
-              Yes
-            </button>
-            <button type="button" className="button add-button mb-5 mr-5" onClick={handleClose}>
-              No
-            </button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={open} onClose={handleSubmit}>
-          <DialogTitle>Accept</DialogTitle>
-          <DialogActions>
-            <TextField label="Enter Price" fullWidth />
-            <button type='button' className='button add-button' onClick={handleAccept}>Submit</button>
-          </DialogActions>
-        </Dialog>
-      </div>
-
-      {accepted && (
-        <button type="button" className="button details-button" style={{ width: '70%' }}>
-          Pending
-        </button>
-      )}
-    </Box>
-  );
-};
+const orders = [1,1,1,1,1,1,1]
 
 export const MenuTable = () => {
   return (
-    <Box
-      sx={{
-        backgroundImage: `url(${BackgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        padding: 2,
-      }}
-    >
-      <CardHeader
-        title="Menu"
-        sx={{ pt: 2, alignItems: "center" }}
-      />
+    <Box>
+      <Card className='mt-2'>
+        <CardHeader
+        title={"Menu"}
+        sx={{pt:2, alignItems:"center"}}
+        />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          padding: 2,
-        }}
-      >
-        {menuItems.map((item) => (
-          <MenuItemTile key={item.id} item={item} />
-        ))}
-      </Box>
+        <CardActions action = {
+          <IconButton aria-label='settings'>
+            <CreateIcon />
+          </IconButton>
+        }
+        />
+
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead >
+          <TableRow >
+            <TableCell>id</TableCell>
+            <TableCell align="left">Image</TableCell>
+            <TableCell align="right">Title</TableCell>
+            <TableCell align="right">Ingredients</TableCell> 
+            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Availability</TableCell>
+            <TableCell align="right">Delete</TableCell> 
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {orders.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {row.name}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {1}
+              </TableCell>
+              <TableCell align="right">{"image"}</TableCell>
+              <TableCell align="right">{"codewithzosh"}</TableCell>
+              <TableCell align="right">{"price"}</TableCell>
+              <TableCell align="right">{"name"}</TableCell>
+              <TableCell align="right"><IconButton><Delete/></IconButton></TableCell> 
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+      </Card>
     </Box>
-  );
-};
+  )
+}
 
