@@ -1,18 +1,13 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import React, { useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-// Demo data, this should ideally be passed in as props or fetched from a server
-
-
 const MenuCard = ({ item }) => {
-  const {auth,restaurant,menu}=useSelector(store=>store);
-  const [initialCeleryValue] = useState(50); // Assume the initial celery value of the food
   const [ingredientCounts, setIngredientCounts] = useState({});
-  const [totalCeleryValue, setTotalCeleryValue] = useState(initialCeleryValue);
-  const navigate = useNavigate(); 
+  const [totalCeleryValue, setTotalCeleryValue] = useState(50); // Example starting celery value
+  const navigate = useNavigate();
 
   const handleCheckBoxChange = (ingredient) => {
     setIngredientCounts((prevCounts) => {
@@ -34,15 +29,14 @@ const MenuCard = ({ item }) => {
     navigate('/cart');
   };
 
-
   const handleNutritionContentClick = () => {
     const encodedFoodName = encodeURIComponent(item.name);
     localStorage.setItem('Item', JSON.stringify({ name: item.name, images: item.images }));
-    const quantity = 1; // Default weight/quantity
+    const quantity = 1; 
     navigate(`/nutrition-content/${quantity} ${encodedFoodName}`);
   };
-  
-  
+
+  const categorizedIngredients = categorizeIngredients(item.ingredients);
 
   return (
     <Accordion>
@@ -53,7 +47,7 @@ const MenuCard = ({ item }) => {
       >
         <div className='lg:flex items-center justify-between'>
           <div className='lg:flex items-center lg:gap-5'>
-            <img className='w-[7rem] h-[7rem] object-cover' src={item.images} alt='' />
+            <img className='w-[7rem] h-[7rem] object-cover' src={item.images[0]} alt={item.name} />
           </div>
           <div className='space-y-1 lg:space-y-5 lg:max-w-2xl lg:ml-5'>
             <p className='font-semibold text-xl'>{item.name}</p>
@@ -65,15 +59,15 @@ const MenuCard = ({ item }) => {
       <AccordionDetails>
         <form onSubmit={handleSubmit}>
           <div className='flex gap-5 flex-wrap'>
-            {Object.keys(categorizeIngredients(item.ingredients)).map((category) => (
+            {Object.keys(categorizedIngredients).map((category) => (
               <div key={category}>
-                <p>{category}</p>
+                <p className='font-bold mb-2'>{category}</p>
                 <FormGroup>
-                  {categorizeIngredients(item.ingredients)[category].map((ingredient) => (
+                  {categorizedIngredients[category].map((ingredient) => (
                     <FormControlLabel
-                      key={`${category}-${ingredient.name}`}
+                      key={ingredient.id}
                       control={<Checkbox onChange={() => handleCheckBoxChange(ingredient)} />}
-                      label={`${ingredient.name} (+${ingredient.celeryValue})`}
+                      label={`${ingredient.name} (+${ingredient.celeryValue || 0})`}
                     />
                   ))}
                 </FormGroup>
@@ -102,14 +96,13 @@ const MenuCard = ({ item }) => {
 
 export default MenuCard;
 
-// Helper function to categorize ingredients
 export const categorizeIngredients = (ingredients) => {
   return ingredients.reduce((acc, ingredient) => {
-    const { category } = ingredient;
-    if (!acc[category]) {
-      acc[category] = [];
+    const categoryName = ingredient.category?.name || 'Uncategorized';
+    if (!acc[categoryName]) {
+      acc[categoryName] = [];
     }
-    acc[category].push(ingredient);
+    acc[categoryName].push(ingredient);
     return acc;
   }, {});
 };

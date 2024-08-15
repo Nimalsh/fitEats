@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Card, CardContent, CardMedia, Typography, Grid, Box, Button } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, Grid, Box, Button, List, ListItem, ListItemText } from '@mui/material';
 import { Pie } from 'react-chartjs-2';
 import { fetchNutritionData } from '../State/Nutrion/Action';
 
@@ -83,7 +83,7 @@ const Nutricontent = () => {
               <Typography variant="body2" color="text.secondary">
                 Calories: {foodData.calories} kcal
               </Typography>
-              <Button variant="contained" color="primary" sx={{ marginLeft: '37rem' }}>
+              <Button variant="contained" color="primary" sx={{ marginLeft: '35rem' }}>
                 Order Now
               </Button>
             </CardContent>
@@ -109,6 +109,22 @@ const Nutricontent = () => {
                   <Pie data={micronutrientData} options={chartOptions} />
                 </Grid>
               </Grid>
+              <Box sx={{ mt: 4 }}>
+  <Typography variant="h6" component="div">
+    Health Highlights
+  </Typography>
+  <Typography variant="body1" component="div">
+    {foodData.healthLabels.slice(0, 10).map(label => label.toLowerCase()).join(', ')}
+  </Typography>
+  <Typography variant="h6" component="div" sx={{ mt: 2 }}>
+    Diet Labels
+  </Typography>
+  <Typography variant="body1" component="div">
+    {foodData.dietLabels.slice(0, 10).map(label => label.toLowerCase()).join(', ')}
+  </Typography>
+</Box>
+
+
             </CardContent>
           </Card>
         </Grid>

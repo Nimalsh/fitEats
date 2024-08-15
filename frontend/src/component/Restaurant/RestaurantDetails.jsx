@@ -27,6 +27,7 @@ const RestaurantDetails = () => {
   const jwt=localStorage.getItem("jwt")
   const {auth,restaurant,menu}=useSelector(store=>store)
   const {id,city}=useParams();
+  const [selectedCategory,setSelectedCtegory]=useState("");
 
 
   const handleFilter = (e) => {
@@ -34,12 +35,32 @@ const RestaurantDetails = () => {
     setFoodType(e.target.value);
   };
 
+  
+  const handleFilterCategory = (e,value) => {
+    console.log(e.target.value, e.target.name,value);
+    setSelectedCtegory(e.target.value);
+  };
+
+
   console.log("restaurant",restaurant)
   useEffect(()=>{
     dispatch(getRestaurantById({jwt,restaurantId:id}))
     dispatch(getRestaurantsCategory({jwt,restaurantId:id}))
-    dispatch(getMenuItemsByRestaurantId({jwt,restaurantId:id,vagetarian:false,nonveg:false,seasonal:false,foodCategory:""}))
+   
   },[])
+
+  useEffect(()=>{
+      dispatch(
+        getMenuItemsByRestaurantId({
+        jwt,
+        restaurantId:id,
+        vagetarian:false,
+        nonveg:false,
+        seasonal:false,
+        foodCategory:selectedCategory,
+      })
+    );
+  },[selectedCategory])
 
   return (
     <div className="px-5 lg:px-20">
@@ -127,11 +148,11 @@ const RestaurantDetails = () => {
               </Typography>
 
               <FormControl className="py-10 space-y-5" component={"fieldset"}>
-                <RadioGroup onChange={handleFilter} name="food_type" value={foodType}>
+                <RadioGroup onChange={handleFilterCategory} name="food_category" >
                   {restaurant.categories.map((item) => (
                     <FormControlLabel
-                    key={item.value}
-                    value={item.value}
+                    key={item}
+                    value={item.name}
                     control={<Radio />}
                     label={item.name}
                   />
