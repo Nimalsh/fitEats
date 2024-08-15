@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom' 
 import { RestaurantRoute } from './RestaurantRoute'
 import  CustomRoutes from './CustomRoutes' 
-import { AdminRoute } from './AdminRoute'
+// import { AdminRoute } from './AdminRoute'
 
 const Routers = () => {
   return (

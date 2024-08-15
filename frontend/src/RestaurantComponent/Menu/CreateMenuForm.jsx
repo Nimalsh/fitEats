@@ -1,32 +1,40 @@
-import { AddPhotoAlternate, Margin } from '@mui/icons-material';
-import { Box, Chip, CircularProgress, FormControl, Grid, IconButton, InputLabel, OutlinedInput, Select, TextField } from '@mui/material';
-import { useFormik } from 'formik'
-import React, { useState } from 'react'
-import CloseIcon from "@mui/icons-material/Close"
-import RestaurantImage from '../../assets/images/Restaurant.jpeg'; 
+import { AddPhotoAlternate } from '@mui/icons-material';
+import CloseIcon from "@mui/icons-material/Close";
+import { Box, CardHeader, Chip, CircularProgress, Grid, IconButton, InputLabel, MenuItem, OutlinedInput, Select, TextField } from '@mui/material';
+import { Formik, useFormik } from 'formik';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import BackgroundImage from '../../assets/images/item.png';
+import { createRestaurant } from '../../component/State/Restaurant/Action';
 import { uploadImageToCloudinary } from '../util/UploadToCloudinary';
 
 const initialValues = {
     name: '',
     description: '', 
-    price:'',
-    category:'',
-    restaurantId:'',
-    vegetarian:'true',
-    seosonal:'false',
+    price:"",
+    category:"",
+    restaurantId:"",
+    vegetarian:true,
+    seasonal:false,
     ingredients:[],
     images: [], 
-};
+}
 
+ 
 
-export const CreateMnuForm = () => {
+export const CreateMenuForm = () => {
 
-  const [uploadImages,setUploadImage] = useState(false);
+  // const dispatch = useDispatch()
+  // const jwt = localStorage.getItem("jwt")
+
+  const [uploadImages, setUploadImage] = useState(false);
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {
-          values.restaurantId = 2
-          console.log("data ---",values)
+      values.restaurantId = 2
+          console.log("data ---", values)
+
+          dispatch(createRestaurant({ data, token: jwt }))
     }
   })  
 
@@ -34,133 +42,161 @@ export const CreateMnuForm = () => {
     const file = e.target.files[0]
     setUploadImage(true)
     const image = await uploadImageToCloudinary(file) 
-    formik.setFieldValue("images",[...formik.values.images,image])
+    formik.setFieldValue("images", [...formik.values.images, image])
     setUploadImage(false)
   };
 
-  const handleRemoveImage=(index) => {
+  const handleRemoveImage = (index) => {
     const updatedImages = [...formik.values.images];
-    updatedImages.splice(index,1);
+    updatedImages.splice(index, 1);
     formik.setFieldValue("images", updatedImages)
   };
 
-
   return (
-    <div className='py-10 px-5 lg:flex items-center min-h-screen gap-10 mt-20 ml-20 mr-20'>
-
-        <div className='lg:max-w-4xl'>
-        <h1 className='font-bold text-2xl text-center py-2 absolute top-0 left-1/2 transform -translate-x-1/2 mt-10 mb-10'>
-           Add New item
-        </h1> 
-
-        </div>
-
-        <form onSubmit={formik.handleSubmit} className='space-y-4'>
-            <Grid container spacing = {2}>
-                <Grid className='flex flex-wrap gap-5' items xs={12}>
-
-                    <input
-                    accept = 'image/*'
-                    id='fileInput'
-                    style={{display:"none"}}
-                    onChange = {handleImageChange}
-                    type="file"/>
-
-                    <label className='relative' htmlFor="fileInput">
-                        <span className='w-24 h-24 cursor-pointer flex items-center justify-center
-                        p-3 border rounded-md bordergrey-600'><AddPhotoAlternate className='text-white'/></span>
-                        {
-                            uploadImages && <div className='absolute left-0-right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center'>
-                                <CircularProgress/>
-                            </div>
-                        }
-                    </label>
-
-<div className='flex flex-wrap gap-2'>
-  {formik.values.images.map((image, index) => (
-    <div className='relative'>
-      <img className='w-24 h-24 object-cover' 
-        key={index}
-        src={image} alt=""/>
-      <IconButton 
-        size="small"
+    <Box
+      sx={{
+        backgroundImage: `url(${BackgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: '100vh',
+        padding: 2,
+        display: 'flex',
+        justifyContent: 'space-between', // Align items to the left and right
+        alignItems: 'center',
+      }}
+    >
+      <Box
         sx={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          outline: "none"
+          width: '75%', 
+          backgroundColor: 'rgba(64, 64, 64, 0.8)',
+          borderRadius: 10,
+          padding: 4,
+          marginLeft: '12%',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
-        onClick={() => handleRemoveImage(index)} >
-        <CloseIcon sx={{fontSize:"1rem"}}/>
-      </IconButton>
-    </div>
-  ))}
-</div>
-
-                </Grid>
-
-                <Grid  item xs={12}>
-                    <TextField fullWidth
-                    id="name"
-                    name="name"
-                    label="Name"
-                    variant="outlined"
-                    onChange={formik.handleChange}
-                    value={formik.values.name}>
-                    </TextField>
-
-                </Grid>
-                <Grid  item xs={12}>
-                    <TextField fullWidth
-                    id="description"
-                    name="description"
-                    label="Description"
-                    variant="outlined"
-                    onChange={formik.handleChange}
-                    value={formik.values.description}>
-                    </TextField>
-                </Grid>
-                <Grid  item xs={12} lg={6}>
-                    <TextField fullWidth
-                    id="price"
-                    name="price"
-                    label="Price"
-                    variant="outlined"
-                    onChange={formik.handleChange}
-                    value={formik.values.price}>
-                    </TextField>
-
-                </Grid>
-
-                <Grid  item xs={12} lg={3}>
-<FormControl fullWidth>
-  <InputLabel id="demo-simple-select-label">Category</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    value={formik.values.category}
-    label="Category"
-    onChange={formik.handleChange}
-    name="category"
-  >
-    <MenuItem value={10}>Ten</MenuItem>
-    <MenuItem value={20}>Twenty</MenuItem>
-    <MenuItem value={30}>Thirty</MenuItem>
-  </Select>
-</FormControl>
-                </Grid>
-
-                <Grid  item xs={12} lg={3}>
-                <FormControl fullwidth>
+      >
+        <CardHeader
+          title="Add New Restaurant"
+          sx={{ pt: 2, alignItems: 'center', color: 'white' }}
+        />
+        <form onSubmit={formik.handleSubmit} className='space-y-4'>
+          <Grid container spacing={2}>
+            <Grid className='flex flex-wrap gap-5' items xs={12}>
+              <input
+                accept='image/*'
+                id='fileInput'
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+                type="file" 
+              />
+              <label className='relative' htmlFor="fileInput">
+                <span className='w-24 h-24 cursor-pointer flex items-center justify-center
+                  p-3 border rounded-md bordergrey-600'>
+                  <AddPhotoAlternate className='text-white'/>
+                </span>
+                {uploadImages && <div className='absolute left-0-right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center'>
+                  <CircularProgress/>
+                </div>}
+              </label>
+              <div className='flex flex-wrap gap-2'>
+                {formik.values.images.map((image, index) => (
+                  <div className='relative'>
+                    <img className='w-24 h-24 object-cover' 
+                      key={index}
+                      src={image} alt="" />
+                    <IconButton 
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        outline: "none"
+                      }}
+                      onClick={() => handleRemoveImage(index)} >
+                      <CloseIcon sx={{ fontSize: "1rem" }} />
+                    </IconButton>
+                  </div>
+                ))}
+              </div>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth
+                id="name"
+                name="name"
+                label="Name"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth
+                id="description"
+                name="description"
+                label="Description"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.description}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField fullWidth
+                id="price"
+                name="price"
+                label="Price"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.price}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField fullWidth
+                id="category"
+                name="category"
+                label="Food Category"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.category}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+        
+            <Grid item xs={12}>
+            <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel id="demo-multiple-chip-label">Ingredients</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
-          name="ingredients"
           multiple
           value={formik.values.ingredients}
           onChange={formik.handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Ingredients" />}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
@@ -168,61 +204,159 @@ export const CreateMnuForm = () => {
               ))}
             </Box>
           )}
-         // MenuProps={MenuProps}
+          // MenuProps={MenuProps}
         >
-          {["bread","sauce"].map((name,index) => (
+          {[1,1,1].map((name) => (
             <MenuItem
               key={name}
-              value={name}
-               
+              value={name} 
             >
-              {name}
+              {index}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-                </Grid> 
-
-                <Grid  item xs={12} lg={3}>
-<FormControl fullWidth>
-  <InputLabel id="demo-simple-select-label">Is Seasonal</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="seasonal"
-    value={formik.values.seosonal}
-    label="Is Seasonal"
-    onChange={formik.handleChange}
-    name="seasonal"
-  >
-    <MenuItem value={true}>Yes</MenuItem>
-    <MenuItem value={false}>No</MenuItem> 
-  </Select>
-</FormControl>
-                </Grid>
-
-                <Grid  item xs={12} lg={3}>
-<FormControl fullWidth>
-  <InputLabel id="demo-simple-select-label">Is Vegetarian</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="vegetarian"
-    value={formik.values.vegetarian}
-    label="Is Vegetarian"
-    onChange={formik.handleChange}
-    name="vegetarian"
-  >
-    <MenuItem value={true}>Yes</MenuItem>
-    <MenuItem value={false}>No</MenuItem> 
-  </Select>
-</FormControl>
-                </Grid>
             </Grid>
 
-            <button type='submit' className='button add-button'>
-                 Create Restaurant
+            <Grid item xs={12} lg={4}>
+              <TextField fullWidth
+                id="city"
+                name="city"
+                label="City"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.city}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <TextField fullWidth
+                id="district"
+                name="district"
+                label="District"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.district}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <TextField fullWidth
+                id="postalCode"
+                name="postalCode"
+                label="Postal Code"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.postalCode}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <TextField fullWidth
+                id="email"
+                name="email"
+                label="Email"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.email}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <TextField fullWidth
+                id="mobileNumber"
+                name="mobileNumber"
+                label="Mobile Number"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.mobileNumber}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={4}>
+              <TextField fullWidth
+                id="facebook"
+                name="facebook"
+                label="Facebook"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.facebook}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField fullWidth
+                id="instagram"
+                name="instagram"
+                label="Instagram"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.instagram}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField fullWidth
+                id="twitter"
+                name="twitter"
+                label="Twitter"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.twitter}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
+            </Grid>
+          </Grid>
+          <div className='flex justify-center'>
+            <button 
+              type='submit'
+              className='button add-button'
+            >
+              Create Restaurant
             </button>
-
+          </div>
         </form>
-    </div>
-  )
-}
+      </Box>
+    </Box>
+  );
+};
