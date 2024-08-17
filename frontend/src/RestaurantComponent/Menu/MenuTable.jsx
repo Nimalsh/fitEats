@@ -80,23 +80,28 @@ import { Delete, MoreVert } from '@mui/icons-material'
 import { Box, Card, CardActions, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React from 'react'
 import CreateIcon from '@mui/icons-material/Create'
+import { useNavigate } from 'react-router-dom'
 
 const orders = [1,1,1,1,1,1,1]
 
 export const MenuTable = () => {
+
+  const navigate = useNavigate();
+
   return (
     <Box>
       <Card className='mt-2'>
         <CardHeader
-        title={"Menu"}
-        sx={{pt:2, alignItems:"center"}}
-        />
-
-        <CardActions action = {
-          <IconButton aria-label='settings'>
+        action = {
+          <IconButton onClick={()=>navigate("/admin/restaurant/add-menu")} aria-label='settings'>
             <CreateIcon />
           </IconButton>
         }
+        title={"Food Items"}
+        sx={{pt:2, alignItems:"center"}}
+        />
+
+        <CardActions 
         />
 
     <TableContainer component={Paper}>

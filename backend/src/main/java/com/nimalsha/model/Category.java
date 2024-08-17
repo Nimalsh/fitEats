@@ -17,9 +17,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
-
-    private List<String>images;
+    private String name; 
 
     @ManyToOne
     @JsonIgnore

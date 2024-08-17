@@ -1,3 +1,6 @@
+ import {api} from '../../config/api'
+import axios from 'axios';
+ 
 
 
 import { api } from "../../config/api";
