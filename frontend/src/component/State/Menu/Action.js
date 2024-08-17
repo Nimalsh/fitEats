@@ -1,9 +1,6 @@
  import {api} from '../../config/api'
 import axios from 'axios';
- 
-
-
-import { api } from "../../config/api";
+  
 import {
   CREATE_MENU_ITEM_REQUEST,
   CREATE_MENU_ITEM_SUCCESS,
@@ -32,7 +29,7 @@ export const createMenuItem = ({ menu, jwt }) => {
         },
       });
       dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: data });
-      console.log("create menu item", data);
+      console.log("created menu item", data);
     } catch (error) {
       console.log("error", error);
       dispatch({ type: CREATE_MENU_ITEM_FAILURE, payload: error });

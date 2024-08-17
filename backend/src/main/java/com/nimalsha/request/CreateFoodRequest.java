@@ -21,3 +21,4 @@ public class CreateFoodRequest {
     private boolean seasonal;
     private List<IngredientsItem> ingredients;
 }
+

@@ -1,8 +1,10 @@
 
 import CreateIcon from '@mui/icons-material/Create'
 import { Box, Card, CardActions, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CreateIngredientCategoryForm } from './CreateIngredientCategoryForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { getIngredientCategories } from '../../component/State/ingredients/Action'
 
 const orders = [1,1,1,1,1,1,1]
 
@@ -22,7 +24,21 @@ export const Category = () => {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => setOpen(false)
+  
+  const dispatch = useDispatch()
+  const {restaurant , ingredients} = useSelector(store=>store)
+  const jwt = localStorage.getItem("jwt")
+
+  useEffect(() => {
+    if (restaurant.usersRestaurant) {
+      dispatch(getIngredientCategories({ 
+        jwt,
+        id: restaurant.usersRestaurant.id,
+      })); 
+ 
+    }
+  }, [dispatch, jwt, restaurant.usersRestaurant]);
 
   return (
     <Box>
@@ -44,22 +60,20 @@ export const Category = () => {
       <Table  aria-label="simple table">
         <TableHead >
           <TableRow >
-            <TableCell>id</TableCell>
-            <TableCell align="left">Image</TableCell>
+            <TableCell>id</TableCell> 
             <TableCell align="left">Name</TableCell> 
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map((row) => (
+          {ingredients.category.map((item) => (
             <TableRow
-              key={row.name}
+              key={item.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             > 
               <TableCell component="th" scope="row">
-                {1}
+                {item.id}
               </TableCell>
-              <TableCell align="right">{"image"}</TableCell>
-              <TableCell align="right">{"name"}</TableCell> 
+              <TableCell align="left">{item.name}</TableCell> 
             </TableRow>
           ))}
         </TableBody>
