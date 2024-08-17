@@ -4,6 +4,7 @@ import com.nimalsha.model.Category;
 import com.nimalsha.model.Food;
 import com.nimalsha.model.IngredientsItem;
 import com.nimalsha.model.Restaurant;
+import com.nimalsha.repository.CategoryRepository;
 import com.nimalsha.repository.FoodRepository;
 import com.nimalsha.repository.IngredientItemRepository;
 
@@ -26,8 +27,14 @@ public class FoodServiceImp implements FoodService {
     @Autowired
     private IngredientItemRepository ingredientItemRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Override
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) {
+    public Food createFood(CreateFoodRequest req, Restaurant restaurant){
+        // Fetch the category using the category ID
+        // Fetch the category using the category ID
+        Category category = categoryRepository.findById(req.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
         Food food = new Food();
         food.setFoodCategory(category);
         food.setRestaurant(restaurant);

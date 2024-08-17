@@ -13,7 +13,7 @@ public class CreateFoodRequest {
     private String description;
     private Long price;
 
-    private Category category;
+    private Long categoryId;  // Store only the category ID
     private List<String> images;
 
     private Long restaurantId;

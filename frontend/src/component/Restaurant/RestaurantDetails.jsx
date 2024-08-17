@@ -30,10 +30,22 @@ const RestaurantDetails = () => {
   const [selectedCategory,setSelectedCtegory]=useState("");
 
 
-  const handleFilter = (e) => {
-    console.log(e.target.value, e.target.name);
-    setFoodType(e.target.value);
-  };
+ const handleFilter = (e) => {
+  const selectedFoodType = e.target.value;
+  setFoodType(selectedFoodType);
+
+  // Dispatch the action with the correct parameters based on the selected food type
+  dispatch(
+    getMenuItemsByRestaurantId({
+      jwt,
+      restaurantId: id,
+      vegetarian: selectedFoodType === "vegetarian",
+      nonveg: selectedFoodType === "non_vegetarian",
+      seasonal: selectedFoodType === "seasonal",
+      foodCategory: selectedCategory,
+    })
+  );
+};
 
   
   const handleFilterCategory = (e,value) => {

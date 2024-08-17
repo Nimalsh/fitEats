@@ -17,9 +17,10 @@ const RestaurantCard = ({ item }) => {
   };
 
   const jwt=localStorage.getItem("jwt")
-  const handleAddToFavorite=()=>{
-    dispatch(addToFavorites({restaurantId:item.id,jwt}))
-  }
+  const handleAddToFavorite = () => {
+    dispatch(addToFavorites({ restaurantId: item.id, jwt }));
+  };
+  
 
   return (
     <Card className="mb-4 w-[18rem]" >
