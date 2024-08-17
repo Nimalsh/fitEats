@@ -4,6 +4,7 @@ import axios from 'axios'; // Ensure axios is imported
 import {
   CREATE_CATEGORY_REQUEST,
   CREATE_CATEGORY_SUCCESS,
+  CREATE_CATEGORY_FAILURE,
   CREATE_EVENTS_FAILURE,
   CREATE_EVENTS_REQUEST,
   CREATE_EVENTS_SUCCESS,
@@ -262,7 +263,7 @@ export const createCategoryAction = ({ reqData, jwt }) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_CATEGORY_REQUEST });
     try {
-      const res = await api.post(`api/admin/category/`, reqData, {
+      const res = await api.post(`api/admin/category`, reqData, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
@@ -271,7 +272,7 @@ export const createCategoryAction = ({ reqData, jwt }) => {
       dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
       console.log("error", error);
-      dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: error });
+      dispatch({ type: CREATE_CATEGORY_FAILURE, payload: error });
     }
   };
 };
@@ -285,7 +286,7 @@ export const getRestaurantsCategory = ({ jwt, restaurantId }) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get restaurants Ccategory ", res.data);
+      console.log("get restaurants category ", res.data);
       dispatch({ type: GET_RESTAURANTS_CATEGORY_SUCCESS, payload: res.data });
     } catch (error) {
       console.log("error", error);

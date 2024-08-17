@@ -1,4 +1,5 @@
-import { api } from "../../../config/api";
+import {api} from '../../config/api'
+import axios from 'axios';
 
 import {
   CREATE_MENU_ITEM_REQUEST,

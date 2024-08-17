@@ -1,65 +1,64 @@
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { FourGMobiledataRounded } from '@mui/icons-material'
+import { TextField } from '@mui/material'
 import React, { useState } from 'react'
 
 export const CreateIngredientCategoryForm = () => {
 
-    const [formData, setFormData] = useState({
-        name:"", 
-    });
+  const [ formData , setFormData ] = useState({name:''})
 
-    const handleSubmit = () => {
-        
-        console.log(formData)
-    };
+  const handleSubmit = () => {
+    console.log(formData);
+  }
 
-    const handleInputChange = (e) => {
-        const{ name , value} = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    }
+  const handleInputChange = (e) => {
+    const {name,value} = e.target
+    setFormData({
+      ...formData,[name]:value
+    })
+  }
+
   return (
-    <div className=''>
-        <div className='p-5'>
-            <h1 className='text-gray-400 text-center text-xl b-10'>
-                Create Category
-            </h1>
+    <div>
+      <div className='p-5'
+      style={{
+        background: 'rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+        backdropFilter: 'blur(5px)',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        borderRadius: '10px',
+        padding: '40px',
+        margin: '20px',
+      }} 
+      >
+        <h1 className='text-center text-xl pb-10'>Create Ingredient Category</h1>
 
-            <form className='space-y-5' onSubmit={handleSubmit}>
-                <TextField
-                fullwidth
+        <form className='space-y-5' onSubmit={handleSubmit} >
+        <TextField fullWidth
                 id="name"
                 name="name"
-                label="Category"
+                label="Ingredient Category Name"
                 variant="outlined"
                 onChange={handleInputChange}
-                value={formData.name}>
-                </TextField>
+                value={formData.name}
+                sx={{ 
+                  backgroundColor: '#000000',
+                  borderRadius: 1,
+                  'label': { color: '#fff' },
+                  '& label.Mui-focused': { color: '#fff' },
+                }} 
+              />
 
-                <Grid item xs={12} lg={3}>
-<FormControl fullWidth>
-  <InputLabel id="demo-simple-select-label">Category</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    value={formData.ingredientCategoryId}
-    label="Category"
-    onChange={handleInputChange}
-    name="ingredientCategoryId"
-  >
-    <MenuItem value={10}>Ten</MenuItem>
-    <MenuItem value={20}>Twenty</MenuItem>
-    <MenuItem value={30}>Thirty</MenuItem>
-  </Select>
-</FormControl>
-                </Grid>
-
-                <Button variant="contained" type="submit">
-
-                </Button>
-            </form>
-        </div>
+              <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <button 
+              className='button add-button' 
+              variant="contained" 
+              type='submit'
+              style={{marginTop:'10px' , }}>
+                Create Category
+              </button>
+              </div>
+        </form>
+      </div>
     </div>
   )
 }

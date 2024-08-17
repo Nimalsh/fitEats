@@ -1,15 +1,14 @@
-import { Box, Card, CardContent, CardHeader, Grid } from '@mui/material';
-import Button from '@mui/material/Button';
-import React, { useState } from 'react';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import backgroundImage from '../../assets/images/Background_image.png';   
-import RestaurantImage from '../../assets/images/Restaurant.jpeg'; 
-import Rectangle from '../../assets/images/rect.png';  
-import Map from '../../assets/images/map.png'; 
+import { Box, CardContent, CardHeader, Grid } from '@mui/material';
+import Button from '@mui/material/Button';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import backgroundImage from '../../assets/images/Background_image.png';
+import RestaurantImage from '../../assets/images/Restaurant.jpeg';
+import Map from '../../assets/images/map.png';
+import Rectangle from '../../assets/images/rect.png';
 import { updateRestaurantStatus } from '../../component/State/Restaurant/Action';
 
 export const RestuarantDetails = () => {
@@ -21,10 +20,10 @@ export const RestuarantDetails = () => {
 
   const handleRestaurantStatus = () => {
     setIsOpen(prevState => !prevState);
-    // dispatch(updateRestaurantStatus({
-    //   restaurantId:restaurant.usersRestaurant.id,
-    //   jwt : localStorage.getItem("jwt")
-    // }))
+    dispatch(updateRestaurantStatus({
+      restaurantId:restaurant.usersRestaurant.id,
+      jwt : localStorage.getItem("jwt")
+    }))
   };
 
   return (
@@ -56,10 +55,11 @@ export const RestuarantDetails = () => {
         <div>
           <Button 
              color={!restaurant.usersRestaurant?.open  ? "primary" : "error"} 
-             className='py-[1rem] px-[2rem]' variant='contained' 
+             className='py-[1rem] px-[2rem]' 
+             variant='contained' 
              onClick={handleRestaurantStatus} 
              size='large'>
-            {isOpen ? "Close" : "Open"}
+            {restaurant.usersRestaurant?.open ? "Close" : "Open"}
           </Button>
         </div>
       </div>
@@ -105,7 +105,7 @@ export const RestuarantDetails = () => {
                   <p className='w-48'>Status</p>
                   <p className='text-grey-400'>
                     <span className='pr-5'>-</span>
-                    {isOpen ? <span className='px-5 py-2 rounded-full bg-[darkGreen] text-[#FFFFFF]'>Open</span> : <span className='px-5 py-2 rounded-full bg-gray-400 text-grey-950'>Closed</span>}
+                    {!restaurant.usersRestaurant?.open ? <span className='px-5 py-2 rounded-full bg-[darkGreen] text-[#FFFFFF]'>Open</span> : <span className='px-5 py-2 rounded-full bg-gray-400 text-grey-950'>Closed</span>}
                   </p>
                 </div>
               </div>
