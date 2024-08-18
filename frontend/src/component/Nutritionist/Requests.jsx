@@ -35,12 +35,13 @@ function Requests() {
     }
   };
 
-  const handleViewClick = (title, status, requestId) => {
+  const handleViewClick = (title, status, requestId,planId,duration) => {
     // Convert title to lowercase
     const lowerCaseTitle = title.toLowerCase();
   
-    if (status === 'Finished') {
-      navigate(`/view/completed/${requestId}`);
+    if (status === 'Completed') {
+      navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}/${status}`);
+  
     } else {
       switch (lowerCaseTitle) {
         case 'weight loss':
@@ -142,7 +143,7 @@ function Requests() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => handleViewClick(row.title, row.status,row.requestId)}
+                      onClick={() => handleViewClick(row.title, row.status,row.requestId,row.planId,row.duration,row.status)}
                     >
                       View
                     </Button>

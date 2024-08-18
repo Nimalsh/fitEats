@@ -124,8 +124,9 @@ const Weightloss = () => {
 
   const handleProceedClick = () => {
     localStorage.setItem('planDuration', parseInt(duration, 10));
-    dispatch(createPlan(parseInt(duration, 10), token, navigate));
+    dispatch(createPlan(parseInt(duration, 10), token, requestId, navigate)); // Pass the requestId here
   };
+  
 
   return (
     <Container>

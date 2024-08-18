@@ -20,16 +20,15 @@ import {
   UPDATE_PLAN_STATUS_SUCCESS,
   UPDATE_PLAN_STATUS_FAILURE,
 } from "./ActionType";
-
+import { updateRequestWithPlanId,completeRequestByPlanId } from '../Requests/Action';
 // Action to create a plan
 // Action Creator
-export const createPlan = (duration, token, navigate) => {
+export const createPlan = (duration, token, requestId, navigate) => {
     return async (dispatch) => {
       dispatch({ type: CREATE_PLAN_REQUEST });
       try {
         const requestData = { duration };
   
-        // Replace with your actual API endpoint and response structure
         const { data } = await api.post(`/api/plan/create`, requestData, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -40,10 +39,13 @@ export const createPlan = (duration, token, navigate) => {
         console.log("Plan created", data);
   
         const planId = data.planId;
-      
+        const status = data.status;
+        console.log("Request Id", requestId);
+        // Update the request with the created planId
+        await dispatch(updateRequestWithPlanId(requestId, planId, token));
   
         // Navigate to the next view with the planId attached to the URL
-        navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}`);
+        navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}/${status}`);
   
         return planId; // Return the planId
       } catch (error) {
@@ -53,7 +55,6 @@ export const createPlan = (duration, token, navigate) => {
       }
     };
   };
-  
 
 // Action to set breakfast for a specific day
 export const setBreakfast = (planId, reqData) => {
@@ -144,21 +145,29 @@ export const getPlanData = (planId, day, token) => {
     };
 };
 
-export const updatePlanStatus = (planId, status, token) => {
-    return async (dispatch) => {
-      dispatch({ type: UPDATE_PLAN_STATUS_REQUEST });
-      try {
-        await api.put(`/api/plan/${planId}/status`, status, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        dispatch({ type: UPDATE_PLAN_STATUS_SUCCESS });
-        console.log("Plan status updated successfully");
-      } catch (error) {
-        console.log("error", error);
-        dispatch({ type: UPDATE_PLAN_STATUS_FAILURE, payload: error.message });
+export const updatePlanStatus = (planId, status, token, navigate) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_PLAN_STATUS_REQUEST });
+    try {
+      await api.put(`/api/plan/${planId}/status`, status, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      dispatch({ type: UPDATE_PLAN_STATUS_SUCCESS });
+      console.log("Plan status updated successfully");
+
+      // If the status is 'Completed', call the completeRequestByPlanId action
+      if (status === 'Completed') {
+        await dispatch(completeRequestByPlanId(planId, token));
+        // Navigate to another page after completing the request
+        navigate(`/nutri/requests`);
       }
-    };
+    } catch (error) {
+      console.log("Error updating plan status:", error);
+      dispatch({ type: UPDATE_PLAN_STATUS_FAILURE, payload: error.message });
+    }
   };
+};

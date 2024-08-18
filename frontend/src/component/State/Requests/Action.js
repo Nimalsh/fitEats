@@ -9,6 +9,12 @@ import {
   GET_REQUEST_BY_ID_REQUEST,
   GET_REQUEST_BY_ID_SUCCESS,
   GET_REQUEST_BY_ID_FAILURE,
+  UPDATE_REQUEST_WITH_PLAN_ID_REQUEST,
+  UPDATE_REQUEST_WITH_PLAN_ID_SUCCESS,
+  UPDATE_REQUEST_WITH_PLAN_ID_FAILURE,
+  COMPLETE_REQUEST_BY_PLAN_ID_REQUEST,
+  COMPLETE_REQUEST_BY_PLAN_ID_SUCCESS,
+  COMPLETE_REQUEST_BY_PLAN_ID_FAILURE,
 } from './ActionType';
 
 // Action to create a new request
@@ -64,3 +70,42 @@ export const getRequestById = (id, token) => {
       }
     };
   };
+
+  export const updateRequestWithPlanId = (requestId, planId, token) => {
+    return async (dispatch) => {
+      dispatch({ type: UPDATE_REQUEST_WITH_PLAN_ID_REQUEST });
+      try {
+        await api.put(`/api/plan/requests/${requestId}/set-plan`, JSON.stringify(planId), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+  
+        dispatch({ type: UPDATE_REQUEST_WITH_PLAN_ID_SUCCESS });
+        console.log("Request updated with planId");
+      } catch (error) {
+        console.error("Error updating request with planId", error);
+        dispatch({ type: UPDATE_REQUEST_WITH_PLAN_ID_FAILURE, payload: error.message });
+      }
+    };
+  };
+
+  export const completeRequestByPlanId = (planId, token) => {
+    return async (dispatch) => {
+      dispatch({ type: COMPLETE_REQUEST_BY_PLAN_ID_REQUEST });
+      try {
+        await api.put(`/api/plan/requests/complete/${planId}`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        dispatch({ type: COMPLETE_REQUEST_BY_PLAN_ID_SUCCESS });
+        console.log("Request status updated to Completed");
+      } catch (error) {
+        console.error("Error completing request", error);
+        dispatch({ type: COMPLETE_REQUEST_BY_PLAN_ID_FAILURE, payload: error.message });
+      }
+    };
+  };
+  
