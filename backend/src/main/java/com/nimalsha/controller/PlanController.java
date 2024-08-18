@@ -97,6 +97,17 @@ public ResponseEntity<String> setPlanIdForRequest(
     }
 }
 
+@PutMapping("/requests/complete/{planId}")
+public ResponseEntity<String> completeRequestByPlanId(@PathVariable Long planId) {
+    try {
+        planService.completeRequestByPlanId(planId);
+        return ResponseEntity.ok("Request status updated to Completed");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
+
+
 
 
 }

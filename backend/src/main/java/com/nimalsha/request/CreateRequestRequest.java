@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CreateRequestRequest {
     private String title;
-    private Long planId;
+    
     private Long nutritionistId; 
     private String status;
     private double currentWeight;

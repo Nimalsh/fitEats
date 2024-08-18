@@ -9,5 +9,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     // Additional custom queries if needed
     List<Request> findByNutritionistId(Long nutritionistId);
     Optional<Request> findById(Long id);
+    Optional<Request> findByPlanId(Long planId);
 }
 
