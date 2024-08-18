@@ -46,7 +46,7 @@ public class UserServiceImp implements  UserService{
         Request request = new Request();
         request.setTitle(req.getTitle());
         request.setUserId(user.getId()); // Use the ID of the user obtained from JWT
-        request.setPlanId(req.getPlanId());
+       
         request.setNutritionistId(req.getNutritionistId());
         request.setName(user.getFullName());
         request.setStatus(req.getStatus());

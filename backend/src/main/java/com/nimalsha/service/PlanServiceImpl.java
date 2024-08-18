@@ -132,6 +132,20 @@ public void setPlanIdForRequest(Long requestId, Long planId) throws Exception {
     requestRepository.save(request);
 }
 
+@Override
+public void completeRequestByPlanId(Long planId) throws Exception {
+    // Find the request by planId
+    Request request = requestRepository.findByPlanId(planId)
+            .orElseThrow(() -> new Exception("Request not found for planId: " + planId));
+
+    // Update the status to "Completed"
+    request.setStatus("Completed");
+
+    // Save the updated request
+    requestRepository.save(request);
+}
+
+
 
 
 

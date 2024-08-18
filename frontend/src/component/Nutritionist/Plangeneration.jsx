@@ -5,6 +5,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getPlanData, updatePlanStatus } from '../State/Plan/Action'; // Import action creators
 import { setBreakfast as saveBreakfast, setLunch as saveLunch, setDinner as saveDinner } from '../State/Plan/Action';
+import { useNavigate } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
 
@@ -12,7 +13,9 @@ const Plangeneration = () => {
   const dispatch = useDispatch();
   const { planId } = useParams();
   const { duration } = useParams();
+  const { status } = useParams();
   const token = localStorage.getItem('jwt');
+  const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState(1);
 
@@ -72,7 +75,8 @@ const Plangeneration = () => {
 
   // Function to handle publish plan
   const handlePublish = () => {
-    dispatch(updatePlanStatus(planId, "Completed", token))
+    dispatch(updatePlanStatus(planId, "Completed", token, navigate))
+
       .then(() => {
         console.log("Plan published successfully");
         // You can add navigation or any other actions after publishing here
@@ -177,6 +181,7 @@ const Plangeneration = () => {
                 </Grid>
               </Box>
               {/* Publish Plan Button */}
+             {status!=="followed" &&(
               <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
                 <Button
                   variant="contained"
@@ -186,6 +191,7 @@ const Plangeneration = () => {
                   Publish Plan
                 </Button>
               </Box>
+             )}
             </CardContent>
           </Card>
         </Grid>

@@ -16,5 +16,6 @@ public interface PlanService {
      List<Request> getRequestsByNutritionistIdFromToken(String jwtToken) throws Exception;
      Request getRequestById(Long requestId) throws Exception;
      void setPlanIdForRequest(Long requestId, Long planId) throws Exception;
+     void completeRequestByPlanId(Long planId) throws Exception;
 
 }

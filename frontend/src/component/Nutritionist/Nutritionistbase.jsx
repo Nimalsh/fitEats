@@ -39,7 +39,7 @@ const Nutritionistbase = () => {
             <Route path="/weightloss/view/:requestId" element={<Weightloss />} />
             <Route path="/other/view" element={<Othergoal />} />
             <Route path="/other/view/proceed" element={<Plangeneration />} />
-            <Route path="/weightloss/view/proceed/:planId/:duration" element={<Plangeneration />} />
+            <Route path="/weightloss/view/proceed/:planId/:duration/:status" element={<Plangeneration />} />
 
             <Route path="/weightgain/view/proceed" element={<Plangeneration />} />
             <Route path="requests/view/completed" element={<Completedplans/>} />
