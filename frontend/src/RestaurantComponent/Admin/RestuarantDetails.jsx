@@ -165,7 +165,7 @@ export const RestuarantDetails = () => {
               <div className='space-y-1 text-grey-200'>
                 <div className='flex'>
                   <p className='w-48'>Restaurant Name</p>
-                  <p className='text-grey-400'><span className='pr-5'>-</span>Hungry Restaurant</p>
+                  <p className='text-grey-400'><span className='pr-5'>-</span>{restaurant.usersRestaurant?.name}</p>
                 </div>
                 <div className='flex'>
                   <p className='w-48'>Address</p>

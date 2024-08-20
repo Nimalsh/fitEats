@@ -1,10 +1,10 @@
  import { Delete, MoreVert } from '@mui/icons-material'
-import { Avatar, Box, Card, CardActions, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Avatar, Box, Card, CardActions, CardHeader, Chip, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React , {useEffect} from 'react'
 import CreateIcon from '@mui/icons-material/Create'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux' 
-import { getMenuItemsByRestaurantId } from '../../component/State/Menu/Action'
+import { deleteFoodAction, getMenuItemsByRestaurantId } from '../../component/State/Menu/Action'
 
 export const MenuTable = () => {
 
@@ -18,12 +18,21 @@ export const MenuTable = () => {
   useEffect(() => {
     if (restaurant.usersRestaurant) {
       dispatch(getMenuItemsByRestaurantId({ 
-        jwt,
+
         restaurantId: restaurant.usersRestaurant.id,
+        jwt,
+        vegetarian:false,
+        seasonal:false,
+        nonveg:false,
+        foodCategory:""
       })); 
  
     }
   }, [dispatch, jwt, restaurant.usersRestaurant]);
+
+  const handleDeleteFood = (foodId) => {
+    dispatch(deleteFoodAction({foodId,jwt}))
+  }
 
 
   return (
@@ -58,20 +67,24 @@ export const MenuTable = () => {
         <TableBody>
           {menu.menuItems.map((item) => (
             <TableRow
-              key={item.name}
+              key={item.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {item.name}
-              </TableCell>
-              <TableCell component="th" scope="row">
                 {item.id}
               </TableCell>
-              <TableCell align="right"><Avatar src={item.images[0]}></Avatar></TableCell>
-              <TableCell align="right">{"codewithzosh"}</TableCell>
-              <TableCell align="right">{"price"}</TableCell>
-              <TableCell align="right">{"name"}</TableCell>
-              <TableCell align="right"><IconButton><Delete/></IconButton></TableCell> 
+              <TableCell component="th" scope="row">
+              <Avatar src={item.images[0]}></Avatar>
+              </TableCell>
+              <TableCell align="right">{item.name}</TableCell>
+              <TableCell align="right">{item.ingredients.map((ingredient)=><Chip label={ingredient.name}/>)}</TableCell>
+              <TableCell align="right">Rs.{item.price}/=</TableCell>
+              <TableCell align="right">{item.available? "in_stoke":"out_of_stoke"}</TableCell>
+              <TableCell align="right">
+                <IconButton color="error" onClick={()=> handleDeleteFood(item.id)}>
+                <Delete/>
+                </IconButton>
+                </TableCell> 
             </TableRow>
           ))}
         </TableBody>
