@@ -21,6 +21,7 @@ const style = {
 const initialValues = {
   image: '',
   location: '',
+  description:'',
   name: '',
   startedAt: null,
   endAt: null,
@@ -47,6 +48,7 @@ export const Events = () => {
    jwt
    }))
    setFormValues (initialValues)
+   handleClose();
   };
 
   const handleFormChange = (e) => {
@@ -61,7 +63,7 @@ export const Events = () => {
     <div className="p-5">
       <button onClick={handleOpen} variant="contained" className="button add-button">
         Create New Event
-      </button>
+      </button> 
 
       <Modal
         open={open}
@@ -96,6 +98,7 @@ export const Events = () => {
                 />
               </Grid>
 
+
               <Grid item xs={12}>
                 <TextField
                   name="name"
@@ -103,6 +106,17 @@ export const Events = () => {
                   variant="outlined"
                   fullWidth
                   value={formValues.name}
+                  onChange={handleFormChange}
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <TextField
+                  name="description"
+                  label="Description"
+                  variant="outlined"
+                  fullWidth
+                  value={formValues.description}
                   onChange={handleFormChange}
                 />
               </Grid>

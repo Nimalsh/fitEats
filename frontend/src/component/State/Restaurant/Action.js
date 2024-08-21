@@ -1,10 +1,9 @@
  import { api } from "../../config/api";
-import axios from 'axios'; // Ensure axios is imported
 
 import {
+  CREATE_CATEGORY_FAILURE,
   CREATE_CATEGORY_REQUEST,
   CREATE_CATEGORY_SUCCESS,
-  CREATE_CATEGORY_FAILURE,
   CREATE_EVENTS_FAILURE,
   CREATE_EVENTS_REQUEST,
   CREATE_EVENTS_SUCCESS,
@@ -187,6 +186,24 @@ export const updateRestaurantStatus = ({ restaurantId, jwt }) => {
   };
 };
 
+// export const createEventAction = ({ data, jwt, restaurantId }) => {
+//   return async (dispatch) => {
+//     dispatch({ type: CREATE_EVENTS_REQUEST });
+//     try {
+//       const res = await api.post(`api/admin/events/restaurant/${restaurantId}`, data, {
+//         headers: {
+//           Authorization: `Bearer ${jwt}`,
+//         },
+//       });
+//       console.log("create event", res.data);
+//       dispatch({ type: CREATE_EVENTS_SUCCESS, payload: res.data });
+//     } catch (error) {
+//       console.log("error", error);
+//       dispatch({ type: CREATE_EVENTS_FAILURE, payload: error });
+//     }
+//   };
+// };
+
 export const createEventAction = ({ data, jwt, restaurantId }) => {
   return async (dispatch) => {
     dispatch({ type: CREATE_EVENTS_REQUEST });
@@ -199,11 +216,12 @@ export const createEventAction = ({ data, jwt, restaurantId }) => {
       console.log("create event", res.data);
       dispatch({ type: CREATE_EVENTS_SUCCESS, payload: res.data });
     } catch (error) {
-      console.log("error", error);
-      dispatch({ type: CREATE_EVENTS_FAILURE, payload: error });
+      console.error("Error creating event:", error.response?.data || error.message);
+      dispatch({ type: CREATE_EVENTS_FAILURE, payload: error.response?.data || error.message });
     }
   };
 };
+
 
 export const getAllEvents = ({ jwt }) => {
   return async (dispatch) => {

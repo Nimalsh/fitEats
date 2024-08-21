@@ -1,21 +1,20 @@
 import { Dashboard, ShoppingBag } from '@mui/icons-material';
-import React, { useState } from 'react';
-import ShopTwoIcon from '@mui/icons-material/ShopTwo';
-import CategoryIcon from '@mui/icons-material/Category';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import EventIcon from '@mui/icons-material/Event';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import CategoryIcon from '@mui/icons-material/Category';
+import EventIcon from '@mui/icons-material/Event';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ShopTwoIcon from '@mui/icons-material/ShopTwo';
 import { Divider, Drawer, useMediaQuery } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import plateImage from './logo.png'; // Ensure this path is correct
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../component/State/Authentication/Action'
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../component/State/Authentication/Action';
 
 const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/" },
   { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
-  { title: "Meal Requests", icon: <ShopTwoIcon />, path: "/menu" },
+  { title: "Food Items", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "FoodCategory", icon: <CategoryIcon />, path: "/category" },
   { title: "Ingredients", icon: <FastfoodIcon />, path: "/ingredients" },
   { title: "Offers", icon: <EventIcon />, path: "/events" },
