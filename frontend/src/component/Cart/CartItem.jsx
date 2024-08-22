@@ -24,7 +24,7 @@ export default function CartItem({item}) {
     dispatch(removeCartItem({cartItemId:item.id,jwt:auth.jwt|| jwt}))
   }
   const handleUpdateCartItem = (value) => {
-    if (value === -1 && item.quantity === 1) {
+    if (value === -1 && item.quantity === 0) {
       handleRemoveCartItem(); // Remove item if quantity is 1 and user tries to decrement
     } else {
       const updatedQuantity = item.quantity + value;

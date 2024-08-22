@@ -21,7 +21,8 @@ const MenuCard = ({ item }) => {
         ingredients:selectedIngredients,
       },
     };
-    dispatch(addItemToCart(reqData))
+    dispatch(addItemToCart(reqData));
+    navigate("/cart")
     console.log(reqData)
   };
 

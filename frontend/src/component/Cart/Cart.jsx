@@ -39,17 +39,24 @@ const initialValues = {
 const handleSubmit = (values) => {console.log(values)};
 
 const Cart = () => {
-  const createOderUsingSelectedAddress = () => {};
-  const handleOpenAddressModel = () => setOpen(true);
+  const { cart } = useSelector((store) => store);
   const [open, setOpen] = React.useState(false);
+
+  const handleOpenAddressModel = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const {cart}=useSelector(store=>store);
+
+  // Calculate the total price for all items in the cart
+  const itemTotal = cart.cartItems.reduce((total, item) => total + item.totalPrice, 0);
+  const deliveryFee = 100;
+  const gstAndCharges = 500;
+  const totalPay = itemTotal + deliveryFee + gstAndCharges;
+
   return (
     <div>
       <main className="lg:flex justify-between">
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-          {cart.cartItems.map((item) => (
-            <CartItem item={item}/>
+          {cart.cartItems?.map((item) => (
+            <CartItem key={item.id} item={item} />
           ))}
 
           <Divider />
@@ -58,23 +65,23 @@ const Cart = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-gray-400">
                 <p>Item Total</p>
-                <p>LkR {cart.cart.total} </p>
+                <p>LKR {itemTotal}</p>
               </div>
 
               <div className="flex justify-between text-gray-400">
-                <p>delivery Fee</p>
-                <p>LkR 100 </p>
+                <p>Delivery Fee</p>
+                <p>LKR {deliveryFee}</p>
               </div>
 
               <div className="flex justify-between text-gray-400">
                 <p>GST and Restaurant charges</p>
-                <p>LkR 500 </p>
+                <p>LKR {gstAndCharges}</p>
               </div>
               <Divider />
             </div>
             <div className="flex justify-between text-gray-400">
-              <p>Total pay</p>
-              <p>LKR {cart.cart.total+100+200}</p>
+              <p>Total Pay</p>
+              <p>LKR {totalPay}</p>
             </div>
           </div>
         </section>
@@ -88,7 +95,7 @@ const Cart = () => {
           <div className="flex gap-5 flex-wrap justify-center">
             {[1, 1, 1, 1, 1].map((item, index) => (
               <AddressCard
-                handleSelectAddress={createOderUsingSelectedAddress}
+                handleSelectAddress={() => {}}
                 key={index}
                 item={item}
                 showButton={true}
@@ -115,7 +122,6 @@ const Cart = () => {
         </section>
       </main>
 
-    
       <Modal
         open={open}
         onClose={handleClose}
@@ -123,82 +129,52 @@ const Cart = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Formik
-            initialValues={initialValues}
-            // validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-          <Form>
-            <Grid container spacing={2}>
+          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Form>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="streetAddress"
-                    label="StreetAdress"
+                    label="StreetAddress"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="state"
-                    label="state"
+                    label="State"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="city"
-                    label="city"
+                    label="City"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="pincode"
-                    label="pincode"
+                    label="Pincode"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
-                <Grid  item xs={12}>
-                  <Button fullWidth variant="contained" type="submit" color="primary">Deliver Here</Button>
+                <Grid item xs={12}>
+                  <Button fullWidth variant="contained" type="submit" color="primary">
+                    Deliver Here
+                  </Button>
                 </Grid>
-            </Grid>
-          </Form>
+              </Grid>
+            </Form>
           </Formik>
         </Box>
       </Modal>

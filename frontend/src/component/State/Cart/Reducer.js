@@ -61,7 +61,7 @@ const cartReducer = (state = initialState, action) => {
     case actionTypes.REMOVE_CARTITEM_SUCCESS:
       return {
         ...state,
-        cartItem: state.cartItems.filter((item) => item.id !== action.payload),
+        cartItems: state.cartItems.filter((item) => item.id !== action.payload), // Correct key is cartItems
         loading: false,
       };
 
