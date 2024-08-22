@@ -1,12 +1,7 @@
 package com.nimalsha.model;
 
 import java.util.Date;
-import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+ 
 @Entity
 @Data
 @NoArgsConstructor
@@ -36,12 +31,9 @@ public class Event {
     private Date endAt;
 
     private String description;
+ 
+    private String images;
 
-    @Column(length = 1000)
-    @ElementCollection
-    private List<String> images;
-
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne 
     private Restaurant restaurant;
 }

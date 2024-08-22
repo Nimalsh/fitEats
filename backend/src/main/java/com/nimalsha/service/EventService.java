@@ -8,11 +8,11 @@ import com.nimalsha.request.CreateEventRequest;
 
 public interface EventService {
 
-    public Event createEvent(CreateEventRequest req, Restaurant restaurant) throws Exception;
+    public Event createEvent(CreateEventRequest req, Restaurant restaurant);
 
     void deleteEvent(Long eventId) throws Exception;
 
     public List<Event> getRestaurantsEvents(Long restaurantId);
 
     public Event findEventById(Long eventId) throws Exception;
-}
+}   

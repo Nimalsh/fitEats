@@ -48,13 +48,12 @@ public class EventController {
             return new ResponseEntity<>(events, HttpStatus.OK);
         }
 
-        @PostMapping("/restaurant/{restaurantId}")
+        @PostMapping
         public ResponseEntity<Event> createEvent(
-            @RequestBody CreateEventRequest req,
-            @PathVariable Long restaurantId,
+            @RequestBody CreateEventRequest req, 
             @RequestHeader("Authorization") String jwt) throws Exception {
             User user = userService.findUserByJwtToken(jwt);
-            Restaurant restaurant = restaurantService.getRestaurantByUserId(restaurantId);
+            Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
             Event event = eventService.createEvent(req, restaurant);
             return new ResponseEntity<>(event, HttpStatus.CREATED);
         }

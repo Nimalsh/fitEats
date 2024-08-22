@@ -13,9 +13,12 @@ import com.nimalsha.request.CreateEventRequest;
 
 @Service
 public class EventServiceImpl implements EventService{
-    
+        
     @Autowired
     private EventRepository eventRepository; 
+
+    @Autowired
+    private RestaurantService restaurantService;
 
     @Override
     public Event createEvent(CreateEventRequest req, Restaurant restaurant) {
@@ -28,6 +31,7 @@ public class EventServiceImpl implements EventService{
         event.setStartedAt(req.getStartedAt());
         event.setEndAt(req.getEndAt());
         Event savedEvent = eventRepository.save(event);
+        restaurant.getEvents().add(savedEvent);
         return savedEvent;
     } 
 
@@ -38,11 +42,18 @@ public class EventServiceImpl implements EventService{
         eventRepository.delete(event);
     }
 
+    // @Override
+    // public List<Event> getRestaurantsEvents(Long restaurantId) {
+    //     return eventRepository.findByRestaurantId(restaurantId);
+    // }
+
     @Override
-    public List<Event> getRestaurantsEvents(Long restaurantId) {
-        List<Event> events = eventRepository.findByRestaurantId(restaurantId);
-        return events;
-    }
+    public List<Event> getRestaurantsEvents(Long restaurantId)  {  // Changed method name
+            List<Event> events = eventRepository.findByRestaurantId(restaurantId);
+            return events;
+         }
+
+    
 
     @Override
     public Event findEventById(Long eventId) throws Exception {

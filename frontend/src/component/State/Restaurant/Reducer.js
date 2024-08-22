@@ -10,9 +10,10 @@ const initialState = {
   restaurantsEvents: [],
   categories: [],
 };
-
+   
 const restaurantReducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.GET_RESTAURANTS_EVENTS_REQUEST:
     case actionTypes.CREATE_RESTAURANT_REQUEST:
     case actionTypes.GET_ALL_RESTAURANTS_REQUEST:
     case actionTypes.DELETE_RESTAURANT_REQUEST:
@@ -120,6 +121,7 @@ const restaurantReducer = (state = initialState, action) => {
         categories: action.payload,
       };
 
+    case actionTypes.GET_RESTAURANTS_EVENTS_FAILURE:
     case actionTypes.GET_ALL_RESTAURANTS_FAILURE:
     case actionTypes.UPDATE_RESTAURANT_FAILURE:
     case actionTypes.GET_RESTAURANT_BY_ID_FAILURE:

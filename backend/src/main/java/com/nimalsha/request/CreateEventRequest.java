@@ -1,7 +1,6 @@
 package com.nimalsha.request;
 
 import java.util.Date;
-import java.util.List;
 
 import lombok.Data;
 
@@ -13,6 +12,6 @@ public class CreateEventRequest {
     private String description;
     public Date startedAt;
     public Date endAt;
-    private List<String> images;
+    private String images;
     private Long restaurantId;
 }
