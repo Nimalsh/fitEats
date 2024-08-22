@@ -37,14 +37,15 @@ const cartReducer = (state = initialState, action) => {
       };
 
       case actionTypes.UPDATE_CARTITEM_SUCCESS:
-        return {
-          ...state,
-          cartItem: state.cartItems.map((item) =>
-            item.id === action.payload.id ? action.payload : item
-          ),
-          loading: false,
-        };
-  
+  return {
+    ...state,
+    cartItems: state.cartItems.map((cartItem) =>
+      cartItem.id === action.payload.id
+        ? { ...cartItem, quantity: action.payload.quantity, totalPrice: action.payload.totalPrice }
+        : cartItem
+    ),
+  };
+
 
 
     // case actionTypes.GET_ALL_CART_ITEMS_SUCCESS:

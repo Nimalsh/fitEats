@@ -30,6 +30,7 @@ import Plangeneration from './component/Nutritionist/Plangeneration';
 import Mealplanmakebysearch from './component/Nutritionist/Mealplansmakebysearch'; 
 import { getRestaurantByUserId } from './component/State/Restaurant/Action';
 import Calorytrack from './component/Profile/Calorytrack'; 
+import { findCart } from './component/State/Cart/Action';
 
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
 
   useEffect(()=>{
     dispatch(getRestaurantByUserId(auth.jwt || jwt));
+    
+    dispatch(findCart(jwt));
   },[auth.user])
 
   return (

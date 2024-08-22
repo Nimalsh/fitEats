@@ -2,23 +2,26 @@ import React, { useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItemToCart } from '../State/Cart/Action';
 
 const MenuCard = ({ item }) => {
   const [selectedIngredients, setSelectedIngredients] = useState([]); // Initialize as an array
   const [totalCeleryValue, setTotalCeleryValue] = useState(50); // Example starting celery value
   const navigate = useNavigate();
+  const dispatch=useDispatch();
 
   const handleAddItemToCart=(e)=>{
     e.preventDefault()
     const reqData = {
       token:localStorage.getItem("jwt"),
       cartItem:{
-        menuItemId:item.id,
+        foodId:item.id,
         quantity:1,
         ingredients:selectedIngredients,
       },
     };
+    dispatch(addItemToCart(reqData))
     console.log(reqData)
   };
 
@@ -101,6 +104,14 @@ selectedIngredients.filter((item)=>item!==itemName)
             ))}
           </div>
           <div className='pt-5 flex items-center justify-end gap-4'>
+          <Button 
+              variant='contained'
+              type="button"
+              onClick={handleAddItemToCart} 
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-md uppercase font-semibold text-sm"
+            >
+              Add to Cart
+            </Button>
             <Button 
               variant='contained'
               type="button"

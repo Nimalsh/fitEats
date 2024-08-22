@@ -4,6 +4,8 @@ import CartItem from "./CartItem";
 import { AddressCard } from "./AddressCard";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
+import { store } from "../State/store";
 // import * as Yup from "yup";
 
 const items = [1, 1];
@@ -41,12 +43,13 @@ const Cart = () => {
   const handleOpenAddressModel = () => setOpen(true);
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
+  const {cart}=useSelector(store=>store);
   return (
     <div>
       <main className="lg:flex justify-between">
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-          {items.map((item) => (
-            <CartItem />
+          {cart.cartItems.map((item) => (
+            <CartItem item={item}/>
           ))}
 
           <Divider />
@@ -55,7 +58,7 @@ const Cart = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-gray-400">
                 <p>Item Total</p>
-                <p>LkR 5900 </p>
+                <p>LkR {cart.cart.total} </p>
               </div>
 
               <div className="flex justify-between text-gray-400">
@@ -71,7 +74,7 @@ const Cart = () => {
             </div>
             <div className="flex justify-between text-gray-400">
               <p>Total pay</p>
-              <p>LKR 6500</p>
+              <p>LKR {cart.cart.total+100+200}</p>
             </div>
           </div>
         </section>
