@@ -1,27 +1,61 @@
-import React, { useState } from 'react';
-import { Container, Grid, TextField, Paper, Typography, Box, Avatar,Button } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Container, Grid, TextField, Paper, Typography, Box, Avatar, Button } from '@mui/material';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title, ArcElement } from 'chart.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPlan } from '../State/Plan/Action';
+import { getRequestById } from '../State/Requests/Action';
+
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title, ArcElement);
 
 const Weightloss = () => {
+  const { requestId } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Initialize with initial values and disable
-  const [currentWeight, setCurrentWeight] = useState('75'); // Initial value
-  const [targetWeightLoss, setTargetWeightLoss] = useState('5'); // Initial value
-  const [duration, setDuration] = useState('12'); // Initial value
-  const [age, setAge] = useState('24');
-  const [gender, setGender] = useState('Male');
-  const [height, setHeight] = useState('154');
-  const [activityLevel, setActivityLevel] = useState('Moderately active');
-  const [dietaryPreferences, setDietaryPreferences] = useState('Vegan');
-  const [dietaryRestrictions, setDietaryRestrictions] = useState('Nut free');
-  const [mealsPerDay, setMealsPerDay] = useState('3');
+  const token = localStorage.getItem('jwt');
+  const [UserName, setUserName] = useState('');
+  const [currentWeight, setCurrentWeight] = useState('');
+  const [targetWeightLoss, setTargetWeightLoss] = useState('');
+  const [duration, setDuration] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [height, setHeight] = useState('');
+  const [activityLevel, setActivityLevel] = useState('');
+  const [dietaryPreferences, setDietaryPreferences] = useState('');
+  const [dietaryRestrictions, setDietaryRestrictions] = useState('');
+  const [mealsPerDay, setMealsPerDay] = useState('');
+  const [userId, setUserId] = useState('');
+  const [nutritionistId,setNutritionistId] = useState('');
 
-  // Assume we have the user's name
-  const userName = 'John Doe';
+
+  const request = useSelector(state => state.request.requestById);
+
+  useEffect(() => {
+    if (requestId) {
+      console.log('Dispatching getRequestById with requestId:', requestId, 'and token:', token);
+      dispatch(getRequestById(requestId, token));
+    }
+  }, [requestId, dispatch, token]);
+
+  useEffect(() => {
+    if (request) {
+      setUserId(request.userId || '');
+      setNutritionistId(request.nutritionistId || '');
+      setUserName(request.name || '');
+      setCurrentWeight(request.currentWeight || '');
+      setTargetWeightLoss(request.weightGoal || '');
+      setDuration(request.duration || '');
+      setAge(request.age || '');
+      setGender(request.gender || '');
+      setHeight(request.height || '');
+      setActivityLevel(request.activityLevel || '');
+      setDietaryPreferences(request.dietaryPreferences || '');
+      setDietaryRestrictions(request.dietaryRestrictions || '');
+      setMealsPerDay(request.mealsPerDay || '');
+    }
+  }, [request]);
 
   const generateChartData = () => {
     const currentWeightNum = parseFloat(currentWeight) || 0;
@@ -70,12 +104,11 @@ const Weightloss = () => {
     },
   };
 
-  // Dummy data for the donut chart
   const donutData = {
     labels: ['Protein', 'Carbohydrates', 'Fat'],
     datasets: [
       {
-        data: [20, 70, 10], // Example data
+        data: [20, 70, 10],
         backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)'],
         borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
         borderWidth: 1,
@@ -88,15 +121,17 @@ const Weightloss = () => {
       legend: {
         position: 'right',
         labels: {
-          padding: 50, // Increase the gap between the donut chart and the legend
+          padding: 50,
         },
       },
     },
   };
+
   const handleProceedClick = () => {
-    // Navigate to the article page
-   navigate('/nutri/weightloss/view/proceed');
+    localStorage.setItem('planDuration', parseInt(duration, 10));
+    dispatch(createPlan( duration, userId, nutritionistId, requestId,token, navigate)); // Pass the requestId here
   };
+  
 
   return (
     <Container>
@@ -127,7 +162,7 @@ const Weightloss = () => {
                       maxWidth: '100px',
                     }}
                   >
-                    {userName}
+                    {UserName} {/* Updated to UserName */}
                   </Typography>
                 </Box>
                 <Box>
@@ -139,7 +174,7 @@ const Weightloss = () => {
                       type="number"
                       name="currentWeight"
                       value={currentWeight}
-                      disabled // Make the field disabled
+                      disabled
                     />
                     <TextField
                       label="Weight Loss (kg)"
@@ -148,7 +183,7 @@ const Weightloss = () => {
                       type="number"
                       name="targetWeightLoss"
                       value={targetWeightLoss}
-                      disabled // Make the field disabled
+                      disabled
                     />
                     <TextField
                       label="Duration (weeks)"
@@ -157,19 +192,17 @@ const Weightloss = () => {
                       type="number"
                       name="duration"
                       value={duration}
-                      disabled // Make the field disabled
+                      disabled
                     />
                   </form>
                 </Box>
               </Box>
-              {/* Chart Component */}
               <Box mt={3}>
                 <Typography variant="h6" gutterBottom>
                   Weight Loss and Duration Chart
                 </Typography>
                 <Line data={data} options={options} />
               </Box>
-              {/* Donut Chart Component */}
               <Box mt={2} display="flex" flexDirection="column">
                 <Typography variant="h6" gutterBottom mb={-5}>
                   Daily Caloric Needs Breakdown
@@ -189,7 +222,6 @@ const Weightloss = () => {
                 Personal Information
               </Typography>
               <Grid>
-                {/* Age, Gender, Height */}
                 <form noValidate autoComplete="off">
                   <TextField
                     label="Age"
@@ -198,7 +230,7 @@ const Weightloss = () => {
                     type="number"
                     name="Age"
                     value={age}
-                    disabled // Make the field disabled
+                    disabled
                   />
                   <TextField
                     label="Height"
@@ -207,7 +239,7 @@ const Weightloss = () => {
                     type="number"
                     name="Height"
                     value={height}
-                    disabled // Make the field disabled
+                    disabled
                   />
                   <TextField
                     label="Gender"
@@ -216,7 +248,7 @@ const Weightloss = () => {
                     type="text"
                     name="Gender"
                     value={gender}
-                    disabled // Make the field disabled
+                    disabled
                   />
                   <TextField
                     label="Activity Level"
@@ -225,7 +257,7 @@ const Weightloss = () => {
                     type="text"
                     name="activitylevel"
                     value={activityLevel}
-                    disabled // Make the field disabled
+                    disabled
                   />
                   <TextField
                     label="Dietary Preferences"
@@ -234,7 +266,7 @@ const Weightloss = () => {
                     type="text"
                     name="dietaryPreferences"
                     value={dietaryPreferences}
-                    disabled // Make the field disabled
+                    disabled
                   />
                   <TextField
                     label="Dietary Restrictions"
@@ -243,7 +275,7 @@ const Weightloss = () => {
                     type="text"
                     name="dietaryRestrictions"
                     value={dietaryRestrictions}
-                    disabled // Make the field disabled
+                    disabled
                   />
                   <TextField
                     label="Meals per day"
@@ -252,17 +284,16 @@ const Weightloss = () => {
                     type="number"
                     name="mealsPerDay"
                     value={mealsPerDay}
-                    disabled // Make the field disabled
+                    disabled
                   />
-                 
-
                 </form>
                 <Button
                   variant="contained"
                   sx={{
                     marginLeft: '250px',
                     marginTop: '30px',
-                  }} onClick={handleProceedClick}
+                  }}
+                  onClick={handleProceedClick}
                 >
                   Proceed
                 </Button>

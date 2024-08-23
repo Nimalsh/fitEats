@@ -1,40 +1,38 @@
 import { Box, Button, Card, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ButtonBase, Avatar, Typography, Tabs, Tab } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserRequests,updateRequestStatus } from '../State/Requests/Action'; // Import the action to fetch user requests
 
-const orders = [
-    { id: 1, user: 'John Smith', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Pending', userImage: 'https://media.istockphoto.com/id/180866257/photo/design-is-his-passion.jpg?s=2048x2048&w=is&k=20&c=4Jmxxt1oo1bQdOooPl5anov8ZCcyLK1bDoz-FJaLxZ4=' },
-    { id: 2, user: 'Sarah Johnson', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Replied', userImage: 'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg' },
-    { id: 3, user: 'Michael Williams', requestDate: '2024-07-13', title: 'Other', status: 'Replied', userImage: 'https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg' },
-    { id: 4, user: 'Emily Brown', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Finished', userImage: 'https://sources.roboflow.com/dzuGOec8v6bRLhxo590fQ69a22N2/cNc6Q78185vhZDZhqEdS/original.jpg' },
-    { id: 5, user: 'Jessica Miller', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Pending', userImage: 'https://t4.ftcdn.net/jpg/03/03/11/75/360_F_303117590_NNmo6BS2fOBEmDp8uKs2maYmt03t8fSL.jpg' },
-    { id: 6, user: 'Ashley Garcia', requestDate: '2024-07-10', title: 'Weight Gain', status: 'In progress', userImage: 'https://via.placeholder.com/150/6' },
-];
-
-const getStatusColor = (status) => {
-    switch (status) {
-        case 'Pending':
-            return '#f44336'; // Red
-        case 'In progress':
-            return '#4caf50'; // Green
-        case 'Replied':
-            return '#F0ED0C'; // Yellow
-        case 'Finished':
-            return '#2196f3'; // Blue
-        default:
-            return '#9e9e9e'; // Grey
-    }
-};
-
-function Plans() {
+const Plans = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [clickedUser, setClickedUser] = useState(null);
     const [tabIndex, setTabIndex] = useState(0);
+    const token = localStorage.getItem('jwt');
+    console.log("token",token)
 
-    const handleUserClick = (user) => {
-        setClickedUser(user);
-        console.log(`Clicked on user: ${user}`);
+    // Function to return a color based on the status
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'In progress':
+                return '#FFA726'; // Orange color for in-progress status
+            case 'Finished':
+                return '#66BB6A'; // Green color for finished status
+            case 'Pending':
+                return '#FFEB3B'; // Yellow color for pending status
+            case 'Replied':
+                return '#29B6F6'; // Blue color for replied status
+            default:
+                return '#BDBDBD'; // Grey color for unknown status
+        }
     };
+
+    useEffect(() => {
+        // Assuming token is stored in localStorage
+        dispatch(getUserRequests(token));
+    }, [dispatch]);
+
+    const { requests, loading, error } = useSelector((state) => state.request);
 
     const handleTabChange = (event, newValue) => {
         setTabIndex(newValue);
@@ -43,27 +41,39 @@ function Plans() {
     const filterOrders = (orders, status) => {
         switch (status) {
             case 0: // In Progress
-                return orders.filter(order => order.status === 'In progress');
+                return orders.filter(order => order.status === 'Started');
             case 1: // Completed
                 return orders.filter(order => order.status === 'Finished');
             case 2: // Requested
                 return orders.filter(order => order.status === 'Pending');
             case 3: // Replied
-                return orders.filter(order => order.status === 'Replied');
+                return orders.filter(order => order.status === 'Completed');
             default:
                 return orders;
         }
     };
 
-    const handleViewClick = (status) => {
-        if (status === 'Finished') {
-            navigate('/my-profile/completed');
-        } else {
-            navigate('/my-profile/personalized-plan/view');
-        }
+    const handleViewClick = (planId,duration) => {
+        navigate(`/my-profile/personalized-plan/view/${planId}/${duration}`);
     };
+    
 
-    const filteredOrders = filterOrders(orders, tabIndex);
+
+    const handleStartClick = (requestId) => {
+        // Dispatch the update request status action
+        dispatch(updateRequestStatus(requestId, 'Started', token))
+            .then(() => {
+                // Update local state if needed or re-fetch requests
+                dispatch(getUserRequests(token)); // Re-fetch requests to ensure state is updated
+            });
+    };
+    
+
+
+    const filteredOrders = filterOrders(requests, tabIndex);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <Box>
@@ -96,13 +106,10 @@ function Plans() {
                                         {row.title}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <ButtonBase onClick={() => handleUserClick(row.user)}>
+                                        <ButtonBase>
                                             <Box display="flex" alignItems="center" justifyContent="center">
                                                 <Avatar src={row.userImage} alt={row.user} sx={{ width: 32, height: 32 }} />
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{ marginLeft: 1, textDecoration: clickedUser === row.user ? 'underline' : 'none' }}
-                                                >
+                                                <Typography variant="body2" sx={{ marginLeft: 1 }}>
                                                     {row.user}
                                                 </Typography>
                                             </Box>
@@ -124,18 +131,25 @@ function Plans() {
                                             {row.status}
                                         </Box>
                                     </TableCell>
-                                    <TableCell align="center" sx={{ marginRight: 10 }}>
-                                        {row.status !== "Pending" && (
-                                          <Button
-                                            variant="contained"
-                                            color="primary"
-                                           onClick={() => handleViewClick(row.status)}
+                                    <TableCell align="center">
+                                        {row.status === "Completed" ? (
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleStartClick(row.requestId)}
                                             >
-                                            View
-                                        </Button>
-                                       )}
-                                   </TableCell>
-
+                                                Start
+                                            </Button>
+                                        ) : row.status !== "Pending" ? (
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => handleViewClick(row.planId,row.duration)}
+                                            >
+                                                View
+                                            </Button>
+                                        ) : null}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

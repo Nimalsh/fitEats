@@ -7,7 +7,13 @@ import menuItemReducer from "./Menu/Reducer";
 import NutrionReducer from "./Nutrion/Reducer";
 import orderReducer from "./Order/Reducer";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
+
 import restaurantReducer from "./Restaurant/Reducer";
+
+
+import planReducer from "./Plan/Reducer";
+import requestReducer from "./Requests/Reducer";
+import  bmiReducer from "./Bmi/Reducer";
 
 const rootReducer =combineReducers({
   auth:authReducer,
@@ -17,8 +23,14 @@ const rootReducer =combineReducers({
   order:orderReducer,
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
+
   nutrion:NutrionReducer,
   event:restaurantReducer
+
+
+  plan: planReducer, 
+  request:requestReducer,
+  bmi:bmiReducer
 
 });
 

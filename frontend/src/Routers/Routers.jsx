@@ -10,7 +10,11 @@ const Routers = () => {
          <Routes>
             <Route path='/admin/restaurant/*' element={<RestaurantRoute/>}></Route> 
             <Route path='/*' element={<CustomRoutes/>}></Route> 
+
             {/* <Route path='/admin/admin/*' element={<AdminRoute/>}></Route> */}
+
+            
+
          </Routes>
     </div>
   )
