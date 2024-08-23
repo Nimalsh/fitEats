@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,8 +26,9 @@ public class EdamamController {
             @RequestParam String quantity) {
 
         try {
-            Map<String, Object> nutritionData = edamamService.getNutritionData(foodName, quantity);
-            return new ResponseEntity<>(nutritionData, HttpStatus.OK);
+            // Call the updated service method
+            List<Map<String, Object>> nutritionData = edamamService.getNutritionData(foodName, quantity);
+            return new ResponseEntity<>(Map.of("nutrition", nutritionData), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
         }

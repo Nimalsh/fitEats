@@ -110,4 +110,29 @@ public class BmiplanController {
         }
     }
 
+    @PutMapping("/update-nutrition/{planId}/{daysId}")
+    public ResponseEntity<String> updateNutrition(
+        @PathVariable Long planId,
+        @PathVariable int daysId,
+        @RequestBody Map<String, Double> nutritionValues) {
+
+        try {
+            // Call the service method to update the Nutriconsumption
+            bmiService.updateNutritionConsumption(planId, daysId, nutritionValues);
+            return ResponseEntity.ok("Nutrition values updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating nutrition values: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-nutrition/{planId}/{daysId}")
+    public ResponseEntity<Map<String, Double>> getNutrition(@PathVariable Long planId, @PathVariable int daysId) {
+        try {
+            Map<String, Double> nutritionValues = bmiService.getNutritionValues(planId, daysId);
+            return ResponseEntity.ok(nutritionValues);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }

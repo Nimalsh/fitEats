@@ -14,11 +14,14 @@ import com.nimalsha.repository.BdinnerRepository;
 import com.nimalsha.repository.BlunchRepository;
 import com.nimalsha.model.Bmiplan;
 import com.nimalsha.model.Bsnack;
+import com.nimalsha.model.Nutriconsumption;
 import com.nimalsha.repository.BmiplanRepository;
 import com.nimalsha.repository.BsnackRepository;
+import com.nimalsha.repository.NutriconsumptionRepository;
 import com.nimalsha.request.AddMealRequest;
 import com.nimalsha.request.CreatebmiplanRequest;
 import java.util.Map;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,44 +47,61 @@ public class BmiServiceImpl implements BmiService {
     @Autowired
     private BsnackRepository bsnackRepository;
 
+    @Autowired
+    private NutriconsumptionRepository NutriconsumptionRepository;
+
     @Override
-    public Bmiplan createPlan(CreatebmiplanRequest request) throws Exception {
-        // Create and save Bmiplan
-        Bmiplan bmiplan = new Bmiplan();
-        bmiplan.setDuration(request.getDuration());
-        bmiplan.setUserId(request.getUserId());  // Use userId set in the request
-        bmiplan.setStatus(request.getStatus());
-        bmiplan.setWeight(request.getWeight());
-        bmiplan.setHeight(request.getHeight());
-        bmiplan.setBmi(request.getBmi());
-        bmiplan.setTarget(request.getTarget());
-        bmiplan = bmiplanRepository.save(bmiplan);
-    
-        // Create and save Bmidata for each day
-        for (int day = 1; day <= request.getDuration(); day++) {
-            Bmidata bmidata = new Bmidata();
-            bmidata.setPlanId(bmiplan.getPlanId()); // Set planId directly
-            bmidata.setDaysId(day);
-    
-            // Generate numeric IDs
-            Long breakfastId = (long) (day * 10 + 1);
-            Long lunchId = (long) (day * 10 + 2);
-            Long dinnerId = (long) (day * 10 + 3);
-            Long snackId = (long) (day * 10 + 4);
-    
-            // Assign IDs to Bmiplandata
-            bmidata.setBreakfastId(breakfastId);
-            bmidata.setLunchId(lunchId);
-            bmidata.setDinnerId(dinnerId);
-            bmidata.setSnackId(snackId);
-    
-            // Save each Bmiplandata instance
-            bmidataRepository.save(bmidata);
-        }
-    
-        return bmiplan;
+public Bmiplan createPlan(CreatebmiplanRequest request) throws Exception {
+    // Create and save Bmiplan
+    Bmiplan bmiplan = new Bmiplan();
+    bmiplan.setDuration(request.getDuration());
+    bmiplan.setUserId(request.getUserId());
+    bmiplan.setStatus(request.getStatus());
+    bmiplan.setWeight(request.getWeight());
+    bmiplan.setHeight(request.getHeight());
+    bmiplan.setBmi(request.getBmi());
+    bmiplan.setTarget(request.getTarget());
+    bmiplan = bmiplanRepository.save(bmiplan);
+
+    // Create and save Bmidata for each day
+    for (int day = 1; day <= request.getDuration(); day++) {
+        Bmidata bmidata = new Bmidata();
+        bmidata.setPlanId(bmiplan.getPlanId());
+        bmidata.setDaysId(day);
+
+        // Generate UUIDs for IDs
+        Long breakfastId = generateUniqueLongId();
+        Long lunchId = generateUniqueLongId();
+        Long dinnerId = generateUniqueLongId();
+        Long snackId = generateUniqueLongId();
+
+        // Assign UUIDs to Bmidata
+        bmidata.setBreakfastId(breakfastId);
+        bmidata.setLunchId(lunchId);
+        bmidata.setDinnerId(dinnerId);
+        bmidata.setSnackId(snackId);
+
+        bmidataRepository.save(bmidata);
     }
-    
+
+    for (int day = 1; day <= request.getDuration(); day++) {
+        Nutriconsumption consumption = new Nutriconsumption();
+        consumption.setPlanId(bmiplan.getPlanId());
+        consumption.setDaysId(day);
+
+        NutriconsumptionRepository.save(consumption);
+    }
+
+    return bmiplan;
+}
+  
+private Long generateUniqueLongId() {
+    // Generate a unique Long ID using a timestamp or other logic
+    return System.currentTimeMillis(); // Example
+}
+
+
+
 
     @Override
     public Long getMealId(Long planId, int daysId, String mealName) {
@@ -183,13 +203,78 @@ public class BmiServiceImpl implements BmiService {
         // Structure the results in a map
         Map<String, List<?>> mealMap = new HashMap<>();
         mealMap.put("breakfasts", breakfasts);
-        mealMap.put("lunches", lunches);
+        mealMap.put("lunchs", lunches);
         mealMap.put("dinners", dinners);
         mealMap.put("snacks", snacks);
 
         return mealMap;
     }
 
+    @Override
+
+public Nutriconsumption updateNutritionConsumption(Long planId, int daysId, Map<String, Double> nutritionValues) {
+    // Fetch the existing Nutriconsumption record for the given planId and daysId
+    Nutriconsumption consumption = NutriconsumptionRepository.findByPlanIdAndDaysId(planId, daysId);
+
+    if (consumption == null) {
+        throw new RuntimeException("No Nutriconsumption data found for the given planId and daysId.");
+    }
+
+    // Update the nutritional values by adding the provided values to the existing ones
+    consumption.setCalories(
+        (consumption.getCalories() != null ? consumption.getCalories() : 0) + 
+        (nutritionValues.getOrDefault("calories", 0.0))
+    );
+    consumption.setCarbohydrates(
+        (consumption.getCarbohydrates() != null ? consumption.getCarbohydrates() : 0) + 
+        (nutritionValues.getOrDefault("carbohydrates", 0.0))
+    );
+    consumption.setFiber(
+        (consumption.getFiber() != null ? consumption.getFiber() : 0) + 
+        (nutritionValues.getOrDefault("fiber", 0.0))
+    );
+    consumption.setSugars(
+        (consumption.getSugars() != null ? consumption.getSugars() : 0) + 
+        (nutritionValues.getOrDefault("sugars", 0.0))
+    );
+    consumption.setProtein(
+        (consumption.getProtein() != null ? consumption.getProtein() : 0) + 
+        (nutritionValues.getOrDefault("protein", 0.0))
+    );
+    consumption.setFat(
+        (consumption.getFat() != null ? consumption.getFat() : 0) + 
+        (nutritionValues.getOrDefault("fat", 0.0))
+    );
+    consumption.setSodium(
+        (consumption.getSodium() != null ? consumption.getSodium() : 0) + 
+        (nutritionValues.getOrDefault("sodium", 0.0))
+    );
+
+    // Save the updated Nutriconsumption record
+    return NutriconsumptionRepository.save(consumption);
+}
+
+@Override
+public Map<String, Double> getNutritionValues(Long planId, int daysId) {
+    // Find the Nutriconsumption record by planId and daysId
+    Nutriconsumption consumption = NutriconsumptionRepository.findByPlanIdAndDaysId(planId, daysId);
+    
+    if (consumption == null) {
+        throw new RuntimeException("No Nutriconsumption data found for the given planId and daysId.");
+    }
+
+    // Prepare a map to hold the nutritional values
+    Map<String, Double> nutritionValues = new HashMap<>();
+    nutritionValues.put("carbohydrates", consumption.getCarbohydrates() != null ? consumption.getCarbohydrates() : 0.0);
+    nutritionValues.put("sodium", consumption.getSodium() != null ? consumption.getSodium() : 0.0);
+    nutritionValues.put("fiber", consumption.getFiber() != null ? consumption.getFiber() : 0.0);
+    nutritionValues.put("sugars", consumption.getSugars() != null ? consumption.getSugars() : 0.0);
+    nutritionValues.put("protein", consumption.getProtein() != null ? consumption.getProtein() : 0.0);
+    nutritionValues.put("fat", consumption.getFat() != null ? consumption.getFat() : 0.0);
+    nutritionValues.put("calories", consumption.getCalories() != null ? consumption.getCalories() : 0.0);
+
+    return nutritionValues;
+}
      
 }
 
