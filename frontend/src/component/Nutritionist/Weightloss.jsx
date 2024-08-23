@@ -26,6 +26,9 @@ const Weightloss = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState('');
   const [dietaryRestrictions, setDietaryRestrictions] = useState('');
   const [mealsPerDay, setMealsPerDay] = useState('');
+  const [userId, setUserId] = useState('');
+  const [nutritionistId,setNutritionistId] = useState('');
+
 
   const request = useSelector(state => state.request.requestById);
 
@@ -38,6 +41,8 @@ const Weightloss = () => {
 
   useEffect(() => {
     if (request) {
+      setUserId(request.userId || '');
+      setNutritionistId(request.nutritionistId || '');
       setUserName(request.name || '');
       setCurrentWeight(request.currentWeight || '');
       setTargetWeightLoss(request.weightGoal || '');
@@ -124,7 +129,7 @@ const Weightloss = () => {
 
   const handleProceedClick = () => {
     localStorage.setItem('planDuration', parseInt(duration, 10));
-    dispatch(createPlan(parseInt(duration, 10), token, requestId, navigate)); // Pass the requestId here
+    dispatch(createPlan( duration, userId, nutritionistId, requestId,token, navigate)); // Pass the requestId here
   };
   
 
