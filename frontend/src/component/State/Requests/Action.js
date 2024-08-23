@@ -1,4 +1,4 @@
-import { api } from '../../config/api';
+import { api } from '../../config/api'
 import {
   CREATE_REQUEST_REQUEST,
   CREATE_REQUEST_SUCCESS,
@@ -15,6 +15,15 @@ import {
   COMPLETE_REQUEST_BY_PLAN_ID_REQUEST,
   COMPLETE_REQUEST_BY_PLAN_ID_SUCCESS,
   COMPLETE_REQUEST_BY_PLAN_ID_FAILURE,
+  GET_USER_REQUESTS_REQUEST,
+  GET_USER_REQUESTS_SUCCESS,
+  GET_USER_REQUESTS_FAILURE,
+  UPDATE_REQUEST_STATUS_REQUEST,
+  UPDATE_REQUEST_STATUS_SUCCESS,
+  UPDATE_REQUEST_STATUS_FAILURE,
+  GET_REQUEST_BY_PLAN_ID_REQUEST,
+  GET_REQUEST_BY_PLAN_ID_SUCCESS,
+  GET_REQUEST_BY_PLAN_ID_FAILURE,
 } from './ActionType';
 
 // Action to create a new request
@@ -108,4 +117,59 @@ export const getRequestById = (id, token) => {
       }
     };
   };
+
+  // Action to get requests by JWT token (User's requests)
+export const getUserRequests = (token) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_USER_REQUESTS_REQUEST });
+    try {
+      const { data } = await api.get('/api/users/my-requests', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({ type: GET_USER_REQUESTS_SUCCESS, payload: data });
+      console.log("User requests fetched", data);
+    } catch (error) {
+      console.error("Error fetching user requests", error);
+      dispatch({ type: GET_USER_REQUESTS_FAILURE, payload: error.message });
+    }
+  };
+};
+
+export const updateRequestStatus = (requestId, status, token) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_REQUEST_STATUS_REQUEST });
+    try {
+      await api.put(`/api/plan/requests/${requestId}/status/${status}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({ type: UPDATE_REQUEST_STATUS_SUCCESS });
+      console.log("Request status updated to", status);
+    } catch (error) {
+      console.error("Error updating request status", error);
+      dispatch({ type: UPDATE_REQUEST_STATUS_FAILURE, payload: error.message });
+    }
+  };
+};
+
+export const getRequestByPlanId = (planId, token) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_REQUEST_BY_PLAN_ID_REQUEST });
+    try {
+      const { data } = await api.get(`/api/plan/plan/${planId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({ type: GET_REQUEST_BY_PLAN_ID_SUCCESS, payload: data });
+    } catch (error) {
+      console.error("Error fetching request by planId", error);
+      dispatch({ type: GET_REQUEST_BY_PLAN_ID_FAILURE, payload: error.message });
+    }
+  };
+};
+
   

@@ -19,43 +19,57 @@ import {
   UPDATE_PLAN_STATUS_REQUEST,
   UPDATE_PLAN_STATUS_SUCCESS,
   UPDATE_PLAN_STATUS_FAILURE,
+  UPDATE_MEAL_STATUS_REQUEST,
+  UPDATE_MEAL_STATUS_SUCCESS,
+  UPDATE_MEAL_STATUS_FAILURE,
+  GET_MEAL_STATUS_REQUEST,
+  GET_MEAL_STATUS_SUCCESS,
+  GET_MEAL_STATUS_FAILURE,
+  COUNT_COMPLETED_MEALS_REQUEST, 
+  COUNT_COMPLETED_MEALS_SUCCESS, 
+  COUNT_COMPLETED_MEALS_FAILURE 
 } from "./ActionType";
-import { updateRequestWithPlanId,completeRequestByPlanId } from '../Requests/Action';
+import { updateRequestWithPlanId,completeRequestByPlanId,getRequestById } from '../Requests/Action';
 // Action to create a plan
 // Action Creator
-export const createPlan = (duration, token, requestId, navigate) => {
-    return async (dispatch) => {
-      dispatch({ type: CREATE_PLAN_REQUEST });
-      try {
-        const requestData = { duration };
-  
-        const { data } = await api.post(`/api/plan/create`, requestData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        dispatch({ type: CREATE_PLAN_SUCCESS, payload: data });
-        console.log("Plan created", data);
-  
-        const planId = data.planId;
-        const status = data.status;
-        console.log("Request Id", requestId);
-        // Update the request with the created planId
-        await dispatch(updateRequestWithPlanId(requestId, planId, token));
-  
-        // Navigate to the next view with the planId attached to the URL
-        navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}/${status}`);
-  
-        return planId; // Return the planId
-      } catch (error) {
-        console.log("error", error);
-        dispatch({ type: CREATE_PLAN_FAILURE, payload: error.message });
-        throw error; // Rethrow the error to handle it in the component
-      }
-    };
-  };
+export const createPlan = (duration, userId, nutritionistId, requestId, token, navigate) => {
+  return async (dispatch) => {
+    dispatch({ type: CREATE_PLAN_REQUEST });
+    try {
+      // Construct the request body for creating a plan
+      const planRequestData = {
+        duration,
+        userId,
+        nutritionistId,
+      };
 
+      // Call API to create the plan
+      const { data } = await api.post(`/api/plan/create`, planRequestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      dispatch({ type: CREATE_PLAN_SUCCESS, payload: data });
+      console.log("Plan created", data);
+
+      const planId = data.planId;
+      const status = data.status;
+
+      // Update the request with the created planId
+      await dispatch(updateRequestWithPlanId(requestId, planId, token));
+
+      // Navigate to the next view with the planId attached to the URL
+      navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}/${status}`);
+
+      return planId; // Return the planId
+    } catch (error) {
+      console.log("error", error);
+      dispatch({ type: CREATE_PLAN_FAILURE, payload: error.message });
+      throw error; // Rethrow the error to handle it in the component
+    }
+  };
+};
 // Action to set breakfast for a specific day
 export const setBreakfast = (planId, reqData) => {
   return async (dispatch) => {
@@ -171,3 +185,61 @@ export const updatePlanStatus = (planId, status, token, navigate) => {
     }
   };
 };
+
+export const updateMealStatus = (planId, daysId, mealTypes, token) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_MEAL_STATUS_REQUEST });
+    try {
+      await api.put(`/api/plan/${planId}/day/${daysId}/update-meal-status`, mealTypes, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      dispatch({ type: UPDATE_MEAL_STATUS_SUCCESS });
+      console.log("Meal status updated successfully");
+    } catch (error) {
+      console.log("Error updating meal status:", error);
+      dispatch({ type: UPDATE_MEAL_STATUS_FAILURE, payload: error.message });
+    }
+  };
+};
+
+export const getMealStatus = (planId, daysId, token) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_MEAL_STATUS_REQUEST });
+    try {
+      const { data } = await api.get(`/api/plan/${planId}/day/${daysId}/meal-status`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      dispatch({ type: GET_MEAL_STATUS_SUCCESS, payload: data });
+      console.log("Meal status fetched successfully", data);
+    } catch (error) {
+      console.log("Error fetching meal status:", error);
+      dispatch({ type: GET_MEAL_STATUS_FAILURE, payload: error.message });
+    }
+  };  
+};
+
+export const countCompletedMeals = (planId, token) => {
+  return async (dispatch) => {
+    dispatch({ type: COUNT_COMPLETED_MEALS_REQUEST });
+    try {
+      const { data } = await api.get(`/api/plan/${planId}/completed-meals-count`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    
+      dispatch({ type: COUNT_COMPLETED_MEALS_SUCCESS, payload: data });
+      console.log("Completed meals count fetched successfully", data); 
+      return data;
+    } catch (error) { 
+      console.log("Error fetching completed meals count:", error);
+      dispatch({ type: COUNT_COMPLETED_MEALS_FAILURE, payload: error.message });
+    }
+  };
+  };

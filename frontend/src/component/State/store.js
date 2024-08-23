@@ -9,6 +9,7 @@ import ingredientReducer from "./ingredients/Reduecr";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
 import planReducer from "./Plan/Reducer";
 import requestReducer from "./Requests/Reducer";
+import  bmiReducer from "./Bmi/Reducer";
 const rootReducer =combineReducers({
   auth:authReducer,
   restaurant:restaurantReducer,
@@ -18,7 +19,8 @@ const rootReducer =combineReducers({
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
   plan: planReducer, 
-  request:requestReducer
+  request:requestReducer,
+  bmi:bmiReducer
 });
 
 export const store= legacy_createStore(rootReducer,applyMiddleware(thunk))
