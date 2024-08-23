@@ -1,5 +1,6 @@
 package com.nimalsha.controller;
 
+import com.nimalsha.model.Mealstatus;
 import com.nimalsha.model.Plan;
 import com.nimalsha.model.PlanData;
 import com.nimalsha.model.User;
@@ -27,8 +28,8 @@ public class PlanController {
     @PostMapping("/create")
     public ResponseEntity<Plan> createPlan(@RequestBody CreatePlanRequest request,
                                            @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
-        Plan createdPlan = planService.createPlan(user, request);
+        // No need to retrieve the User object, directly use the request fields
+        Plan createdPlan = planService.createPlan(request);
         return new ResponseEntity<>(createdPlan, HttpStatus.CREATED);
     }
 
@@ -106,8 +107,66 @@ public ResponseEntity<String> completeRequestByPlanId(@PathVariable Long planId)
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
+@PutMapping("/requests/{requestId}/status/{status}")
+public ResponseEntity<String> updateRequestStatus(
+    @PathVariable Long requestId,
+    @PathVariable String status) {
+    try {
+        planService.updateRequestStatus(requestId, status);
+        return ResponseEntity.ok("Request status updated successfully");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
+  
+@PutMapping("/{planId}/day/{daysId}/update-meal-status")
+public ResponseEntity<String> updateMealStatus(
+        @PathVariable Long planId,
+        @PathVariable int daysId,
+        @RequestBody List<String> mealTypes) {
+    try {
+        // Convert the list to an array and pass it to the service method
+        planService.updateMealStatus(planId, daysId, mealTypes.toArray(new String[0]));
+        return ResponseEntity.ok("Meal status updated successfully");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
 
+   @GetMapping("/{planId}/day/{daysId}/meal-status")
+    public ResponseEntity<Mealstatus> getMealStatus(
+            @PathVariable Long planId,
+            @PathVariable int daysId) {
+        try {
+            Mealstatus mealstatus = planService.getMealStatus(planId, daysId);
+            return ResponseEntity.ok(mealstatus);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
+    @GetMapping("/{planId}/completed-meals-count")
+    public ResponseEntity<Integer> countCompletedMeals(@PathVariable Long planId) {
+        try {
+            int completedMealsCount = planService.countCompletedMeals(planId);
+            return ResponseEntity.ok(completedMealsCount);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
+    @GetMapping("/plan/{planId}")
+    public ResponseEntity<Request> getRequestByPlanId(@PathVariable Long planId) {
+        try {
+            Request request = planService.getRequestByPlanId(planId);
+            return ResponseEntity.ok(request);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(null); // Or return a more descriptive error message
+        }
+    }
 
 }
+
+
+
+

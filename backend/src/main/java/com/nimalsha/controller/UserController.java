@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -33,6 +33,13 @@ public class UserController {
         Request request = userService.createNewRequest(jwt, req);
         
         return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/my-requests")
+    public ResponseEntity<List<Request>> getRequestsByToken(@RequestHeader("Authorization") String jwt) throws Exception {
+        // Retrieve the requests associated with the user identified by the JWT token
+        List<Request> requests = userService.getRequestsByToken(jwt);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
     }
     
 

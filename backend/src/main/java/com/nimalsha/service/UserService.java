@@ -3,6 +3,7 @@ package com.nimalsha.service;
 import com.nimalsha.model.User;
 import com.nimalsha.model.Request;
 import com.nimalsha.request.CreateRequestRequest;
+import java.util.List;
 
 
 public interface UserService {
@@ -10,6 +11,6 @@ public interface UserService {
 
     public User findUserByEmail(String email) throws Exception;
     Request createNewRequest(String jwtToken, CreateRequestRequest req) throws Exception;
-    
+    List<Request> getRequestsByToken(String jwtToken) throws Exception; 
     
 }
