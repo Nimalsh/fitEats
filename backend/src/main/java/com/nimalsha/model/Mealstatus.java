@@ -8,16 +8,17 @@ import lombok.Data;
 
 @Entity
 @Data // Lombok will generate getters, setters, toString, equals, and hashCode methods
-public class Plan {
+public class Mealstatus {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private Long planId;
-
-    private int duration;
     private Long userId;
-    private String status; 
-    private Long nutritionistId;
-
-    
-    
+    private int daysId;
+    private boolean breakfast; // Changed from String to boolean
+    private boolean lunch;     // Changed from String to boolean
+    private boolean dinner;
+    private boolean marked;    // Changed from String to boolean
 }
+
