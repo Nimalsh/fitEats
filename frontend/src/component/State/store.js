@@ -25,7 +25,7 @@ const rootReducer =combineReducers({
   ingredients:ingredientReducer,
 
   nutrion:NutrionReducer,
-  event:restaurantReducer
+  event:restaurantReducer,
 
 
   plan: planReducer, 
