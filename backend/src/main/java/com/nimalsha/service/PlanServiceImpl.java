@@ -1,10 +1,12 @@
 package com.nimalsha.service;
 
+import com.nimalsha.model.Mealstatus;
 import com.nimalsha.model.Plan;
 import com.nimalsha.model.PlanData;
 import com.nimalsha.model.User;
 import com.nimalsha.model.Request;
 import com.nimalsha.repository.PlanRepository;
+import com.nimalsha.repository.MealstatusRepository;
 import com.nimalsha.repository.PlanDataRepository;
 import com.nimalsha.repository.RequestRepository;
 import com.nimalsha.request.CreatePlanRequest;
@@ -30,30 +32,45 @@ public class PlanServiceImpl implements PlanService {
     @Autowired
     private RequestRepository requestRepository;
 
+    
+    @Autowired
+    private MealstatusRepository MealstatusRepository;
     @Override
-    public Plan createPlan(User user, CreatePlanRequest request) throws Exception {
+    public Plan createPlan(CreatePlanRequest request) throws Exception {
         Plan plan = new Plan();
         plan.setDuration(request.getDuration());
-        plan.setUserId(user.getId());
+        plan.setUserId(request.getUserId());
         plan.setStatus("In Progress");
-
+        plan.setNutritionistId(request.getNutritionistId());
+    
         Plan savedPlan = planRepository.save(plan);
-
+    
         for (int day = 1; day <= request.getDuration(); day++) {
             PlanData planData = new PlanData();
             planData.setPlanId(savedPlan.getPlanId());
-            planData.setUserId(user.getId());
+            planData.setUserId(request.getUserId());
             planData.setDaysId(day);
-
             planData.setBreakfast("");
             planData.setLunch("");
             planData.setDinner("");
-
             planDataRepository.save(planData);
         }
-
+    
+        for (int day = 1; day <= request.getDuration(); day++) {
+            Mealstatus mealstatus = new Mealstatus();
+            mealstatus.setPlanId(savedPlan.getPlanId());
+            mealstatus.setUserId(request.getUserId());
+            mealstatus.setDaysId(day);
+            mealstatus.setMarked(false);
+            mealstatus.setBreakfast(false);
+            mealstatus.setLunch(false);
+            mealstatus.setDinner(false);
+            MealstatusRepository.save(mealstatus);
+        }
+    
         return savedPlan;
     }
+    
     @Override
 public PlanData getPlanData(Long planId, int daysId) throws Exception {
     return planDataRepository.findByPlanIdAndDaysId(planId, daysId)
@@ -145,8 +162,94 @@ public void completeRequestByPlanId(Long planId) throws Exception {
     requestRepository.save(request);
 }
 
+@Override
+public void updateRequestStatus(Long requestId, String status) throws Exception {
+    // Find the request by requestId
+    Request request = requestRepository.findById(requestId)
+            .orElseThrow(() -> new Exception("Request not found for requestId: " + requestId));
 
+    // Update the status
+    request.setStatus(status);
 
+    // Save the updated request
+    requestRepository.save(request);
+}
+
+@Override
+public void updateMealStatus(Long planId, int daysId, String... mealTypes) throws Exception {
+    // Find the meal status record for the given planId and daysId
+    Optional<Mealstatus> optionalMealstatus = MealstatusRepository.findByPlanIdAndDaysId(planId, daysId);
+    if (optionalMealstatus.isPresent()) {
+        Mealstatus mealstatus = optionalMealstatus.get();
+
+        // Initialize all meal types to false
+        mealstatus.setBreakfast(false);
+        mealstatus.setLunch(false);
+        mealstatus.setDinner(false);
+
+        // Loop through each meal type and update the corresponding field to true
+        for (String mealType : mealTypes) {
+            switch (mealType.toLowerCase()) {
+                case "breakfast":
+                    mealstatus.setBreakfast(true);
+                    break;
+                case "lunch":
+                    mealstatus.setLunch(true);
+                    break;
+                case "dinner":
+                    mealstatus.setDinner(true);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid meal type: " + mealType);
+            }
+        }
+
+        // Save the updated meal status
+        MealstatusRepository.save(mealstatus);
+    } else {
+        throw new Exception("Mealstatus not found for planId: " + planId + ", daysId: " + daysId);
+    }
+}
+
+public Mealstatus getMealStatus(Long planId, int daysId) throws Exception {
+    return MealstatusRepository.findByPlanIdAndDaysId(planId, daysId)
+            .orElseThrow(() -> new Exception("Mealstatus not found for planId: " + planId + ", daysId: " + daysId));
+}
+
+@Override
+public int countCompletedMeals(Long planId) throws Exception {
+    // Fetch all Mealstatus records for the given planId
+    List<Mealstatus> mealstatusList = MealstatusRepository.findByPlanId(planId);
+    
+    if (mealstatusList.isEmpty()) {
+        throw new Exception("No Mealstatus records found for planId: " + planId);
+    }
+
+    // Initialize a counter for completed meals
+    int completedMealsCount = 0;
+
+    // Loop through each Mealstatus record
+    for (Mealstatus mealstatus : mealstatusList) {
+        // Increment the counter for each meal that is set to true
+        if (mealstatus.isBreakfast()) {
+            completedMealsCount++;
+        }
+        if (mealstatus.isLunch()) {
+            completedMealsCount++;
+        }
+        if (mealstatus.isDinner()) {
+            completedMealsCount++;
+        }
+    }
+
+    return completedMealsCount;
+}
+
+@Override
+public Request getRequestByPlanId(Long planId) throws Exception {
+    return requestRepository.findByPlanId(planId)
+            .orElseThrow(() -> new Exception("Request not found for planId: " + planId));
+}
 
 
 
