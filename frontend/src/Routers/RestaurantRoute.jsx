@@ -5,8 +5,7 @@ import { Admin } from '../RestaurantComponent/Admin/Admin';
 import { CreateRestaurantForm } from '../RestaurantComponent/CreateRestaurantForm/CreateRestaurantForm';
 import { AddEvent } from '../RestaurantComponent/Events/AddEvent';
 import { EventDetails } from '../RestaurantComponent/Events/EventDetails';
-import { UpdateEvent } from '../RestaurantComponent/Events/UpdateEvent';
-import { AddFoodCategory, CreateFoodCategory } from '../RestaurantComponent/FoodCategory/CreateFoodCategory';
+import { UpdateEvent } from '../RestaurantComponent/Events/UpdateEvent'; 
 import { AddFoodItem } from '../RestaurantComponent/FoodCategory/AddFoodItem';
 import { FoodItemDetails } from '../RestaurantComponent/FoodCategory/FoodItemDetails';
 import { FoodItemsByCategory } from '../RestaurantComponent/FoodCategory/FoodItemsByCategory';
@@ -24,7 +23,6 @@ export const RestaurantRoute = () => {
       <Routes>
         {/* <Route path='/*' element={false? <CreateRestaurantForm /> : <Admin />}></Route> */}
         <Route path='/*' element={!restaurant.usersRestaurant? <CreateRestaurantForm /> : <Admin />}></Route>
-        <Route path="/category/add" element={<CreateFoodCategory />} />
         <Route path="/food-category/:categoryId" element={<FoodItemsByCategory />} />
         <Route path="/food-item/add/:categoryId" element={<AddFoodItem />} />
         <Route path="/food-item/:foodItemId" element={<FoodItemDetails />} />

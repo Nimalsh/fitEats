@@ -1,157 +1,97 @@
-import { Box, CardHeader, Dialog, DialogActions, DialogTitle, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import BackgroundImage from '../../assets/images/Background_image.png';
-
-const menuItems = [
-  { id: 1, name: "Scrumbled Egg", amount: 3, description: "Medically reviewed by Melizza Rifkin.", username:'Kasuni Amanda', tel:'0712345678' },
-  { id: 2, name: "Grilled Chicken wedges", amount: 2, description: "Medically reviewed by Melizza Rifkin.", username:'Kasuni Amanda', tel:'0711234567' },
-];
-
-const MenuItemTile = ({ item }) => {
-  const [open, setOpen] = useState(false);
-  const [accepted, setAccepted] = useState(false); // Track acceptance state
-
-  const handleDelete = () => {
-    console.log(`Deleting item ${item.id}`);
-    setOpen(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleAccept = () => {
-    // Handle the acceptance logic here
-    setAccepted(true); // Update state to show pending button
-    setOpen(false);
-  };
-
-  const handleSubmit = () => {
-    // Handle the submission logic here
-    setOpen(false);
-  };
-
-  return (
-    <Box
-      sx={{
-        width: 300,
-        height: 350,
-        margin: 2,
-        borderRadius: 10,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        backgroundColor: 'rgba(64, 64, 64, 0.8)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: 2,
-      }}
-    >
-<div
-  style={{
-    width: 200,
-    height: 80,
-    borderRadius: '50px',
-    boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent', // Keep the background transparent
-  }}
->
-  <Typography variant="h6" sx={{ margin: 0, color: 'white' }}>
-    {item.name}
-  </Typography>
-</div>
-
-
-      <Typography variant="h6" sx={{ marginTop: 1 }}>
-        Amount of items: {item.amount}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        {item.description}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        User Name : {item.username}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        Telphone : {item.tel}
-      </Typography>
-
-      <div className="button-container mt-5">
-        {!accepted && (
-          <button type="button" className="button add-button" onClick={handleClickOpen}>
-            Accept
-          </button>
-        )}
-        <button type="button" className="button delete-button" onClick={handleDelete}>
-          Reject
-        </button>
-
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Are you sure you want to delete {item.name}?</DialogTitle>
-          <DialogActions>
-            <button type="button" className="button add-button mb-5 mr-5" onClick={handleDelete} autoFocus>
-              Yes
-            </button>
-            <button type="button" className="button add-button mb-5 mr-5" onClick={handleClose}>
-              No
-            </button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={open} onClose={handleSubmit}>
-          <DialogTitle>Accept</DialogTitle>
-          <DialogActions>
-            <TextField label="Enter Price" fullWidth />
-            <button type='button' className='button add-button' onClick={handleAccept}>Submit</button>
-          </DialogActions>
-        </Dialog>
-      </div>
-
-      {accepted && (
-        <button type="button" className="button details-button" style={{ width: '70%' }}>
-          Pending
-        </button>
-      )}
-    </Box>
-  );
-};
+ import { Delete, MoreVert } from '@mui/icons-material'
+import { Avatar, Box, Card, CardActions, CardHeader, Chip, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import React , {useEffect} from 'react'
+import CreateIcon from '@mui/icons-material/Create'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux' 
+import { deleteFoodAction, getMenuItemsByRestaurantId } from '../../component/State/Menu/Action'
 
 export const MenuTable = () => {
-  return (
-    <Box
-      sx={{
-        backgroundImage: `url(${BackgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        padding: 2,
-      }}
-    >
-      <CardHeader
-        title="Menu"
-        sx={{ pt: 2, alignItems: "center" }}
-      />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          padding: 2,
-        }}
-      >
-        {menuItems.map((item) => (
-          <MenuItemTile key={item.id} item={item} />
-        ))}
-      </Box>
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+
+  const { restaurant , ingredients , menu } = useSelector((store)=>store)
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (restaurant.usersRestaurant) {
+      dispatch(getMenuItemsByRestaurantId({ 
+
+        restaurantId: restaurant.usersRestaurant.id,
+        jwt,
+        vegetarian:false,
+        seasonal:false,
+        nonveg:false,
+        foodCategory:""
+      })); 
+ 
+    }
+  }, [dispatch, jwt, restaurant.usersRestaurant]);
+
+  const handleDeleteFood = (foodId) => {
+    dispatch(deleteFoodAction({foodId,jwt}))
+  }
+
+
+  return (
+    <Box>
+      <Card className='mt-2'>
+        <CardHeader
+        action = {
+          <IconButton onClick={()=>navigate("/admin/restaurant/add-menu")} aria-label='settings'>
+            <CreateIcon />
+          </IconButton>
+        }
+        title={"Food Items"}
+        sx={{pt:2, alignItems:"center"}}
+        />
+
+        <CardActions 
+        />
+
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead >
+          <TableRow >
+            <TableCell>id</TableCell>
+            <TableCell align="left">Image</TableCell>
+            <TableCell align="right">Title</TableCell>
+            <TableCell align="right">Ingredients</TableCell> 
+            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Availability</TableCell>
+            <TableCell align="right">Delete</TableCell> 
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {menu.menuItems.map((item) => (
+            <TableRow
+              key={item.id}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {item.id}
+              </TableCell>
+              <TableCell component="th" scope="row">
+              <Avatar src={item.images[0]}></Avatar>
+              </TableCell>
+              <TableCell align="right">{item.name}</TableCell>
+              <TableCell align="right">{item.ingredients.map((ingredient)=><Chip label={ingredient.name}/>)}</TableCell>
+              <TableCell align="right">Rs.{item.price}/=</TableCell>
+              <TableCell align="right">{item.available? "in_stoke":"out_of_stoke"}</TableCell>
+              <TableCell align="right">
+                <IconButton color="error" onClick={()=> handleDeleteFood(item.id)}>
+                <Delete/>
+                </IconButton>
+                </TableCell> 
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+      </Card>
     </Box>
-  );
-};
+  )
+}
 

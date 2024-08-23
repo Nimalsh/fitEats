@@ -1,119 +1,89 @@
-import React from 'react';
-import { Card, CardContent, CardMedia, Typography, Grid, Box, Button } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { Card, CardContent, CardMedia, Typography, Grid, Box, Button, List, ListItem, ListItemText } from '@mui/material';
 import { Pie } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import { fetchNutritionData } from '../State/Nutrion/Action';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+const Nutricontent = () => {
+  const { foodName } = useParams();
+  const dispatch = useDispatch();
+  const foodData = useSelector((state) => state.nutrion.nutritionData);
 
-const foodData = {
-  name: 'Chicken Biryani',
-  image: 'https://cdn.pixabay.com/photo/2015/04/08/13/13/food-712665_960_720.jpg', // Replace with your image URL
-  servingSize: '200 grams',
-  calories: 350,
-  macronutrients: {
-    carbohydrates: 45,
-    protein: 20,
-    fat: 15,
-    fiber: 4,
-    sugar: 5,
-  },
-  micronutrients: {
-    vitaminA: 20,
-    vitaminC: 15,
-    iron: 10,
-    calcium: 8,
-    sodium: 600,
-  },
-  ingredients: 'Basmati rice, chicken, onions, tomatoes, yogurt, spices (turmeric, cumin, coriander, etc.)',
-  allergens: 'Contains dairy',
-  healthHighlights: ['High in protein', 'Good source of fiber'],
-};
+  useEffect(() => {
+    dispatch(fetchNutritionData(foodName));
+  }, [dispatch, foodName]);
 
-const macronutrientData = {
-  labels: ['Carbohydrates', 'Protein', 'Fat', 'Fiber', 'Sugar'],
-  datasets: [
-    {
-      data: [
-        foodData.macronutrients.carbohydrates,
-        foodData.macronutrients.protein,
-        foodData.macronutrients.fat,
-        foodData.macronutrients.fiber,
-        foodData.macronutrients.sugar,
-      ],
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-    },
-  ],
-};
+  const item = JSON.parse(localStorage.getItem('Item'));
 
-const micronutrientData = {
-  labels: ['Vitamin A', 'Vitamin C', 'Iron', 'Calcium', 'Sodium'],
-  datasets: [
-    {
-      data: [
-        foodData.micronutrients.vitaminA,
-        foodData.micronutrients.vitaminC,
-        foodData.micronutrients.iron,
-        foodData.micronutrients.calcium,
-        foodData.micronutrients.sodium,
-      ],
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-    },
-  ],
-};
+  if (!foodData) return <div>Loading...</div>;
 
-const chartOptions = {
-  plugins: {
-    legend: {
-      display: true,
-      position: 'bottom',
-      align: 'start', // Align legend items to the start (left)
-      labels: {
-        usePointStyle: true, // Use a circular point as legend icon
-        boxWidth: 10, // Width of the colored box next to legend labels
-        color: 'white', // Set legend label text color to white
-        generateLabels: function(chart) {
-          return chart.data.labels.map(function(label, i) {
-            const backgroundColor = chart.data.datasets[0].backgroundColor[i];
-            return {
-              text: label,
-              fillStyle: backgroundColor,
-              fontColor: 'white', // Set font color to white
-              hidden: false,
-              index: i,
-            };
-          });
+  const macronutrientData = {
+    labels: ['Carbohydrates', 'Protein', 'Fat', 'Fiber', 'Sugar'],
+    datasets: [
+      {
+        data: [
+          foodData.totalNutrients.CHOCDF?.quantity || 0,
+          foodData.totalNutrients.PROCNT?.quantity || 0,
+          foodData.totalNutrients.FAT?.quantity || 0,
+          foodData.totalNutrients.FIBTG?.quantity || 0,
+          foodData.totalNutrients.SUGAR?.quantity || 0,
+        ],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+      },
+    ],
+  };
+
+  const micronutrientData = {
+    labels: ['Vitamin A', 'Vitamin C', 'Iron', 'Calcium', 'Sodium'],
+    datasets: [
+      {
+        data: [
+          foodData.totalNutrients.VITA_RAE?.quantity || 0,
+          foodData.totalNutrients.VITC?.quantity || 0,
+          foodData.totalNutrients.FE?.quantity || 0,
+          foodData.totalNutrients.CA?.quantity || 0,
+          foodData.totalNutrients.NA?.quantity || 0,
+        ],
+        backgroundColor: ['#FF6384', '#FFCE56', '#36A2EB', '#9966FF', '#4BC0C0'],
+        hoverBackgroundColor: ['#FF6384', '#FFCE56', '#36A2EB', '#9966FF', '#4BC0C0'],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        align: 'start',
+        labels: {
+          usePointStyle: true,
+          boxWidth: 10,
+          color: 'white',
         },
       },
     },
-  },
-};
+  };
 
-const NutritionInfo = () => {
   return (
     <Box sx={{ mt: 4 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Card>
-            <CardMedia component="img" height="300" image={foodData.image} alt={foodData.name} />
-          
+            <CardMedia component="img" height="300" image={item.images} alt={item.name} />
             <CardContent>
               <Typography variant="h5" component="div">
-                {foodData.name}
+                {item.name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Serving Size: {foodData.servingSize}
+                Serving Size: {foodData.totalWeight} grams
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Calories: {foodData.calories} kcal
               </Typography>
-                  <Button variant="contained" color="primary"sx={{ marginLeft: '37rem' }}  >
+              <Button variant="contained" color="primary" sx={{ marginLeft: '35rem' }}>
                 Order Now
               </Button>
             </CardContent>
@@ -139,20 +109,22 @@ const NutritionInfo = () => {
                   <Pie data={micronutrientData} options={chartOptions} />
                 </Grid>
               </Grid>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 4 }}>
-                <strong>Ingredients:</strong> {foodData.ingredients}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Allergens:</strong> {foodData.allergens}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Health Highlights:</strong>
-              </Typography>
-              <ul>
-                {foodData.healthHighlights.map((highlight, index) => (
-                  <li key={index}>{highlight}</li>
-                ))}
-              </ul>
+              <Box sx={{ mt: 4 }}>
+  <Typography variant="h6" component="div">
+    Health Highlights
+  </Typography>
+  <Typography variant="body1" component="div">
+    {foodData.healthLabels.slice(0, 10).map(label => label.toLowerCase()).join(', ')}
+  </Typography>
+  <Typography variant="h6" component="div" sx={{ mt: 2 }}>
+    Diet Labels
+  </Typography>
+  <Typography variant="body1" component="div">
+    {foodData.dietLabels.slice(0, 10).map(label => label.toLowerCase()).join(', ')}
+  </Typography>
+</Box>
+
+
             </CardContent>
           </Card>
         </Grid>
@@ -161,4 +133,4 @@ const NutritionInfo = () => {
   );
 };
 
-export default NutritionInfo;
+export default Nutricontent;
