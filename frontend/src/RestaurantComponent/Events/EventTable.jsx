@@ -59,10 +59,10 @@ export const EventTable = () => {
         {event.restaurantsEvents && event.restaurantsEvents.length > 0 ? (
           event.restaurantsEvents.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card style={{ background: 'Grey' }}>
+              <Card style={{ background: "#555555" }}>
                 <CardContent>
                   <Box display="flex" justifyContent="center">
-                    <img src={item.images} style={{ width: 100, height: 100, marginBottom: '10px' }} />
+                    <img src={item.images} style={{ width: 200, height: 180, marginBottom: '10px' }} />
                   </Box>
                   <Typography variant="h6" align="center" gutterBottom>
                     {item.name}
