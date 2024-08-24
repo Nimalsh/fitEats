@@ -18,7 +18,9 @@ const rootReducer =combineReducers({
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
   nutrion:NutrionReducer,
-  event:restaurantReducer
+  event:restaurantReducer,
+  foodDetails:menuItemReducer,
+
 
 });
 

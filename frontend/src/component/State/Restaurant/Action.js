@@ -297,27 +297,52 @@ export const deleteEventAction = ({ eventId, jwt }) => {
 //   };
 // };
 
-export const getRestaurantsEvents = ({reqData}) => {
+// export const getRestaurantsEvents = ({reqData}) => {
+//   return async (dispatch) => {
+//     dispatch({ type: GET_RESTAURANTS_EVENTS_REQUEST });
+//     try {
+//       const {data} = await api.get(`api/admin/events/restaurant/${reqData.restaurantId}`, {
+//         headers: {
+//           Authorization: `Bearer ${reqData.jwt}`,
+//         },
+//       });
+//       dispatch({
+//         type:  GET_RESTAURANTS_EVENTS_SUCCESS,
+//         payload: data,
+//       });
+//       console.log("get restaurants event ", data); 
+//     } catch (error) {
+//       console.log("error", error);
+//       dispatch({
+//         type: GET_RESTAURANTS_EVENTS_FAILURE,
+//         payload: error,
+//       }); 
+//     }
+//   };
+// };
+
+
+export const getRestaurantsEvents = ({ restaurantId, jwt }) => {
   return async (dispatch) => {
-    dispatch({ type: GET_RESTAURANTS_EVENTS_REQUEST });
-    try {
-      const {data} = await api.get(`api/admin/events/restaurant/${reqData.restaurantId}`, {
-        headers: {
-          Authorization: `Bearer ${reqData.jwt}`,
-        },
-      });
-      dispatch({
-        type:  GET_RESTAURANTS_EVENTS_SUCCESS,
-        payload: data,
-      });
-      console.log("get restaurants event ", data); 
-    } catch (error) {
-      console.log("error", error);
-      dispatch({
-        type: GET_RESTAURANTS_EVENTS_FAILURE,
-        payload: error,
-      }); 
-    }
+      dispatch({ type: GET_RESTAURANTS_EVENTS_REQUEST });
+      try {
+          const { data } = await api.get(`api/admin/events/restaurant/${restaurantId}`, {
+              headers: {
+                  Authorization: `Bearer ${jwt}`,
+              },
+          });
+          dispatch({
+              type: GET_RESTAURANTS_EVENTS_SUCCESS,
+              payload: data,
+          });
+          console.log("get restaurants event ", data); 
+      } catch (error) {
+          console.log("error", error);
+          dispatch({
+              type: GET_RESTAURANTS_EVENTS_FAILURE,
+              payload: error,
+          }); 
+      }
   };
 };
 

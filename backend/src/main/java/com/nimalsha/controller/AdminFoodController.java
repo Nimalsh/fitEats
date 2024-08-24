@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -82,4 +83,11 @@ public class AdminFoodController {
         res.setMessage("food deleted successfully");
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{foodId}")
+public ResponseEntity<Food> getFoodDetails(@PathVariable Long foodId, @RequestHeader("Authorization") String jwt) throws Exception {
+    User user = userService.findUserByJwtToken(jwt);
+    Food food = foodService.findFoodById(foodId);
+    return new ResponseEntity<>(food, HttpStatus.OK);
+}
 }
