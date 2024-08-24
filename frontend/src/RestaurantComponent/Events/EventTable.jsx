@@ -3,27 +3,34 @@ import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventAction, getRestaurantsEvents } from '../../component/State/Restaurant/Action';
- 
- export const EventTable = () => {
 
+const initialState = {
+  restaurantsEvents: [], 
+};
+
+export const EventTable = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt")
 
-    const { restaurant , event } = useSelector((store) => store)
-
-    // const navigate = useNavigate();
+    const { restaurant, event } = useSelector((store) => store);
 
     useEffect(() => {
-        if(restaurant.usersRestaurant) {
+        console.log('Fetching restaurant events'); // Debugging log
+        if (restaurant.usersRestaurant) {
             dispatch(getRestaurantsEvents({
                 restaurantId: restaurant.usersRestaurant.id,
                 jwt
-            }))
-        };
-    },[dispatch , jwt , restaurant.usersRestaurant]);
+            }));
+        }
+    }, [dispatch, jwt, restaurant.usersRestaurant]);
+
+    useEffect(() => {
+        console.log('restaurant.usersRestaurant:', restaurant.usersRestaurant); // Debugging log
+        console.log('event.restaurantsEvents:', event.restaurantsEvents); // Debugging log
+    }, [restaurant.usersRestaurant, event.restaurantsEvents]);
 
     const handleDeleteEvent = (eventId) => {
-        dispatch(deleteEventAction({eventId,jwt}))
+        dispatch(deleteEventAction({ eventId, jwt }));
     }
 
 
@@ -44,33 +51,36 @@ import { deleteEventAction, getRestaurantsEvents } from '../../component/State/R
             <TableCell>id</TableCell>
             <TableCell align="left">Image</TableCell>
             <TableCell align="right">Title</TableCell>
-            <TableCell align="right">Ingredients</TableCell> 
-            <TableCell align="right">Price</TableCell>
-            <TableCell align="right">Availability</TableCell>
+            <TableCell align="right">Starts At</TableCell> 
+            <TableCell align="right">Ends At</TableCell>
+            <TableCell align="right">Location</TableCell>
             <TableCell align="right">Delete</TableCell> 
           </TableRow>
         </TableHead>
         <TableBody>
-          {event.restaurantsEvents.map((item) => (
-            <TableRow
-              key={item.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {item.id}
-              </TableCell>
-              <TableCell component="th" scope="row">
-              <Avatar src={item.images}></Avatar>
-              </TableCell>
-              <TableCell align="right">{item.name}</TableCell>  
-              <TableCell align="right">
-                <IconButton color="error" onClick={()=> handleDeleteEvent(item.id)}>
-                
-                </IconButton>
-                </TableCell> 
+    {event.restaurantsEvents && event.restaurantsEvents.length > 0 ? (
+        event.restaurantsEvents.map((item) => (
+            <TableRow key={item.id}>
+                <TableCell component="th" scope="row">{item.id}</TableCell>
+                <TableCell><Avatar src={item.images} /></TableCell>
+                <TableCell align="right">{item.name}</TableCell>
+                <TableCell align="right">{new Date(item.startedAt).toLocaleDateString()}</TableCell>
+                <TableCell align="right">{new Date(item.endAt).toLocaleDateString()}</TableCell>
+                <TableCell align="right">{item.location}</TableCell>
+                <TableCell align="right">
+                    <IconButton color="error" onClick={() => handleDeleteEvent(item.id)}>
+                        <button className='btn delete-button'>Delete</button>
+                    </IconButton>
+                </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
+        ))
+    ) : (
+        <TableRow>
+            <TableCell colSpan={7} align="center">No Events Found</TableCell>
+        </TableRow>
+    )}
+</TableBody>
+
       </Table>
     </TableContainer>
         

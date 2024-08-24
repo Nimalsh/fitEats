@@ -26,11 +26,11 @@ const rootReducer =combineReducers({
 
   nutrion:NutrionReducer,
   event:restaurantReducer,
-
-
+  foodDetails:menuItemReducer,
   plan: planReducer, 
   request:requestReducer,
   bmi:bmiReducer
+
 
 });
 
