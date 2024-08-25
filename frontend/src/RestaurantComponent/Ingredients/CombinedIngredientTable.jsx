@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, CardHeader, Modal, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getIngredientCategories,
@@ -29,11 +29,18 @@ export const CombinedIngredientTable = () => {
 
   const [openIngredient, setOpenIngredient] = React.useState(false);
   const [openCategory, setOpenCategory] = React.useState(false);
+  const [openNutrition, setOpenNutrition] = React.useState(false);
+  const [selectedIngredient, setSelectedIngredient] = useState(null);
 
   const handleOpenIngredient = () => setOpenIngredient(true);
   const handleCloseIngredient = () => setOpenIngredient(false);
   const handleOpenCategory = () => setOpenCategory(true);
   const handleCloseCategory = () => setOpenCategory(false);
+  const handleOpenNutrition = (ingredient) => {
+    setSelectedIngredient(ingredient);
+    setOpenNutrition(true);
+  };
+  const handleCloseNutrition = () => setOpenNutrition(false);
 
   useEffect(() => {
     console.log(ingredients);
@@ -137,7 +144,11 @@ export const CombinedIngredientTable = () => {
                       marginBottom: 1,
                     }}
                   >
-                    <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ flexGrow: 1, cursor: "pointer" }}
+                      onClick={() => handleOpenNutrition(ingredient)}
+                    >
                       {ingredient.name}
                     </Typography>
                     <Button
@@ -148,7 +159,7 @@ export const CombinedIngredientTable = () => {
                         borderRadius: "20px",
                         padding: "5px 10px",
                       }}
-                      onClick={() => handleUpdateStock(ingredient.id)}
+                      onClick={() => handleUpdateStock(ingredient.id, !ingredient.inStoke)}
                     >
                       {ingredient.inStoke ? "In Stock" : "Out of Stock"}
                     </Button>
@@ -178,6 +189,29 @@ export const CombinedIngredientTable = () => {
       >
         <Box sx={style}>
           <CreateIngredientCategoryForm />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openNutrition}
+        onClose={handleCloseNutrition}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Nutrition Content
+          </Typography>
+          {selectedIngredient && (
+            <>
+              <Typography>Calories: {selectedIngredient.calories}</Typography>
+              <Typography>Protein: {selectedIngredient.protein}</Typography>
+              <Typography>Carbohydrates: {selectedIngredient.carbohydrates}</Typography>
+              <Typography>Fat: {selectedIngredient.fat}</Typography>
+              <Typography>Total Sugar: {selectedIngredient.totalSugar}</Typography>
+              <Typography>Total Iron: {selectedIngredient.totalIron}</Typography>
+            </>
+          )}
         </Box>
       </Modal>
     </Box>
