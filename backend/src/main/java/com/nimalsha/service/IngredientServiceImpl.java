@@ -1,6 +1,7 @@
 package com.nimalsha.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class IngredientServiceImpl implements IngredientService {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private NutritionService nutritionService;
+
 
     @Override
     public IngredientCategory createIngredientCategory(String name, Long restaurantId) throws Exception {
@@ -38,20 +42,34 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long categoryId)
-            throws Exception {
+    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long categoryId) throws Exception {
+        Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
+        IngredientCategory category = findIngredientCategoryById(categoryId);
         
-                Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
-                IngredientCategory category = findIngredientCategoryById(categoryId);
-                
-                IngredientsItem item = new IngredientsItem();
-                item.setName(ingredientName);
-                item.setRestaurant(restaurant);
-                item.setCategory(category);
-
-                IngredientsItem ingredientsItem = ingredientItemRepository.save(item);
-                category.getIngredientItems().add(ingredientsItem);
-
+        if (restaurant == null) {
+            throw new Exception("Restaurant not found with id: " + restaurantId);
+        }
+        if (category == null) {
+            throw new Exception("Category not found with id: " + categoryId);
+        }
+        
+        // Fetch nutrition data
+        Map<String, Double> nutritionData = nutritionService.getNutritionData(ingredientName);
+        
+        IngredientsItem item = new IngredientsItem();
+        item.setName(ingredientName);
+        item.setRestaurant(restaurant);
+        item.setCategory(category);
+        item.setCalories(nutritionData.getOrDefault("calories", 0.0));
+        item.setProtein(nutritionData.getOrDefault("protein", 0.0));
+        item.setTotalCarbohydrate(nutritionData.getOrDefault("carbohydrates", 0.0));
+        item.setTotalFat(nutritionData.getOrDefault("fat", 0.0));
+        item.setCarbohydrates(nutritionData.getOrDefault("carbohydrates", 0.0));
+        item.setFat(nutritionData.getOrDefault("fat", 0.0));
+        
+        IngredientsItem ingredientsItem = ingredientItemRepository.save(item);
+        category.getIngredientItems().add(ingredientsItem);
+        
         return ingredientsItem;
     }
 
