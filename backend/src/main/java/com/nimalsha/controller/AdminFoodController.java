@@ -1,5 +1,7 @@
  package com.nimalsha.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,4 +92,11 @@ public ResponseEntity<Food> getFoodDetails(@PathVariable Long foodId, @RequestHe
     Food food = foodService.findFoodById(foodId);
     return new ResponseEntity<>(food, HttpStatus.OK);
 }
+
+@GetMapping("/category/{categoryId}")
+public ResponseEntity<List<Food>> getFoodItemsByCategory(@PathVariable Long categoryId) {
+    List<Food> foodItems = foodService.getFoodItemsByCategory(categoryId);
+    return ResponseEntity.ok(foodItems);
 }
+}
+

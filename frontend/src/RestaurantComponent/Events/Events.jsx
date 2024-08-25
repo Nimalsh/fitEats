@@ -1,6 +1,6 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import { CircularProgress, Grid, IconButton, Modal, TextField } from "@mui/material";
+import { CardHeader, CircularProgress, Grid, IconButton, Modal, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createEventAction } from "../../component/State/Restaurant/Action";
 import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { EventTable } from "./EventTable";
+import AddIcon from "@mui/icons-material/Add";
 
 const style = {
   position: "absolute",
@@ -88,13 +89,43 @@ export const Events = () => {
 
   return (
     <div className="p-5">
-      <button
+      {/* <button
         onClick={handleOpen}
         variant="contained"
         className="button add-button"
       >
         Create New Event
-      </button>
+      </button> */}
+      <CardHeader
+        action={
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "center",
+            }}
+          > 
+            <button
+              className="button add-button"
+              onClick={handleOpen}
+              sx={{
+                backgroundColor: "#95CD41",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#7baf30",
+                },
+                borderRadius: "20px",
+                padding: "10px 20px",
+                width: "150px",
+              }}
+            >
+              <AddIcon /> Create New Event
+            </button>
+          </Box>
+        }
+        title="Events and Offers"
+        sx={{ pt: 2, textAlign: "left" }}
+      />
 
       <EventTable />
 

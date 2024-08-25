@@ -14,8 +14,8 @@ import { logout } from '../../component/State/Authentication/Action';
 const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/" },
   { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
-  { title: "Food Items", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "FoodCategory", icon: <CategoryIcon />, path: "/category" },
+  { title: "Food Items", icon: <ShopTwoIcon />, path: "/menu" },
   { title: "Ingredients", icon: <FastfoodIcon />, path: "/ingredients" },
   { title: "Events and Offers", icon: <EventIcon />, path: "/events" },
   { title: "My Profile", icon: <AdminPanelSettingsIcon />, path: "/details" },

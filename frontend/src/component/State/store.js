@@ -23,6 +23,7 @@ const rootReducer =combineReducers({
   order:orderReducer,
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
+  foodItems:restaurantReducer,
 
   nutrion:NutrionReducer,
   event:restaurantReducer,

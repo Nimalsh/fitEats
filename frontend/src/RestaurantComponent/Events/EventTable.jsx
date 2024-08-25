@@ -2,6 +2,7 @@ import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Grid,
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventAction, getRestaurantsEvents } from '../../component/State/Restaurant/Action';
+import AddIcon from "@mui/icons-material/Add";
 
 const modalStyle = {
   position: 'absolute',
@@ -48,12 +49,12 @@ export const EventTable = () => {
 
   return (
     <Box>
-      <Card className='mt-2'>
+      {/* <Card className='mt-2'>
         <CardHeader
           title={"Events and Offers"}
           sx={{ pt: 2, alignItems: "center" }}
         />
-      </Card>
+      </Card> */}
 
       <Grid container spacing={2} sx={{ marginTop: 2 }}>
         {event.restaurantsEvents && event.restaurantsEvents.length > 0 ? (

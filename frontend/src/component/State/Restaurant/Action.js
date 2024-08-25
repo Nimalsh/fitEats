@@ -1,4 +1,5 @@
- import { api } from "../../config/api";
+ import axios from "axios";
+import { api } from "../../config/api";
 
 import {
   CREATE_CATEGORY_FAILURE,
@@ -21,6 +22,9 @@ import {
   GET_ALL_RESTAURANTS_FAILURE,
   GET_ALL_RESTAURANTS_REQUEST,
   GET_ALL_RESTAURANTS_SUCCESS,
+  GET_FOOD_ITEMS_BY_CATEGORY_FAILURE,
+  GET_FOOD_ITEMS_BY_CATEGORY_REQUEST,
+  GET_FOOD_ITEMS_BY_CATEGORY_SUCCESS,
   GET_RESTAURANT_BY_ID_FAILURE,
   GET_RESTAURANT_BY_ID_REQUEST,
   GET_RESTAURANT_BY_ID_SUCCESS,
@@ -380,4 +384,25 @@ export const getRestaurantsCategory = ({ jwt, restaurantId }) => {
       dispatch({ type: GET_RESTAURANTS_CATEGORY_FAILURE, payload: error });
     }
   };
+};
+
+// src/component/State/Restaurant/Action.js
+
+export const getFoodItemsByCategory = ({ categoryId, jwt }) => async (dispatch) => {
+  dispatch({ type: GET_FOOD_ITEMS_BY_CATEGORY_REQUEST });
+  
+  try {
+    const response = await axios.get(`/api/food-items?category_id=${categoryId}`, {
+      headers: { Authorization: `Bearer ${jwt}` }
+    });
+    dispatch({
+      type: GET_FOOD_ITEMS_BY_CATEGORY_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_FOOD_ITEMS_BY_CATEGORY_FAILURE,
+      payload: error.message,
+    });
+  }
 };
