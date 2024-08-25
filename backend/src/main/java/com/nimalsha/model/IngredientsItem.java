@@ -1,4 +1,4 @@
-package com.nimalsha.model; 
+package com.nimalsha.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,10 +33,12 @@ public class IngredientsItem {
 
     // Nutritional information
     private Double calories;
-    private Double protein;
-    private Double totalCarbohydrate;
-    private Double totalFat;
+    private Double protein; 
     private Double carbohydrates;
     private Double fat;
+    
+    // Added fields for additional nutritional information
+    private Double totalVitamins;  // Total amount of vitamins
+    private Double totalSugar;     // Total amount of sugar
+    private Double totalIron;      // Total amount of iron
 }
-

@@ -1,4 +1,4 @@
-package com.nimalsha.service;
+ package com.nimalsha.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +47,9 @@ public class NutritionService {
         nutritionData.put("protein", DEFAULT_NUTRITION_VALUE);
         nutritionData.put("fat", DEFAULT_NUTRITION_VALUE);
         nutritionData.put("carbohydrates", DEFAULT_NUTRITION_VALUE);
+        nutritionData.put("total_sugar", DEFAULT_NUTRITION_VALUE);
+        nutritionData.put("total_vitamins", DEFAULT_NUTRITION_VALUE);
+        nutritionData.put("total_iron", DEFAULT_NUTRITION_VALUE);
 
         try {
             // Send the request and receive a response
@@ -55,8 +58,11 @@ public class NutritionService {
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 // Extract the foods array from the response body
                 Map<String, Object> responseBody = response.getBody();
+                
+                // Debugging output to inspect the response
+                System.out.println("API Response: " + responseBody);
+
                 if (responseBody.containsKey("foods")) {
-                    // Assuming the "foods" key contains a list, we get the first element
                     List<?> foodsList = (List<?>) responseBody.get("foods");
                     if (!foodsList.isEmpty()) {
                         Map<String, Object> foods = (Map<String, Object>) foodsList.get(0);
@@ -66,11 +72,15 @@ public class NutritionService {
                         nutritionData.put("protein", extractNumber(foods.get("nf_protein")));
                         nutritionData.put("fat", extractNumber(foods.get("nf_total_fat")));
                         nutritionData.put("carbohydrates", extractNumber(foods.get("nf_total_carbohydrate")));
+                        nutritionData.put("total_sugar", extractNumber(foods.get("nf_sugars")));
+                        nutritionData.put("total_iron", extractNumber(foods.get("nf_iron_mg")));
+                        nutritionData.put("total_vitamins", extractNumber(foods.get("nf_vitamin_d_mcg")));
+
                     }
                 }
             }
         } catch (Exception e) {
-            // Log the exception (logging framework should be used in real applications)
+            // Log the exception
             System.err.println("Failed to fetch nutrition data: " + e.getMessage());
         }
 
@@ -82,5 +92,15 @@ public class NutritionService {
             return ((Number) value).doubleValue();
         }
         return DEFAULT_NUTRITION_VALUE;
+    }
+
+    private Double calculateTotalVitamins(Map<String, Object> foods) {
+        double totalVitamins = DEFAULT_NUTRITION_VALUE;
+        totalVitamins += extractNumber(foods.get("nf_vitamin_a_dv"));
+        totalVitamins += extractNumber(foods.get("nf_vitamin_c_dv"));
+        totalVitamins += extractNumber(foods.get("nf_vitamin_d_mcg"));
+        totalVitamins += extractNumber(foods.get("nf_vitamin_e_dv"));
+        totalVitamins += extractNumber(foods.get("nf_vitamin_k_dv"));
+        return totalVitamins;
     }
 }
