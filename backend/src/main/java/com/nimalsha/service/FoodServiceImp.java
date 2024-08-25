@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.nimalsha.model.Category;
 import com.nimalsha.model.Food;
 import com.nimalsha.model.Restaurant;
+import com.nimalsha.repository.CategoryRepository;
 import com.nimalsha.repository.FoodRepository;
 import com.nimalsha.repository.IngredientItemRepository;
 import com.nimalsha.request.CreateFoodRequest;
@@ -23,6 +24,9 @@ public class FoodServiceImp implements FoodService {
 
     @Autowired
     private IngredientItemRepository ingredientItemRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) {
@@ -118,4 +122,12 @@ public class FoodServiceImp implements FoodService {
         food.setAvailable((!food.isAvailable()));
         return foodRepository.save(food);
     }
+
+    @Override
+    public List<Food> getFoodItemsByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        return foodRepository.findByFoodCategory(category);
+    }
+    
 }

@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRestaurantsCategory } from "../../component/State/Restaurant/Action";
 import { CreateFoodCategoryForm } from "./CreateFoodCategoryForm";
+import AddIcon from "@mui/icons-material/Add";
 
 const style = {
   position: "absolute",
@@ -51,14 +52,43 @@ export const CategoryTable = () => {
     <Box>
       <Card className="mt-2">
         <CardHeader
+          // action={
+          //   <IconButton onClick={handleOpen} aria-label="settings">
+          //     <CreateIcon />
+          //   </IconButton>
+          // }
+          // title={"Food Category"}
+          // sx={{ pt: 2, alignItems: "center" }}
           action={
-            <IconButton onClick={handleOpen} aria-label="settings">
-              <CreateIcon />
-            </IconButton>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+              }}
+            > 
+              <button
+                className="button add-button"
+                onClick={handleOpen}
+                sx={{
+                  backgroundColor: "#95CD41",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#7baf30",
+                  },
+                  borderRadius: "20px",
+                  padding: "10px 20px",
+                  width: "150px",
+                }}
+              >
+                <AddIcon /> Add Category
+              </button>
+            </Box>
           }
-          title={"Food Category"}
-          sx={{ pt: 2, alignItems: "center" }}
+          title="Food Categories"
+          sx={{ pt: 2, textAlign: "left" }}
         />
+
         <Box sx={{ p: 2 }}>
           <Grid container spacing={2}>
             {restaurant.categories.map((item) => (
