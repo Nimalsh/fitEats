@@ -210,6 +210,7 @@ export const CombinedIngredientTable = () => {
               <Typography>Fat: {selectedIngredient.fat}</Typography>
               <Typography>Total Sugar: {selectedIngredient.totalSugar}</Typography>
               <Typography>Total Iron: {selectedIngredient.totalIron}</Typography>
+              <Typography>Total Vitamins: {selectedIngredient.totalVitamins}</Typography>
             </>
           )}
         </Box>

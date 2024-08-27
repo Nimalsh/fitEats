@@ -1,4 +1,4 @@
- package com.nimalsha.service;
+package com.nimalsha.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +58,7 @@ public class NutritionService {
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 // Extract the foods array from the response body
                 Map<String, Object> responseBody = response.getBody();
-                
+
                 // Debugging output to inspect the response
                 System.out.println("API Response: " + responseBody);
 
@@ -73,8 +73,11 @@ public class NutritionService {
                         nutritionData.put("fat", extractNumber(foods.get("nf_total_fat")));
                         nutritionData.put("carbohydrates", extractNumber(foods.get("nf_total_carbohydrate")));
                         nutritionData.put("total_sugar", extractNumber(foods.get("nf_sugars")));
-                        nutritionData.put("total_iron", extractNumber(foods.get("nf_iron_mg")));
-                        nutritionData.put("total_vitamins", extractNumber(foods.get("nf_vitamin_d_mcg")));
+                        nutritionData.put("total_iron", extractNumber(foods.get("nf_sodium")) / 1000.0);
+                        nutritionData.put("total_vitamins", extractNumber(foods.get("nf_vitamin_d_mcg")) / 1000.0);
+
+                        System.out.println("Vitamin D (mcg): " + foods.get("nf_vitamin_d_mcg"));
+                        System.out.println("Total Vitamins (g): " + nutritionData.get("total_vitamins"));
 
                     }
                 }
@@ -94,13 +97,13 @@ public class NutritionService {
         return DEFAULT_NUTRITION_VALUE;
     }
 
-    private Double calculateTotalVitamins(Map<String, Object> foods) {
-        double totalVitamins = DEFAULT_NUTRITION_VALUE;
-        totalVitamins += extractNumber(foods.get("nf_vitamin_a_dv"));
-        totalVitamins += extractNumber(foods.get("nf_vitamin_c_dv"));
-        totalVitamins += extractNumber(foods.get("nf_vitamin_d_mcg"));
-        totalVitamins += extractNumber(foods.get("nf_vitamin_e_dv"));
-        totalVitamins += extractNumber(foods.get("nf_vitamin_k_dv"));
-        return totalVitamins;
-    }
+    // private Double calculateTotalVitamins(Map<String, Object> foods) {
+    // double totalVitamins = DEFAULT_NUTRITION_VALUE;
+    // totalVitamins += extractNumber(foods.get("nf_vitamin_a_dv"));
+    // totalVitamins += extractNumber(foods.get("nf_vitamin_c_dv"));
+    // totalVitamins += extractNumber(foods.get("nf_vitamin_d_mcg"));
+    // totalVitamins += extractNumber(foods.get("nf_vitamin_e_dv"));
+    // totalVitamins += extractNumber(foods.get("nf_vitamin_k_dv"));
+    // return totalVitamins;
+    // }
 }
