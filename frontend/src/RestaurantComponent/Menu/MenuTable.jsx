@@ -8,6 +8,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Chip,
   Grid,
   IconButton,
   MenuItem,
@@ -27,7 +28,7 @@ import { getRestaurantsCategory } from "../../component/State/Restaurant/Action"
 export const MenuTable = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const { restaurant, menu } = useSelector((store) => store);
+  const { restaurant, menu, ingredients } = useSelector((store) => store);
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,12 +65,14 @@ export const MenuTable = () => {
 
   const filteredMenuItems = menu.menuItems.filter((item) => {
     const matchesCategory =
-      selectedCategory === "" || item.foodCategory.id === selectedCategory;
-    const matchesSearchQuery =
-      item.name.toLowerCase().includes(searchQuery.toLowerCase());
-
+      selectedCategory === "" || item.foodCategory.name === selectedCategory;
+    const matchesSearchQuery = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+  
     return matchesCategory && matchesSearchQuery;
   });
+  
 
   return (
     <Box>
@@ -97,8 +100,8 @@ export const MenuTable = () => {
                   width: "150px",
                 }}
               >
-                <AddIcon /> Add Food 
-              </button> 
+                <AddIcon /> Add Food
+              </button>
 
               <TextField
                 variant="outlined"
@@ -108,24 +111,34 @@ export const MenuTable = () => {
                 InputProps={{
                   startAdornment: <SearchIcon />,
                 }}
-                sx={{ width: "250px", backgroundColor: "#555555", borderRadius: "4px", height: "55px" }}
+                sx={{
+                  width: "250px",
+                  backgroundColor: "#555555",
+                  borderRadius: "4px",
+                  height: "55px",
+                }}
               />
 
-              <Select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                displayEmpty
-                sx={{ width: "200px", backgroundColor: "#555555", borderRadius: "4px" }}
-              >
-                <MenuItem value="">
-                  <em>All Categories</em>
-                </MenuItem>
-                {restaurant.categories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
+<Select
+  value={selectedCategory}
+  onChange={(e) => setSelectedCategory(e.target.value)}
+  displayEmpty
+  sx={{
+    width: "200px",
+    backgroundColor: "#555555",
+    borderRadius: "4px",
+  }}
+>
+  <MenuItem value="">
+    <em>All Categories</em>
+  </MenuItem>
+  {restaurant.categories.map((category) => (
+    <MenuItem key={category.id} value={category.name}>
+      {category.name}
+    </MenuItem>
+  ))}
+</Select>
+
             </Box>
           }
           title="All Food Items"
@@ -153,13 +166,13 @@ export const MenuTable = () => {
                   </Box>
                   <Typography variant="h5" align="center" gutterBottom>
                     {item.name}
-                  </Typography>
+                  </Typography> 
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     align="center"
                   >
-                    Rs.{item.price}/= 
+                    Rs.{item.price}/=
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: "center" }}>
