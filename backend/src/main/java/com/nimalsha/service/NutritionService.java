@@ -72,7 +72,7 @@ public class NutritionService {
                         nutritionData.put("protein", extractNumber(foods.get("nf_protein")));
                         nutritionData.put("fat", extractNumber(foods.get("nf_total_fat")));
                         nutritionData.put("carbohydrates", extractNumber(foods.get("nf_total_carbohydrate")));
-                        nutritionData.put("total_sugar", extractNumber(foods.get("nf_sugars")));
+                       nutritionData.put("total_sugar", extractNumber(foods.get("nf_sugars")));
                         nutritionData.put("total_iron", extractNumber(foods.get("nf_sodium")) / 1000.0);
                         nutritionData.put("total_vitamins", extractNumber(foods.get("nf_vitamin_d_mcg")) / 1000.0);
 

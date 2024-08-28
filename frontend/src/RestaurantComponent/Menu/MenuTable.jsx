@@ -69,10 +69,9 @@ export const MenuTable = () => {
     const matchesSearchQuery = item.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
-  
+
     return matchesCategory && matchesSearchQuery;
   });
-  
 
   return (
     <Box>
@@ -119,26 +118,25 @@ export const MenuTable = () => {
                 }}
               />
 
-<Select
-  value={selectedCategory}
-  onChange={(e) => setSelectedCategory(e.target.value)}
-  displayEmpty
-  sx={{
-    width: "200px",
-    backgroundColor: "#555555",
-    borderRadius: "4px",
-  }}
->
-  <MenuItem value="">
-    <em>All Categories</em>
-  </MenuItem>
-  {restaurant.categories.map((category) => (
-    <MenuItem key={category.id} value={category.name}>
-      {category.name}
-    </MenuItem>
-  ))}
-</Select>
-
+              <Select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                displayEmpty
+                sx={{
+                  width: "200px",
+                  backgroundColor: "#555555",
+                  borderRadius: "4px",
+                }}
+              >
+                <MenuItem value="">
+                  <em>All Categories</em>
+                </MenuItem>
+                {restaurant.categories.map((category) => (
+                  <MenuItem key={category.id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
             </Box>
           }
           title="All Food Items"
@@ -166,7 +164,7 @@ export const MenuTable = () => {
                   </Box>
                   <Typography variant="h5" align="center" gutterBottom>
                     {item.name}
-                  </Typography> 
+                  </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"

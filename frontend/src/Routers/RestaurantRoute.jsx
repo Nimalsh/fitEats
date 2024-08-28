@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { Admin } from '../RestaurantComponent/Admin/Admin';
 import { CreateRestaurantForm } from '../RestaurantComponent/CreateRestaurantForm/CreateRestaurantForm';
+import { IngredientReport } from '../RestaurantComponent/Dashboard/IngredientReport';
 import { AddEvent } from '../RestaurantComponent/Events/AddEvent';
 import { EventDetails } from '../RestaurantComponent/Events/EventDetails';
 import { UpdateEvent } from '../RestaurantComponent/Events/UpdateEvent';
@@ -27,6 +28,7 @@ export const RestaurantRoute = () => {
         <Route path="/drivers" element={<Drivers />} />
         <Route path="/ingredientcategory/add" element={<CreateIngredientCategoryForm />} /> 
         {/* <Route path="/admin/restaurant/menu/food-details/:id" element={<FoodDetails />} /> */}
+        <Route path="/ingredient-report" element={<IngredientReport/>}/>
       </Routes>
     </div>
   );
