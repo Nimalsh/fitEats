@@ -5,6 +5,7 @@ import { fetchRestaurantsOrder } from '../../component/State/Restaurant Order/Ac
 import { getRestaurantsCategory } from '../../component/State/Restaurant/Action';
 import ComplaintPage from '../Complains/ComplaintForm';
 import { Dashboard } from '../Dashboard/Dashboard';
+import { IngredientReport } from '../Dashboard/IngredientReport';
 import { Events } from '../Events/Events';
 import { FoodCategory } from '../FoodCategory/FoodCategory';
 import { Ingredients } from '../Ingredients/Ingredients';
@@ -51,7 +52,9 @@ export const Admin = () => {
             <Route path='/details' element={<RestuarantDetails />} />
             <Route path='/complains' element={<ComplaintPage />} />
             <Route path='/add-menu' element={<CreateMenuForm />} />
-            <Route path="/menu/food-details/:id" element={<FoodDetails />} />
+            <Route path="/menu/food-details/:id" element={<FoodDetails />} /> 
+            
+
           </Routes>
         </div>
       </div>
