@@ -55,12 +55,6 @@ class _FinancePageState extends State<FinancePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Combined container for earnings
-                    _buildCombinedEarningsContainer(
-                      todayEarnings: "\$150.00", // Replace with dynamic data
-                      weekEarnings: "\$1,050.00", // Replace with dynamic data
-                      monthEarnings: "\$2,300.00", // Replace with dynamic data
-                    ),
-                    const SizedBox(height: 20),
                     
                     // Container for deliveries
                     _buildDeliveriesContainer(

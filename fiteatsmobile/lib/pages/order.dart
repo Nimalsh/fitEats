@@ -1,10 +1,14 @@
 import 'package:delivery/pages/finance.dart';
+import 'package:delivery/pages/help.dart';
 import 'package:delivery/pages/profile.dart';
 import 'package:delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery/components/bottom_nav_bar.dart';
 import 'package:delivery/pages/homepage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login_page.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   final int userId;
@@ -22,8 +26,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   int _selectedIndex = 2;
     String? _fullName;
 
-final UserService _userService = UserService('http://10.0.3.2:8080');
-
+ late final UserService _userService; 
+ // Make UserService a late final variable
   @override
   void initState() {
     super.initState();
@@ -373,7 +377,13 @@ title: Row(
                 title: const Text('Help', style: TextStyle(color:Color.fromARGB(255, 46, 46, 46), fontSize: 20, fontWeight: FontWeight.bold)),
                 onTap: () {
                   Navigator.pop(context); // Close drawer
-                  // Additional logic for item 5
+                  // Additional logic for item 3
+                 Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HelpPage(), // Pass userId here
+          ),
+        );
                 },
               ),
               // Logout button
@@ -383,9 +393,17 @@ title: Row(
                 contentPadding:  EdgeInsets.only(left: 40.0.w),
                 leading: const Icon(Icons.logout, size: 26, color: Color.fromARGB(255, 78, 78, 78)),
                 title: const Text('Logout', style: TextStyle(color: Color.fromARGB(255, 46, 46, 46), fontWeight: FontWeight.bold)),
-                onTap: () {
-                  // Implement logout logic here
-                },
+                 onTap: () async {
+              // Implement logout logic here
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.remove('userToken'); // Clear the saved token (or any other key you're using)
+
+              // Navigate back to the login page
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => LoginPage(onTap: () {})),
+                (Route<dynamic> route) => false,
+              );
+            },
               ),
             ],
           ),

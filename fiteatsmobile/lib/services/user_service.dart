@@ -41,5 +41,14 @@ Future<void> updateUserDetails(int userId, Map<String, dynamic> updatedData) asy
     throw Exception('Failed to update user details');
   }
 }
-
+ Future<void> updateDriverAvailability(int userId, bool availability) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/api/drivers/$userId'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'availability': availability}),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update driver availability');
+    }
+  }
 }

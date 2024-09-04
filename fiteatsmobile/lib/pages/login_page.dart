@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
+import 'forgot_ps.dart';
 import 'homepage.dart';
 import '../services/auth_service.dart';
 
@@ -133,11 +134,15 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 25),
                     GestureDetector(
-                      onTap: () {
-                        // Implement your forgot password logic here
+                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                        );
                       },
                       child: Padding(
                         padding:  EdgeInsets.only(left: 90.0.w),
+                        
                         child: Text(
                           "Forgot Password?",
                           textAlign: TextAlign.center,
@@ -146,6 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: Theme.of(context).colorScheme.surface,
                           ),
                         ),
+                        
                       ),
                     ),
                      SizedBox(height: 0.03.sh),

@@ -20,6 +20,9 @@ dependencies:
   path: ^1.8.0
   flutter_screenutil: ^5.9.3
   device_preview: ^1.0.0+2
+  shared_preferences: ^2.0.8
+  google_maps_flutter: ^2.7.0
+  flutter_local_notifications: ^13.0.0
   
 dev_dependencies:
   flutter_test:
