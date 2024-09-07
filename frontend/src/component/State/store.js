@@ -14,6 +14,7 @@ import restaurantReducer from "./Restaurant/Reducer";
 import planReducer from "./Plan/Reducer";
 import requestReducer from "./Requests/Reducer";
 import  bmiReducer from "./Bmi/Reducer";
+import  MeallogReducer from "./Meallog/Reducer";
 
 const rootReducer =combineReducers({
   auth:authReducer,
@@ -30,7 +31,8 @@ const rootReducer =combineReducers({
 
   plan: planReducer, 
   request:requestReducer,
-  bmi:bmiReducer
+  bmi:bmiReducer,
+  meallog:MeallogReducer
 
 });
 
