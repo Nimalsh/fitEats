@@ -1,22 +1,20 @@
 package com.nimalsha.service;
 
-import com.nimalsha.model.Category;
-import com.nimalsha.model.Food;
-import com.nimalsha.model.IngredientsItem;
-import com.nimalsha.model.Restaurant;
-import com.nimalsha.repository.CategoryRepository;
-import com.nimalsha.repository.FoodRepository;
-import com.nimalsha.repository.IngredientItemRepository;
-
-import com.nimalsha.request.CreateFoodRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nimalsha.model.Category;
+import com.nimalsha.model.Food;
+import com.nimalsha.model.Restaurant;
+import com.nimalsha.repository.CategoryRepository;
+import com.nimalsha.repository.FoodRepository;
+import com.nimalsha.repository.IngredientItemRepository;
+import com.nimalsha.request.CreateFoodRequest;
 
 @Service
 public class FoodServiceImp implements FoodService {
@@ -29,6 +27,7 @@ public class FoodServiceImp implements FoodService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public Food createFood(CreateFoodRequest req, Restaurant restaurant){
         // Fetch the category using the category ID
@@ -127,4 +126,12 @@ public class FoodServiceImp implements FoodService {
         food.setAvailable((!food.isAvailable()));
         return foodRepository.save(food);
     }
+
+    @Override
+    public List<Food> getFoodItemsByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        return foodRepository.findByFoodCategory(category);
+    }
+    
 }

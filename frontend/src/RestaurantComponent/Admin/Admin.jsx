@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { getMenuItemsByRestaurantId } from '../../component/State/Menu/Action';
 import { fetchRestaurantsOrder } from '../../component/State/Restaurant Order/Action';
-import { getRestaurantById, getRestaurantsCategory } from '../../component/State/Restaurant/Action';
+import { getRestaurantsCategory } from '../../component/State/Restaurant/Action';
 import ComplaintPage from '../Complains/ComplaintForm';
 import { Dashboard } from '../Dashboard/Dashboard';
+import { IngredientReport } from '../Dashboard/IngredientReport';
 import { Events } from '../Events/Events';
 import { FoodCategory } from '../FoodCategory/FoodCategory';
 import { Ingredients } from '../Ingredients/Ingredients';
 import { CreateMenuForm } from '../Menu/CreateMenuForm';
+import { FoodDetails } from '../Menu/FoodDetails';
 import { Menu } from '../Menu/Menu';
 import { Orders } from '../Orders/Orders';
 import { AdminSideBar } from './AdminSideBar';
@@ -51,6 +52,9 @@ export const Admin = () => {
             <Route path='/details' element={<RestuarantDetails />} />
             <Route path='/complains' element={<ComplaintPage />} />
             <Route path='/add-menu' element={<CreateMenuForm />} />
+            <Route path="/menu/food-details/:id" element={<FoodDetails />} /> 
+            
+
           </Routes>
         </div>
       </div>

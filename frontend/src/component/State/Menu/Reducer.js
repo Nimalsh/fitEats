@@ -4,9 +4,11 @@ const initialState = {
   menuItems: [],
   loading: false,
   error: null,
-  search: [],
+  searchResults: [],
   message: null,
+  foodDetails: null,
 };
+
 
 const menuItemReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,6 +17,7 @@ const menuItemReducer = (state = initialState, action) => {
     case actionTypes.DELETE_MENU_ITEM_REQUEST:
     case actionTypes.SEARCH_MENU_ITEM_REQUEST:
     case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST:
+    case actionTypes.GET_FOOD_DETAILS_REQUEST:  
       return {
         ...state,
         loading: true,
@@ -61,11 +64,19 @@ const menuItemReducer = (state = initialState, action) => {
         ),
       };
 
+      case actionTypes.GET_FOOD_DETAILS_SUCCESS:
+        return {
+          ...state,
+          loading:false,
+          foodDetails:action.payload
+        };
+
     case actionTypes.CREATE_MENU_ITEM_FAILURE:
     case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE:
     case actionTypes.DELETE_MENU_ITEM_FAILURE:
     case actionTypes.SEARCH_MENU_ITEM_FAILURE:
     case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE:
+    case actionTypes.GET_FOOD_DETAILS_FAILURE:  
       return {
         ...state,
         loading: false,
@@ -76,6 +87,7 @@ const menuItemReducer = (state = initialState, action) => {
     default:
       return state;
   }
+
 };
 
 export default menuItemReducer;

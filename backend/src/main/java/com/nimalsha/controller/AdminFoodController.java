@@ -1,9 +1,12 @@
  package com.nimalsha.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,8 +41,12 @@ public class AdminFoodController {
     public ResponseEntity<Food> createFood(@RequestBody CreateFoodRequest req,
     @RequestHeader("Authorization") String jwt) throws Exception {
        User user= userService.findUserByJwtToken(jwt);
+
+       Restaurant restaurant=restaurantService.getRestaurantByUserId(user.getId());
+       Food food=foodService.createFood(req,req.getCategory(),restaurant);
+
        Restaurant restaurant=restaurantService.findRestaurantById(req.getRestaurantId());
-       Food food=foodService.createFood(req,restaurant);
+
       return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
@@ -82,4 +89,18 @@ public class AdminFoodController {
         res.setMessage("food deleted successfully");
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{foodId}")
+public ResponseEntity<Food> getFoodDetails(@PathVariable Long foodId, @RequestHeader("Authorization") String jwt) throws Exception {
+    User user = userService.findUserByJwtToken(jwt);
+    Food food = foodService.findFoodById(foodId);
+    return new ResponseEntity<>(food, HttpStatus.OK);
 }
+
+@GetMapping("/category/{categoryId}")
+public ResponseEntity<List<Food>> getFoodItemsByCategory(@PathVariable Long categoryId) {
+    List<Food> foodItems = foodService.getFoodItemsByCategory(categoryId);
+    return ResponseEntity.ok(foodItems);
+}
+}
+

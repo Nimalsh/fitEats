@@ -1,14 +1,23 @@
 import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
-import { authReducer } from "./Authentication/Reducer";
 import { thunk } from "redux-thunk";
-import restaurantReducer from "./Restaurant/Reducer";
-import menuItemReducer from "./Menu/Reducer";
+import { authReducer } from "./Authentication/Reducer";
 import cartReducer from "./Cart/Reducer";
-import orderReducer from "./Order/Reducer";
 import ingredientReducer from "./ingredients/Reduecr";
-import restaurantOrderReducer from "./Restaurant Order/Reducer";
+import menuItemReducer from "./Menu/Reducer";
 import NutrionReducer from "./Nutrion/Reducer";
+
+import orderReducer from "./Order/Reducer";
+import restaurantOrderReducer from "./Restaurant Order/Reducer";
+
+import restaurantReducer from "./Restaurant/Reducer";
+
+
+import planReducer from "./Plan/Reducer";
+import requestReducer from "./Requests/Reducer";
+import  bmiReducer from "./Bmi/Reducer";
+
 import complaintReducer from "./complain/Reducer";
+
 
 const rootReducer =combineReducers({
   auth:authReducer,
@@ -18,8 +27,19 @@ const rootReducer =combineReducers({
   order:orderReducer,
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
+
+  foodItems:restaurantReducer,
+
+  nutrion:NutrionReducer,
+  event:restaurantReducer,
+  foodDetails:menuItemReducer,
+  plan: planReducer, 
+  request:requestReducer,
+  bmi:bmiReducer
+
   nutrion:NutrionReducer,
   complaintReducer:complaintReducer,
+
 
 });
 

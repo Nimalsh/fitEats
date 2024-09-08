@@ -3,12 +3,48 @@ import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, Radi
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createRequest } from '../State/Requests/Action';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
 const Paidweightlossform = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleProceed = () => {
+    const token = localStorage.getItem('jwt'); // Or wherever your token is stored
+    
+    // Create a requestData object with all the form data
+    const requestData = {
+      title: "Weight loss", // Example static title, replace if needed
+      status: "Pending",
+      currentWeight: parseFloat(currentWeight) || 0,
+      weightGoal: parseFloat(targetWeightLoss) || 0,
+      duration: parseInt(duration) || 0,
+      age: parseInt(age) || 0,
+      height: parseFloat(height) || 0,
+      gender: gender,
+      dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
+      dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
+      activityLevel: activityLevel,
+      mealsPerDay: parseInt(mealsPerDay) || 0
+    };
+  
+    // Dispatch the createRequest action with requestData and token
+    dispatch(createRequest(requestData, token))
+    .then(() => {
+      // Navigate to another page upon successful request creation
+      navigate('/my-profile/personalized-plan'); // Adjust the path as needed
+    })
+    .catch((error) => {
+      console.error("Error creating request", error);
+      // Handle errors if needed
+    });
+  };
+  
+
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -486,16 +522,17 @@ const Paidweightlossform = () => {
         />
       </Grid>
       <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('halal')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="halal"
-            />
-          }
-          label="Halal"
-        />
+      <FormControlLabel
+  control={
+    <Checkbox
+      checked={dietaryRestrictions.includes('halal')}
+      onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+      name="halal"
+    />
+  }
+  label="Halal"
+/>
+
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
@@ -534,7 +571,7 @@ const Paidweightlossform = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                  onClick={() => navigate('/my-profile/personalized-plan/weightloss/nutritionist')}  >
+                  onClick={handleProceed}  >
                   Proceed
                 </Button>
               </Grid>

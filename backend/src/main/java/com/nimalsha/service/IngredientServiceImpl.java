@@ -1,6 +1,7 @@
 package com.nimalsha.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,11 @@ public class IngredientServiceImpl implements IngredientService {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private NutritionService nutritionService;
 
     @Override
     public IngredientCategory createIngredientCategory(String name, Long restaurantId) throws Exception {
-        
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
 
         IngredientCategory category = new IngredientCategory();
@@ -38,30 +40,45 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long categoryId)
-            throws Exception {
+    public IngredientsItem createIngredientItem(Long restaurantId, String ingredientName, Long categoryId) throws Exception {
+        Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
+        IngredientCategory category = findIngredientCategoryById(categoryId);
         
-                Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
-                IngredientCategory category = findIngredientCategoryById(categoryId);
-                
-                IngredientsItem item = new IngredientsItem();
-                item.setName(ingredientName);
-                item.setRestaurant(restaurant);
-                item.setCategory(category);
-
-                IngredientsItem ingredientsItem = ingredientItemRepository.save(item);
-                category.getIngredientItems().add(ingredientsItem);
-
+        if (restaurant == null) {
+            throw new Exception("Restaurant not found with id: " + restaurantId);
+        }
+        if (category == null) {
+            throw new Exception("Category not found with id: " + categoryId);
+        }
+        
+        // Fetch nutrition data
+        Map<String, Double> nutritionData = nutritionService.getNutritionData(ingredientName);
+        
+        IngredientsItem item = new IngredientsItem();
+        item.setName(ingredientName);
+        item.setRestaurant(restaurant);
+        item.setCategory(category);
+        item.setCalories(nutritionData.getOrDefault("calories", 0.0));
+        item.setProtein(nutritionData.getOrDefault("protein", 0.0)); 
+        item.setCarbohydrates(nutritionData.getOrDefault("carbohydrates", 0.0));
+        item.setFat(nutritionData.getOrDefault("fat", 0.0));
+        item.setTotalSugar(nutritionData.getOrDefault("total_sugar", 0.0));
+        item.setTotalVitamins(nutritionData.getOrDefault("total_vitamins", 0.0));
+        item.setTotalIron(nutritionData.getOrDefault("total_iron", 0.0));
+        
+        IngredientsItem ingredientsItem = ingredientItemRepository.save(item);
+        category.getIngredientItems().add(ingredientsItem);
+        
         return ingredientsItem;
     }
 
     @Override
     public IngredientCategory findIngredientCategoryById(Long Id) throws Exception {
-         Optional<IngredientCategory> opt=ingredientCategoryRepository.findById(Id);
+        Optional<IngredientCategory> opt = ingredientCategoryRepository.findById(Id);
 
-         if(opt.isEmpty()) {
+        if (opt.isEmpty()) {
             throw new Exception("ingredient category not found");
-         }
+        }
         return opt.get();
     }
 
@@ -73,7 +90,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public List<IngredientsItem> findRestaurantIngredients(Long restaurantId) {
-        
         return ingredientItemRepository.findByRestaurantId(restaurantId);
     }
 
@@ -81,14 +97,11 @@ public class IngredientServiceImpl implements IngredientService {
     public IngredientsItem updateStock(Long Id) throws Exception {
         Optional<IngredientsItem> optionalIngredientsItems = ingredientItemRepository.findById(Id);
 
-        if(optionalIngredientsItems.isEmpty()) {
+        if (optionalIngredientsItems.isEmpty()) {
             throw new Exception("ingredient not found");
         }
         IngredientsItem ingredientsItem = optionalIngredientsItems.get();
         ingredientsItem.setInStoke(!ingredientsItem.isInStoke());
         return ingredientItemRepository.save(ingredientsItem);
     }
-
-
-    
 }

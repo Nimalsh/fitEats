@@ -38,7 +38,6 @@ export const CreateMenuForm = () => {
 
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-
   const { restaurant , ingredients } = useSelector((store)=>store)
 
   const [uploadImages, setUploadImage] = useState(false);
