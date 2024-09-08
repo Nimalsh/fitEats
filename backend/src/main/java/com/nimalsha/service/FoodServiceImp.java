@@ -29,7 +29,11 @@ public class FoodServiceImp implements FoodService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) {
+    public Food createFood(CreateFoodRequest req, Restaurant restaurant){
+        // Fetch the category using the category ID
+        // Fetch the category using the category ID
+        Category category = categoryRepository.findById(req.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
         Food food = new Food();
         food.setFoodCategory(category);
         food.setRestaurant(restaurant);

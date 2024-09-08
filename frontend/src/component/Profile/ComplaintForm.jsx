@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Paper, Tabs, Tab, Typography, Box, TextField, Button, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { addComplaint } from '../State/complain/Action';
+import { useDispatch } from 'react-redux';
 
 // Complaint Form Component
 const ComplaintForm = () => {
@@ -9,14 +11,15 @@ const ComplaintForm = () => {
     complaint: ''
   });
 
+  const dispatch = useDispatch(); // Initialize the Redux dispatch function
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Handle form submission, such as sending the data to a server
+    dispatch(addComplaint(formData)); // Dispatch the addComplaint action with form data
   };
 
   return (
@@ -40,7 +43,7 @@ const ComplaintForm = () => {
           />
           <TextField
             name="email"
-            label="Titale"
+            label="Email"
             type="email"
             fullWidth
             margin="normal"
@@ -73,6 +76,7 @@ const ComplaintForm = () => {
     </Container>
   );
 };
+
 
 // Complaint History Component with Table
 const ComplaintHistory = () => {

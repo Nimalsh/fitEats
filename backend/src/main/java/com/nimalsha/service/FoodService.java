@@ -8,7 +8,7 @@ import com.nimalsha.model.Restaurant;
 import com.nimalsha.request.CreateFoodRequest;
 
 public interface FoodService {
-    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant);
+    public Food createFood(CreateFoodRequest req, Restaurant restaurant);
 
     void deleteFood(Long foodId)throws Exception;
 
