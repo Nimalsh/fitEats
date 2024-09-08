@@ -35,7 +35,7 @@ const rootReducer =combineReducers({
   foodDetails:menuItemReducer,
   plan: planReducer, 
   request:requestReducer,
-  bmi:bmiReducer
+  bmi:bmiReducer,
 
   nutrion:NutrionReducer,
   complaintReducer:complaintReducer,

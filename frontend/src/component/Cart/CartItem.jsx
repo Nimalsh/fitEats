@@ -32,7 +32,7 @@ export default function CartItem({item}) {
         cartItemId: item.id,
         quantity: updatedQuantity, // Properly set the new quantity
       };
-      dispatch(updCartItemQuantity({ data, jwt }));
+      dispatch(updateCartItem({ data, jwt }));
     }
   };
   
