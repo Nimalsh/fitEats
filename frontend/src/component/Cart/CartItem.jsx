@@ -4,11 +4,11 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { removeCartItem, updateCartItem } from '../State/Cart/Action';
+import { removeCartItem, updateCartItem, updCartItemQuantity } from '../State/Cart/Action';
 
 export default function CartItem({item}) {
   
-  const { auth,cart } = useSelector(store => store);
+  const { auth,cart } = useSelector((store) => store);
   const navigate = useNavigate();
   const dispatch=useDispatch();
   const jwt=localStorage.getItem("jwt");
@@ -24,7 +24,7 @@ export default function CartItem({item}) {
     dispatch(removeCartItem({cartItemId:item.id,jwt:auth.jwt|| jwt}))
   }
   const handleUpdateCartItem = (value) => {
-    if (value === -1 && item.quantity === 0) {
+    if (value === -1 && item.quantity === 1) {
       handleRemoveCartItem(); // Remove item if quantity is 1 and user tries to decrement
     } else {
       const updatedQuantity = item.quantity + value;
@@ -32,7 +32,7 @@ export default function CartItem({item}) {
         cartItemId: item.id,
         quantity: updatedQuantity, // Properly set the new quantity
       };
-      dispatch(updateCartItem({ data, jwt }));
+      dispatch(updCartItemQuantity({ data, jwt }));
     }
   };
   

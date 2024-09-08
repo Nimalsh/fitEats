@@ -1,12 +1,13 @@
 import { Box, Button, Card, Divider, Grid, Modal, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import CartItem from "./CartItem";
 import { AddressCard } from "./AddressCard";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { store } from "../State/store";
-// import * as Yup from "yup";
+import { createOrder } from "../State/Order/Action";
+import { findCart } from "../State/Cart/Action";
 
 const items = [1, 1];
 
@@ -29,17 +30,47 @@ const initialValues = {
   city: "",
 };
 
-// const validationSchema = Yep.object.shape({
-//   streetAddress: Yup.string().required("Street address is required"),
-//   state: Yup.string().required("State is required"),
-//   pincode: Yup.required("pincode is required"),
-//   city: Yup.string().required("City is required"),
-// });
 
-const handleSubmit = (values) => {console.log(values)};
 
 const Cart = () => {
-  const { cart } = useSelector((store) => store);
+ 
+  const { cart ,auth} = useSelector((store) => store);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!cart.id) {
+      dispatch(findCart(auth.jwt));
+    }
+  }, [cart.id, dispatch, auth.jwt]);
+
+  console.log("Cart Object:", cart);
+  const handleSubmit = (values) => {
+    const restaurantId = cart.cartItems[0]?.food?.restaurant?.id;
+    const cartId = cart.id;
+
+    if (!restaurantId) {
+        console.error("Restaurant ID is missing!");
+        return;
+    }
+
+    const data = {
+        jwt: localStorage.getItem("jwt"),
+        order: {
+            restaurantId: restaurantId,
+            deliveryAddress: {
+                streetAddress: values.streetAddress,
+                city: values.city,
+                state: values.state,
+                postalCode: values.pincode,
+                country: "Sri Lanka"
+            }
+        }
+    };
+
+    dispatch(createOrder(data));
+    console.log("Order data:", data);
+};
+
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpenAddressModel = () => setOpen(true);
