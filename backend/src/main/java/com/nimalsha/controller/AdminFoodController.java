@@ -1,4 +1,4 @@
- package com.nimalsha.controller;
+package com.nimalsha.controller;
 
 import java.util.List;
 
@@ -39,15 +39,11 @@ public class AdminFoodController {
 
     @PostMapping
     public ResponseEntity<Food> createFood(@RequestBody CreateFoodRequest req,
-    @RequestHeader("Authorization") String jwt) throws Exception {
-       User user= userService.findUserByJwtToken(jwt);
-
-       Restaurant restaurant=restaurantService.getRestaurantByUserId(user.getId());
-       Food food=foodService.createFood(req,req.getCategory(),restaurant);
-
-       Restaurant restaurant=restaurantService.findRestaurantById(req.getRestaurantId());
-
-      return new ResponseEntity<>(food, HttpStatus.CREATED);
+                                           @RequestHeader("Authorization") String jwt) throws Exception {
+        User user= userService.findUserByJwtToken(jwt);
+        Restaurant restaurant=restaurantService.getRestaurantByUserId(user.getId());
+        Food food=foodService.createFood(req,req.getCategory(),restaurant);
+        return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
 //     @PostMapping
@@ -80,7 +76,7 @@ public class AdminFoodController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Food> updateAvailabilityStatus (@PathVariable Long id,
-                                                      @RequestHeader("Authorization") String jwt) throws Exception {
+                                                          @RequestHeader("Authorization") String jwt) throws Exception {
         User user= userService.findUserByJwtToken(jwt);
 
         Food food=foodService.updateAvailabilityStatus(id);
@@ -91,16 +87,15 @@ public class AdminFoodController {
     }
 
     @GetMapping("/{foodId}")
-public ResponseEntity<Food> getFoodDetails(@PathVariable Long foodId, @RequestHeader("Authorization") String jwt) throws Exception {
-    User user = userService.findUserByJwtToken(jwt);
-    Food food = foodService.findFoodById(foodId);
-    return new ResponseEntity<>(food, HttpStatus.OK);
-}
+    public ResponseEntity<Food> getFoodDetails(@PathVariable Long foodId, @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Food food = foodService.findFoodById(foodId);
+        return new ResponseEntity<>(food, HttpStatus.OK);
+    }
 
-@GetMapping("/category/{categoryId}")
-public ResponseEntity<List<Food>> getFoodItemsByCategory(@PathVariable Long categoryId) {
-    List<Food> foodItems = foodService.getFoodItemsByCategory(categoryId);
-    return ResponseEntity.ok(foodItems);
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Food>> getFoodItemsByCategory(@PathVariable Long categoryId) {
+        List<Food> foodItems = foodService.getFoodItemsByCategory(categoryId);
+        return ResponseEntity.ok(foodItems);
+    }
 }
-}
-
