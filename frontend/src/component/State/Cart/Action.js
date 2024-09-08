@@ -110,16 +110,16 @@ export const updateCartItem = (reqData) => {
   };
 };
 
-export const removeCartItem = (reqData) => {
+export const removeCartItem = ({cartItemId,jwt}) => {
   return async (dispatch) => {
     dispatch({ type: REMOVE_CARTITEM_REQUEST });
     try {
-      const { data } = await api.delete(`/api/cart-item/${reqData.cartItemId}/remove`, {
+      const { data } = await api.delete(`/api/cart-item/${cartItemId}/remove`, {
         headers: {
-          Authorization: `Bearer ${reqData.jwt}`,
+          Authorization: `Bearer ${jwt}`,
         },
       });
-      dispatch({ type: REMOVE_CARTITEM_SUCCESS, payload: data });
+      dispatch({ type: REMOVE_CARTITEM_SUCCESS, payload: cartItemId });
       console.log("remove cart item", data);
     } catch (error) {
       console.log("error", error);

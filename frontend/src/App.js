@@ -40,13 +40,10 @@ function App() {
 
   useEffect(()=>{
     dispatch(getUser(auth.jwt||jwt));
-  }, [auth.jwt]);
-
-  useEffect(()=>{
-    dispatch(getRestaurantByUserId(auth.jwt || jwt));
     
     dispatch(findCart(jwt));
-  },[auth.user])
+  }, [auth.jwt]);
+
 
   return (
     <ThemeProvider theme={darkTheme}>

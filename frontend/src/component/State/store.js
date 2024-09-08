@@ -8,6 +8,7 @@ import orderReducer from "./Order/Reducer";
 import ingredientReducer from "./ingredients/Reduecr";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
 import NutrionReducer from "./Nutrion/Reducer";
+import complaintReducer from "./complain/Reducer";
 
 const rootReducer =combineReducers({
   auth:authReducer,
@@ -17,7 +18,8 @@ const rootReducer =combineReducers({
   order:orderReducer,
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
-  nutrion:NutrionReducer
+  nutrion:NutrionReducer,
+  complaintReducer:complaintReducer,
 
 });
 
