@@ -1,4 +1,4 @@
- package com.nimalsha.controller;
+package com.nimalsha.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

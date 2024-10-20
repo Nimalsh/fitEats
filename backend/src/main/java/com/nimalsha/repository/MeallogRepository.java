@@ -17,6 +17,8 @@ public interface MeallogRepository extends JpaRepository<Meallog, Long> {
     Optional<Meallog> findByDate(LocalDate date);
     // Optional: Add a method to find by userId and date if needed
     Optional<Meallog> findByUserIdAndDate(Long userId, LocalDate date);
+
+    
    
     
 }
