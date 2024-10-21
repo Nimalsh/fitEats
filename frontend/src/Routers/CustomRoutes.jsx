@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import {Navbar} from '../component/Navbar/Navbar';
+import { Navbar } from '../component/Navbar/Navbar';
 import Home from '../component/Home/Home';
 import Profile from '../component/Profile/Profile';
 import RestaurantDetails from '../component/Restaurant/RestaurantDetails';
@@ -11,11 +11,14 @@ import BMI from '../component/Profile/BMI';
 import NutritionInfo from '../component/Profile/Nutricontent';
 
 import Nutritionistbase from '../component/Nutritionist/Nutritionistbase';
+import { Dashboard } from '../AdminCompoent/Dashbpard/Dashboard';
+import { AdminSideBar } from '../AdminCompoent/Admin/AdminSideBar';
+import {Admin} from "../AdminCompoent/Admin/Admin";
 
 export default function CustomRoutes() {
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/account/:register' element={<Home />} />
@@ -23,13 +26,13 @@ export default function CustomRoutes() {
         <Route path='/cart' element={<Cart />} />
         <Route path='/my-profile/*' element={<Profile />} />
         <Route path="/nutrition-content" element={<NutritionInfo />} />
-
+        <Route path="/admin/admin/*" element={<Admin />} />
         <Route path='/nutri/*' element={<Nutritionistbase />} />
-        
+
 
 
       </Routes>
-      <Auth/>
+      <Auth />
     </div>
   );
 }

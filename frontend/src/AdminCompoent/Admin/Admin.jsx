@@ -13,6 +13,7 @@ import { UserApprovals } from '../UserApprovals/UserApprovals';
 import { OrderHistory } from '../OrderHistory/OrderHistory';
 import { NutritionistChanneling } from '../NutritionistChanneling/NutritionistChanneling';
 import { Complaints } from '../Complaints/Complaints';
+import { Transactions } from '../Transactions/Transactions';
 
 export const Admin = () => {
   const handleClose = () => {};
@@ -25,17 +26,15 @@ export const Admin = () => {
         <div style={{ flexGrow: 1, padding: '20px', marginLeft: '20vw', marginTop: '0' }}>
           <Routes>
             <Route path='/' element={<Dashboard/>} />
-            // create route for all admin components
             <Route path='/Users' element={<Users/>} />
             <Route path='/Resturants' element={<Restaurant/>} />
             <Route path='/Nutritionist' element={<Nutritionist/>} />
             <Route path='/DeliveryDriver' element={<DeliveryDriver/>} />
-            <Route path='/Transactions' element={<Users/>} />
+            <Route path='/Transactions' element={<Transactions/>} />
             <Route path='/complains' element={<Complaints/>} />
             <Route path='/UserApprovals' element={<UserApprovals/>} />
             <Route path='/OrderHistory' element={<OrderHistory/>} />
             <Route path='/NutritionistChanneling' element={<NutritionistChanneling/>} />
-
           </Routes>
         </div>
       </div>
