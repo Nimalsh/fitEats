@@ -25,13 +25,16 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
   bool _isSwitchOn = false;
   int _selectedIndex = 2;
     String? _fullName;
+    
 
  late final UserService _userService; 
  // Make UserService a late final variable
   @override
   void initState() {
     super.initState();
+    _userService = UserService('http://10.0.3.2:8080');
     _tabController = TabController(length: 2, vsync: this);
+     _fetchUserFullName();
   }
 
   @override

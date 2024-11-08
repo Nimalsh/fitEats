@@ -1,12 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:delivery/components/bottom_nav_bar.dart';
 import 'package:delivery/pages/homepage.dart';
+import 'package:delivery/pages/order.dart';
 import 'package:delivery/pages/profile.dart';
 import 'package:delivery/services/user_service.dart';
+import 'package:delivery/services/notification_service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DeliveryStatusPage extends StatefulWidget {
   final int userId;
@@ -19,100 +20,65 @@ class DeliveryStatusPage extends StatefulWidget {
 
 class _DeliveryStatusPageState extends State<DeliveryStatusPage> {
   int _selectedIndex = 1;
-  String _notificationMessage = '';
   String? _fullName;
   late UserService _userService;
-
-  // Delivery status options
+  bool _showNotification = false;
+  String _notificationMessage = '';
+  late NotificationService _notificationService;
+  final String baseUrl = 'http://10.0.3.2:8080';  // Replace with your server IP
   String _deliveryStatus = 'Picked Up';
-
-  // Sample restaurant and customer details
-  final String restaurantName = 'Joe\'s Diner';
-  final String restaurantAddress = '123 Main St, San Francisco, CA';
-  final String customerName = 'John Doe';
-  final String customerAddress = '456 Elm St, San Francisco, CA';
+  bool isAccepted = false; // Track if the notification is accepted
+  String? _restaurantName;
+  String? _restaurantAddress;
+ String? _customerName;
+ String? _customerAddress;
 
   @override
   void initState() {
     super.initState();
-    _userService = UserService('http://10.0.3.2:8080'); // Initialize UserService
+
+    // Initialize services
+    _userService = UserService(baseUrl);
+    _notificationService = NotificationService(baseUrl: baseUrl, driverId: widget.userId); 
+
+    // Fetch user data and start polling notifications
     _fetchUserFullName();
-    _startNotificationPolling(); // Start periodic polling
+    _startNotificationPolling(); 
   }
 
   Future<void> _fetchUserFullName() async {
     try {
       final fullName = await _userService.getUserFullName(widget.userId);
-      setState(() {
-        _fullName = fullName;
-      });
+
+      if (mounted) {
+        setState(() {
+          _fullName = fullName;
+        });
+      }
     } catch (e) {
       print('Error fetching user data: $e');
     }
   }
 
-  Future<void> _fetchNotification() async {
-    try {
-      final response = await http.get(
-        Uri.parse('http://10.0.3.2:8080/api/notifications/assign-driver'),
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        setState(() {
-          _notificationMessage = responseData['message'] ?? '';
-        });
-        if (_notificationMessage.isNotEmpty) {
-          _showNotification(_notificationMessage);
-        }
-      } else {
-        print('Failed to fetch notification: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching notification: $e');
-    }
-  }
-
-  Future<void> _handleAssignDriver(int orderId) async {
-    try {
-      final response = await http.post(
-        Uri.parse('http://10.0.3.2:8080/api/notifications/assign-driver'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'orderId': orderId,
-          'message': 'A new order with ID $orderId is available for assignment.',
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        print('Driver assignment notification sent: ${response.body}');
-        // Optionally fetch the latest notification after sending
-        _fetchNotification();
-      } else {
-        print('Failed to send assignment notification: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Failed to send assignment notification: $e');
-    }
-  }
-
-  void _showNotification(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 5),
-      ),
-    );
-  }
-
+  // Start polling for notifications
   void _startNotificationPolling() {
-    // Poll every 30 seconds (adjust as needed)
-    Timer.periodic(Duration(seconds: 30), (Timer timer) {
-      _fetchNotification();
+    _notificationService.startPollingNotifications((message) {
+      setState(() {
+        _notificationMessage = message;
+        _showNotification = true;
+      });
     });
   }
+  void _handleAccept() async {
+    await _notificationService.respondToNotification("Accepted");
+    setState(() {
+    _deliveryStatus = "Accepted";
+      _restaurantName = "Indian Restaurant"; // Replace with actual data from backend
+      _restaurantAddress = "11, Queen st, Colombo 01"; // Replace with actual data
+      _showNotification = false;
+    });
+  }
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -129,10 +95,14 @@ class _DeliveryStatusPageState extends State<DeliveryStatusPage> {
         );
         break;
       case 1:
-        // Handle current page or default action
         break;
       case 2:
-        // Add any additional navigation actions if needed
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderHistoryPage(userId: widget.userId),
+          ),
+        );
         break;
       case 3:
         Navigator.push(
@@ -143,29 +113,48 @@ class _DeliveryStatusPageState extends State<DeliveryStatusPage> {
         );
         break;
       default:
-        // Handle default navigation or action
         break;
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+
+
+ void _handlePickUp() async {
+  await _notificationService.respondToNotification("Picked Up");
+  setState(() {
+    _deliveryStatus = "Picked Up";
+    _restaurantName = "Indian Restaurant"; // Replace with actual data from backend
+    _restaurantAddress = "11, Queen st, Colombo 01"; // Replace with actual data
+    _customerName = "Customer Name"; // Replace with actual data from backend
+    _customerAddress = "Customer Address"; // Replace with actual customer address
+  });
+}
+
+
+  // Handle the "Delivered" status update
+  void _handleDelivered() async {
+    await _notificationService.respondToNotification("Delivered");
+    setState(() {
+      _deliveryStatus = "Delivered";
+    });
+  }
+
+  // Handle "Cancelled" status update
+  void _handleCancel() async {
+    await _notificationService.respondToNotification("Cancelled");
+    setState(() {
+      isAccepted = false;
+      _showNotification = false;
+      _deliveryStatus = "Cancelled";
+    });
+  }
+
+
+   @override
+  Widget build(BuildContext context) { 
     return Scaffold(
       body: Stack(
         children: [
-          // Map will be shown here (commented out for now)
-          /*
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: _initialPosition,
-              zoom: 14,
-            ),
-            onMapCreated: (controller) {
-              _mapController = controller;
-            },
-          ),
-          */
-          // Bottom tab to update delivery status and show details
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -196,86 +185,126 @@ class _DeliveryStatusPageState extends State<DeliveryStatusPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Latest Notification: $_notificationMessage',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Restaurant: $restaurantName',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Text(
-                    'Restaurant Address: $restaurantAddress',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Customer: $customerName',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Text(
-                    'Customer Address: $customerAddress',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Update Delivery Status',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  DropdownButton<String>(
-                    value: _deliveryStatus,
-                    isExpanded: true,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _deliveryStatus = newValue!;
-                      });
-                    },
-                    items: <String>['Picked Up', 'On the Way', 'Delivered']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 16.0),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Status updated to $_deliveryStatus'),
+                  const SizedBox(height: 16.0),
+                  if (_showNotification && !isAccepted)
+                    Column(
+                      children: [
+                        Text(
+                          _notificationMessage,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
-                      child: Text('Confirm Status'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 24.0),
-                      ),
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _handleAccept,
+                              child: const Text('Accept'),
+                            ),
+                            ElevatedButton(
+                              onPressed: _handleCancel,
+                              child: const Text('Decline'),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
+                  if (_deliveryStatus == "Accepted")
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Restaurant: $_restaurantName',
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          'Address: $_restaurantAddress',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _handlePickUp,
+                              child: const Text('Pick Up'),
+                            ),
+                            ElevatedButton(
+                              onPressed: _handleCancel,
+                              child: const Text('Cancel'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  if (_deliveryStatus == "Picked Up")
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Customer: $_customerName',
+            style: const TextStyle(fontSize: 18.0),
+          ),
+          IconButton(
+            icon: Icon(Icons.contact_phone),
+            onPressed: () {
+              // Code to call customer
+            },
+          ),
+        ],
+      ),
+
+                        Text(
+                          'Customer Address: $_customerAddress',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                        Text(
+                          'Restaurant: $_restaurantName',
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          'Address: $_restaurantAddress',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _handleDelivered,
+                          child: const Text('Mark as Delivered'),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _selectedIndex,
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
-    );
+    bottomNavigationBar: BottomNavBar(
+      currentIndex: _selectedIndex,
+      selectedIndex: _selectedIndex,
+      onItemTapped: _onItemTapped,
+    ),
+  );
+}
+
+
+  @override
+  void dispose() {
+    _notificationService.stopPollingNotifications();
+    super.dispose();
   }
 }

@@ -6,7 +6,6 @@ import 'package:delivery/services/auth_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
-
 void main() {
   final authService = AuthService('http://10.0.3.2:8080'); // Update with your actual local IP address
 
