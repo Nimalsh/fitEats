@@ -7,6 +7,7 @@ import menuItemReducer from "./Menu/Reducer";
 import NutrionReducer from "./Nutrion/Reducer";
 import orderReducer from "./Order/Reducer";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
+import autoplansReducer from "./Autoplans/Reducer";
 
 import restaurantReducer from "./Restaurant/Reducer";
 
@@ -32,7 +33,9 @@ const rootReducer =combineReducers({
   plan: planReducer, 
   request:requestReducer,
   bmi:bmiReducer,
-  meallog:MeallogReducer
+  meallog:MeallogReducer,
+  autoplans:autoplansReducer,
+
 
 });
 

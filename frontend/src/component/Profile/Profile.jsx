@@ -33,9 +33,11 @@ import Dashboard from './Dashboard';
 import Complain from './ComplaintForm';
 import ComplaintForm from './ComplaintForm';
 
+
 import Completedplans from './Completedplans';
 
 import CustormizeOrder from './CustormizeOrder';
+import Automealplan from './Automealplan'
 
 
 
@@ -77,6 +79,7 @@ const Profile = () => {
           <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
           <Route path="/personalized-plan/view/:planId/:duration" element={<Mealprogress/>} />
           <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
+          <Route path="/autoplan/view/:planId/:duration" element={<Automealplan/>} />
           <Route path="/BMI/plan/:duration/:planId" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
           <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
