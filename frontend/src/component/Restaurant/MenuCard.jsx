@@ -2,29 +2,59 @@ import React, { useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItemToCart } from '../State/Cart/Action';
 
 const MenuCard = ({ item }) => {
-  const [ingredientCounts, setIngredientCounts] = useState({});
+  const [selectedIngredients, setSelectedIngredients] = useState([]); // Initialize as an array
   const [totalCeleryValue, setTotalCeleryValue] = useState(50); // Example starting celery value
   const navigate = useNavigate();
+  const dispatch=useDispatch();
 
-  const handleCheckBoxChange = (ingredient) => {
-    setIngredientCounts((prevCounts) => {
-      const isSelected = prevCounts[ingredient.name];
-      const newCounts = {
-        ...prevCounts,
-        [ingredient.name]: !isSelected,
-      };
-      const celeryChange = isSelected ? -ingredient.celeryValue : ingredient.celeryValue;
-      setTotalCeleryValue((prevValue) => prevValue + celeryChange);
-      return newCounts;
-    });
+  const handleAddItemToCart=(e)=>{
+    e.preventDefault()
+    const reqData = {
+      token:localStorage.getItem("jwt"),
+      cartItem:{
+        foodId:item.id,
+        quantity:1,
+        ingredients:selectedIngredients,
+      },
+    };
+    dispatch(addItemToCart(reqData));
+    navigate("/cart")
+    console.log(reqData)
   };
+
+  const handleCheckBoxChange = (itemName) => {
+    console.log("value",itemName)
+    if(selectedIngredients.includes(itemName)){
+      setSelectedIngredients(
+selectedIngredients.filter((item)=>item!==itemName)
+      );
+    }else{
+      setSelectedIngredients([...selectedIngredients,itemName]);
+    }
+
+  }
+
+
+  // const handleCheckBoxChange = (ingredient) => {
+  //   setSelectedIngredients((prevCounts) => {
+  //     const isSelected = prevCounts[ingredient.name];
+  //     const newCounts = {
+  //       ...prevCounts,
+  //       [ingredient.name]: !isSelected,
+  //     };
+  //     const celeryChange = isSelected ? -ingredient.celeryValue : ingredient.celeryValue;
+  //     setTotalCeleryValue((prevValue) => prevValue + celeryChange);
+  //     return newCounts;
+  //   });
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Selected ingredients:", ingredientCounts);
+    console.log("Selected ingredients:", selectedIngredients);
     console.log("Total celery value:", totalCeleryValue);
     navigate('/cart');
   };
@@ -57,7 +87,7 @@ const MenuCard = ({ item }) => {
         </div>
       </AccordionSummary>
       <AccordionDetails>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleAddItemToCart}>
           <div className='flex gap-5 flex-wrap'>
             {Object.keys(categorizedIngredients).map((category) => (
               <div key={category}>
@@ -66,7 +96,7 @@ const MenuCard = ({ item }) => {
                   {categorizedIngredients[category].map((ingredient) => (
                     <FormControlLabel
                       key={ingredient.id}
-                      control={<Checkbox onChange={() => handleCheckBoxChange(ingredient)} />}
+                      control={<Checkbox onChange={() => handleCheckBoxChange(ingredient.name)} />}
                       label={`${ingredient.name} (+${ingredient.celeryValue || 0})`}
                     />
                   ))}
@@ -75,8 +105,15 @@ const MenuCard = ({ item }) => {
             ))}
           </div>
           <div className='pt-5 flex items-center justify-end gap-4'>
-            <Button variant='contained' type="submit">Add to Cart</Button>
-            <Button
+          <Button 
+              variant='contained'
+              type="button"
+              onClick={handleAddItemToCart} 
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-md uppercase font-semibold text-sm"
+            >
+              Add to Cart
+            </Button>
+            <Button 
               variant='contained'
               type="button"
               onClick={handleNutritionContentClick} 

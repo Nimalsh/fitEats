@@ -156,7 +156,7 @@ const Dashboard = () => {
     <Container 
         maxWidth={false} 
         sx={{ 
-          backgroundColor: '#1C1B1A', 
+          backgroundColor: '#0000', 
           padding: '10px', 
           borderRadius: '8px', 
           width: '100%',
