@@ -1,4 +1,4 @@
-import { api } from "../../../config/api";
+import { api } from '../../config/api'
 
 import {
   FIND_CART_REQUEST,
@@ -25,13 +25,13 @@ export const findCart = (token) => {
   return async (dispatch) => {
     dispatch({ type: FIND_CART_REQUEST });
     try {
-      const response = await api.get(`/api/cart`, {
+      const response = await api.get('/api/cart', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("my cart", response.data);
       dispatch({ type: FIND_CART_SUCCESS, payload: response.data });
-    
     } catch (error) {
       console.log("error", error);
       dispatch({ type: FIND_CART_FAILURE, payload: error });
@@ -43,7 +43,7 @@ export const clearCartAction = () => {
   return async (dispatch) => {
     dispatch({ type: CLEAR_CART_REQUEST });
     try {
-      const { data } = await api.put(`/api/cart/clear`, {}, {
+      const { data } = await api.put('/api/cart/clear', {}, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
@@ -57,7 +57,6 @@ export const clearCartAction = () => {
   };
 };
 
-//have some problem not imlement backend??
 export const getAllCartItems = (reqData) => {
   return async (dispatch) => {
     dispatch({ type: GET_ALL_CART_ITEMS_REQUEST });
@@ -68,7 +67,6 @@ export const getAllCartItems = (reqData) => {
         },
       });
       dispatch({ type: GET_ALL_CART_ITEMS_SUCCESS, payload: response.data });
-     
     } catch (error) {
       console.log("error", error);
       dispatch({ type: GET_ALL_CART_ITEMS_FAILURE, payload: error });
@@ -80,7 +78,7 @@ export const addItemToCart = (reqData) => {
   return async (dispatch) => {
     dispatch({ type: ADD_ITEM_TO_CART_REQUEST });
     try {
-      const { data } = await api.put(`/api/cart/add`, reqData.cartItem, {
+      const { data } = await api.put('/api/cart/add', reqData.cartItem, {
         headers: {
           Authorization: `Bearer ${reqData.token}`,
         },
@@ -98,7 +96,7 @@ export const updateCartItem = (reqData) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_CARTITEM_REQUEST });
     try {
-      const { data } = await api.put(`/api/cart-item/update`, reqData.data, {
+      const { data } = await api.put('/api/cart-item/update', reqData.data, {
         headers: {
           Authorization: `Bearer ${reqData.jwt}`,
         },
@@ -112,7 +110,7 @@ export const updateCartItem = (reqData) => {
   };
 };
 
-export const removeCartItem = ({cartItemId, jwt}) => {
+export const removeCartItem = ({cartItemId,jwt}) => {
   return async (dispatch) => {
     dispatch({ type: REMOVE_CARTITEM_REQUEST });
     try {

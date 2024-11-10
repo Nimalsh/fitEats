@@ -1,10 +1,13 @@
 import { Box, Button, Card, Divider, Grid, Modal, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import CartItem from "./CartItem";
 import { AddressCard } from "./AddressCard";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-// import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { store } from "../State/store";
+import { createOrder } from "../State/Order/Action";
+import { findCart } from "../State/Cart/Action";
 
 const items = [1, 1];
 
@@ -27,26 +30,64 @@ const initialValues = {
   city: "",
 };
 
-// const validationSchema = Yep.object.shape({
-//   streetAddress: Yup.string().required("Street address is required"),
-//   state: Yup.string().required("State is required"),
-//   pincode: Yup.required("pincode is required"),
-//   city: Yup.string().required("City is required"),
-// });
 
-const handleSubmit = (values) => {console.log(values)};
 
 const Cart = () => {
-  const createOderUsingSelectedAddress = () => {};
-  const handleOpenAddressModel = () => setOpen(true);
+ 
+  const { cart ,auth} = useSelector((store) => store);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!cart.id) {
+      dispatch(findCart(auth.jwt));
+    }
+  }, [cart.id, dispatch, auth.jwt]);
+
+  console.log("Cart Object:", cart);
+  const handleSubmit = (values) => {
+    const restaurantId = cart.cartItems[0]?.food?.restaurant?.id;
+    const cartId = cart.id;
+
+    if (!restaurantId) {
+        console.error("Restaurant ID is missing!");
+        return;
+    }
+
+    const data = {
+        jwt: localStorage.getItem("jwt"),
+        order: {
+            restaurantId: restaurantId,
+            deliveryAddress: {
+                streetAddress: values.streetAddress,
+                city: values.city,
+                state: values.state,
+                postalCode: values.pincode,
+                country: "Sri Lanka"
+            }
+        }
+    };
+
+    dispatch(createOrder(data));
+    console.log("Order data:", data);
+};
+
+
   const [open, setOpen] = React.useState(false);
+
+  const handleOpenAddressModel = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // Calculate the total price for all items in the cart
+  const itemTotal = cart.cartItems.reduce((total, item) => total + item.totalPrice, 0);
+  const deliveryFee = 100;
+  const gstAndCharges = 500;
+  const totalPay = itemTotal + deliveryFee + gstAndCharges;
+
   return (
     <div>
       <main className="lg:flex justify-between">
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-          {items.map((item) => (
-            <CartItem />
+          {cart.cartItems?.map((item) => (
+            <CartItem key={item.id} item={item} />
           ))}
 
           <Divider />
@@ -55,23 +96,23 @@ const Cart = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-gray-400">
                 <p>Item Total</p>
-                <p>LkR 5900 </p>
+                <p>LKR {itemTotal}</p>
               </div>
 
               <div className="flex justify-between text-gray-400">
-                <p>delivery Fee</p>
-                <p>LkR 100 </p>
+                <p>Delivery Fee</p>
+                <p>LKR {deliveryFee}</p>
               </div>
 
               <div className="flex justify-between text-gray-400">
                 <p>GST and Restaurant charges</p>
-                <p>LkR 500 </p>
+                <p>LKR {gstAndCharges}</p>
               </div>
               <Divider />
             </div>
             <div className="flex justify-between text-gray-400">
-              <p>Total pay</p>
-              <p>LKR 6500</p>
+              <p>Total Pay</p>
+              <p>LKR {totalPay}</p>
             </div>
           </div>
         </section>
@@ -85,7 +126,7 @@ const Cart = () => {
           <div className="flex gap-5 flex-wrap justify-center">
             {[1, 1, 1, 1, 1].map((item, index) => (
               <AddressCard
-                handleSelectAddress={createOderUsingSelectedAddress}
+                handleSelectAddress={() => {}}
                 key={index}
                 item={item}
                 showButton={true}
@@ -112,7 +153,6 @@ const Cart = () => {
         </section>
       </main>
 
-    
       <Modal
         open={open}
         onClose={handleClose}
@@ -120,82 +160,52 @@ const Cart = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Formik
-            initialValues={initialValues}
-            // validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-          <Form>
-            <Grid container spacing={2}>
+          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Form>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="streetAddress"
-                    label="StreetAdress"
+                    label="StreetAddress"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="state"
-                    label="state"
+                    label="State"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="city"
-                    label="city"
+                    label="City"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="pincode"
-                    label="pincode"
+                    label="Pincode"
                     fullWidth
                     variant="outlined"
-                    // error={!ErrorMessage("streetAddress")}
-                    // helperText={
-                    //   <ErrorMessage>
-                    //     {(msg)=><span className="text-red-600">{msg}</span>}
-                    //   </ErrorMessage>
-                    // }
                   />
                 </Grid>
-
-                <Grid  item xs={12}>
-                  <Button fullWidth variant="contained" type="submit" color="primary">Deliver Here</Button>
+                <Grid item xs={12}>
+                  <Button fullWidth variant="contained" type="submit" color="primary">
+                    Deliver Here
+                  </Button>
                 </Grid>
-            </Grid>
-          </Form>
+              </Grid>
+            </Form>
           </Formik>
         </Box>
       </Modal>
