@@ -19,6 +19,7 @@
   z-index: 1; /* Ensure cover is above the background but below the text */
 }
 
+<<<<<<< HEAD
 .text-container {
   position: relative;
   z-index: 2; /* Ensure text is above the cover */
@@ -49,3 +50,5 @@
     font-size: 1.5rem;
   }
 }
+=======
+>>>>>>> f6e5053b4d4cb164f1021d7931a5a42786cd1984
