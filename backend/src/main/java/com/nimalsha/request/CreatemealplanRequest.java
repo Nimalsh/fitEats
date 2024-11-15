@@ -15,7 +15,7 @@ public class CreatemealplanRequest {
     private int age; // Default age
     private String activitylevel; 
     private String title;
-   
+    
     private String dietaryPreferences;
     private String dietaryRestrictions;
 }

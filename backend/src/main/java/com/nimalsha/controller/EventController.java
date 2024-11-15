@@ -69,7 +69,7 @@ public class EventController {
         MessageResponse res = new MessageResponse();
         res.setMessage("event delted successfully");
         return new ResponseEntity<>(res, HttpStatus.CREATED);
-                                                       }
+         }
     
 
 }

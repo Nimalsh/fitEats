@@ -3,13 +3,17 @@ package com.nimalsha.controller;
 
 import com.nimalsha.config.JwtProvider;
 import com.nimalsha.model.Cart;
+import com.nimalsha.model.Nutritionistrequests;
 import com.nimalsha.model.USER_ROLE;
 import com.nimalsha.model.User;
 import com.nimalsha.repository.CartRepository;
 import com.nimalsha.repository.UserRepository;
+import com.nimalsha.request.CreateNutritionistRequest;
 import com.nimalsha.request.LoginRequest;
 import com.nimalsha.response.AuthResponse;
 import com.nimalsha.service.CustomerUserDetailsService;
+import com.nimalsha.service.NutritionistService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -45,6 +52,9 @@ public class AuthController {
 
     @Autowired
     private CartRepository cartRepository;
+
+     @Autowired
+    private NutritionistService nutritionistService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse>createUserHandler(@RequestBody User user) throws Exception {
@@ -113,6 +123,55 @@ public class AuthController {
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+    }
+
+    @PostMapping("/nutritionist-request")
+    public ResponseEntity<String> createNutritionistRequest(
+            @RequestParam("fullName") String fullName,
+            @RequestParam("email") String email,
+            @RequestParam("qualifications") String qualifications,
+            @RequestParam("experience") int experience,
+            @RequestParam("specializations") String specializations,
+            @RequestPart("documents") MultipartFile documents) {
+        
+        try {
+            CreateNutritionistRequest request = new CreateNutritionistRequest();
+            request.setFullName(fullName);
+            request.setEmail(email);
+            request.setQualifications(qualifications);
+            request.setExperience(experience);
+            request.setSpecializations(specializations);
+            request.setDocuments(documents);
+            
+            // Pass the request to the service layer
+            nutritionistService.createNutritionistRequest(request);
+            
+            return ResponseEntity.status(201).body("Nutritionist request submitted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to process nutritionist request");
+        }
+    }
+
+    @PostMapping("/check-nutritionist-request")
+public ResponseEntity<Boolean> checkNutritionistRequestByEmail(@RequestParam("email") String email) {
+    try {
+        boolean exists = nutritionistService.doesNutritionistRequestExistByEmail(email);
+        return ResponseEntity.ok(exists);
+    } catch (Exception e) {
+        e.printStackTrace();  // This will print the error stack trace to the console
+        return ResponseEntity.status(500).body(false);
+    }
+}
+
+    @PostMapping("/check-nutritionist-request-confirmed")
+    public ResponseEntity<Boolean> checkNutritionistRequestByEmailAndStatus(
+            @RequestParam("email") String email) {
+        try {
+            boolean exists = nutritionistService.doesNutritionistRequestExistByEmailAndStatusConfirmed(email);
+            return ResponseEntity.ok(exists);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(false); // Return false in case of error
+        }
     }
 
 }
