@@ -5,9 +5,11 @@ import {
   ADD_TO_FAVOURITE_SUCCESS,
   GET_USER_FAILURE,
   GET_USER_REQUEST,
+  GET_USER_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  LOGOUT,
   REGISTER_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
@@ -17,8 +19,9 @@ const initialState = {
   isLoading: false,
   error: null,
   jwt: null,
-  favorite: [],
+  favorites: [], // Ensure favorites is always initialized as an array
   success: null,
+  user: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -38,16 +41,28 @@ export const authReducer = (state = initialState, action) => {
         success: "Register Success",
       };
 
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        user: action.payload,
+        favorites: Array.isArray(action.payload.favorites) ? action.payload.favorites : [],
+      };
+
     case ADD_TO_FAVOURITE_SUCCESS:
+      const newFavorites = isPresentInFavorites(state.favorites, action.payload)
+        ? state.favorites.filter((item) => item.id !== action.payload.id)
+        : [action.payload, ...state.favorites];
       return {
         ...state,
         isLoading: false,
         error: null,
-        favorite: isPresentInFavorites(state.favorite, action.payload)
-          ? state.favorite.filter((item) => item.id !== action.payload.id)
-          : [action.payload, ...state.favorite],
+        favorites: newFavorites,
       };
 
+    case LOGOUT:
+      return initialState;
+      
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
     case GET_USER_FAILURE:
@@ -63,3 +78,5 @@ export const authReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+

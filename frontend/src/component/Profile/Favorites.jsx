@@ -1,21 +1,22 @@
-import React from 'react'
-import RestaurantCard from '../Restaurant/RestaurantCard'
+import React from 'react';
+import { Container, Grid } from '@mui/material';
+import RestaurantHardCodeCard from '../Restaurant/RestaurantHardCodeCard';
+import { useSelector } from 'react-redux';
 
-export default function Favorites() {
+const Favorites = () => {
+  const { favorites } = useSelector(state => state.auth);
+
   return (
-    <div>
-       <h1 style={{ padding: '2rem 0', fontSize: '1.25rem', fontWeight: '600', textAlign: 'center' }}>
-      My favourites
-    </h1>
-      <div className="flex flex-wrap gap-3 justify-center">
+    <Container>
+      <Grid sx={{ mt: 2 }} container spacing={3}>
+        {favorites.map((restaurant) => (
+          <Grid item key={restaurant.id} xs={12} sm={6} md={4}>
+            <RestaurantHardCodeCard item={restaurant} />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
+};
 
-      {[1,1,1,1].map((item)=><RestaurantCard/>)}
-
-
-       </div>
-
-
-    </div>
-  )
-}
-
+export default Favorites;

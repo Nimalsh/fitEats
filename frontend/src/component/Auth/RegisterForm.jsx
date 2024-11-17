@@ -1,9 +1,11 @@
+
+
 import React from 'react';
 import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import * as Yup from 'yup'; // Import Yup
 import { useNavigate } from 'react-router-dom';
-import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Replace with a more fitting icon
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { registerUser } from '../State/Authentication/Action';
 import { useDispatch } from 'react-redux';
 
@@ -11,20 +13,23 @@ const initialValues = {
   fullName: "",
   email: "",
   password: "",
-  // address: "",
-  // mobileNumber: "",
-  // passwordConfirmation: "",
-  role:"ROLE_CUSTOMER"
+  role: "ROLE_CUSTOMER"
 };
+
+// Define validation schema using Yup
+const validationSchema = Yup.object({
+  fullName: Yup.string().required('Full Name is required'),
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  role: Yup.string().required('Role is required')
+});
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
-  
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
   const handleSubmit = (values) => {
-   dispatch(registerUser({userData:values,navigate}))
-    // Handle registration logic here (e.g., API calls, state updates)
+    dispatch(registerUser({ userData: values, navigate }));
   };
 
   return (
@@ -46,6 +51,7 @@ export const RegisterForm = () => {
         </Typography>
         <Formik
           initialValues={initialValues}
+          validationSchema={validationSchema} // Apply validation schema
           onSubmit={handleSubmit}
         >
           {({ values, errors, touched }) => (
@@ -70,7 +76,7 @@ export const RegisterForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="email"
@@ -90,27 +96,7 @@ export const RegisterForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* <Field
-                    as={TextField}
-                    name="mobileNumber"
-                    label="Mobile Number"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    autoComplete="tel"
-                    required
-                    error={touched.mobileNumber && Boolean(errors.mobileNumber)}
-                    helperText={touched.mobileNumber && errors.mobileNumber}
-                    InputLabelProps={{
-                      style: { color: '#fff' },
-                    }}
-                    InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
-                    }}
-                  /> */}
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="password"
@@ -130,26 +116,6 @@ export const RegisterForm = () => {
                       style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* <Field
-                    as={TextField}
-                    name="passwordConfirmation"
-                    label="Confirm Password"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    type="password"
-                    required
-                    error={touched.passwordConfirmation && Boolean(errors.passwordConfirmation)}
-                    helperText={touched.passwordConfirmation && errors.passwordConfirmation}
-                    InputLabelProps={{
-                      style: { color: '#fff' },
-                    }}
-                    InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
-                    }}
-                  /> */}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
@@ -172,14 +138,14 @@ export const RegisterForm = () => {
                           color: '#fff',
                         },
                         '& .MuiInputBase-input': {
-                          height: '40px', // Reduced height for the role field
+                          height: '40px',
                         }
                       }}
                     >
                       <MenuItem value={"ROLE_CUSTOMER"}>Customer</MenuItem>
-                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Rstaurnat Owner</MenuItem>
-                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>Delivery driver</MenuItem>
-                      <MenuItem value={"ROLE_NUTRITION"}>Nutrition</MenuItem>
+                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Restaurant Owner</MenuItem>
+                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>Delivery Driver</MenuItem>
+                      <MenuItem value={"ROLE_NUTRITION"}>Nutritionist</MenuItem>
                       <MenuItem value={"ROLE_ADMIN"}>Admin</MenuItem>
                     </Field>
                   </FormControl>

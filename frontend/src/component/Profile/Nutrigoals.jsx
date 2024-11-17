@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Grid, Paper, Typography, Box, Button, Avatar } from '@mui/material';
 import { styled } from '@mui/system';
 import HealthIcon from '@mui/icons-material/HealthAndSafety';
 import WeightIcon from '@mui/icons-material/Scale';
@@ -24,32 +25,44 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Nutrigoals = () => {
+  const navigate = useNavigate();
+
   const goals = [
-    { icon: <ManIcon />, label: 'BMI Analysis' },
-    { icon: <WeightIcon />, label: 'Lose Weight' },
-    { icon: <MuscleIcon />, label: 'Build Muscle' },
-    { icon: <FoodLogIcon />, label: 'Meal Log' },
-    { icon: <HealthIcon />, label: 'Personalize plans' },
-    { icon: <PsychologyAltIcon />, label: 'Nutri queries' },
+    { icon: <ManIcon  style={{ fontSize: 50 }} />, label: 'BMI Analysis', route: '/my-profile/BMI' },
+    { icon: <WeightIcon style={{ fontSize: 50 }} />, label: 'Lose Weight', route: '/my-profile/lose-weight' },
+    { icon: <FoodLogIcon style={{ fontSize: 50 }} />, label: 'Meal Log', route: '/my-profile/meal-log' },
+    { icon: <HealthIcon style={{ fontSize: 50 }} />, label: 'Personalize plans', route: '/my-profile/personalized-plan' },
+    { icon: <PsychologyAltIcon style={{ fontSize: 50 }} />, label: 'Nutri queries', route: '/my-profile/nutri-queries' },
   ];
 
+  const handleItemClick = (route) => {
+    if (route) {
+      navigate(route);
+    }
+  };
+
+  
+
   return (
-    <Box sx={{ flexGrow: 1, width: '100%', maxWidth: 360, margin: '0 auto', padding: '16px' }}>
-      <Typography variant="h6" gutterBottom align="center">
+    <Box sx={{ flexGrow: 1, padding: '16px' }}>
+      <Typography variant="h4" gutterBottom align="center">
         WHAT ARE YOUR GOALS?
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center" marginTop={10}>
         {goals.map((goal, index) => (
-          <Grid item xs={6} key={index}>
-            <Item>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Item onClick={() => handleItemClick(goal.route)}>
               {goal.icon}
-              <Typography variant="subtitle1">{goal.label}</Typography>
+              <Typography variant="h6">{goal.label}</Typography>
             </Item>
           </Grid>
         ))}
       </Grid>
+      
     </Box>
   );
 };
 
 export default Nutrigoals;
+
+

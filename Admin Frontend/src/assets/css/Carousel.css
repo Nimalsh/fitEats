@@ -1,0 +1,25 @@
+/* square buttons */
+.rec.rec-arrow {
+    color: chartreuse;
+}
+/* round buttons on hover */
+.rec.rec-arrow:hover {
+    opacity: 0.8;
+    color: #3A3A3A;
+    background-color: #95CD41;
+}
+
+/* disable default outline on focused items */
+/* add custom outline on focused items */
+.rec.rec-arrow:focus {
+    color: #3A3A3A;
+    background-color: #95CD41;
+}
+
+.rec.rec-pagination {
+    color: chartreuse;
+}
+.rec.rec-pagination:focus {
+    color: chartreuse;
+    opacity: 0.8;
+}

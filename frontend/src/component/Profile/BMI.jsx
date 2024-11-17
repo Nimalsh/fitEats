@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { Card, CardContent, Typography, Box, TextField } from '@mui/material';
+import { Card, CardContent, Typography, Box, TextField, Button } from '@mui/material';
 import correctbmi from './BMIimage.jpg';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Import useDispatch
+import { createBmiplan } from '../State/Bmi/Action'; // Update with the correct path
 
-const Dashboard = () => {
+const BMI = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch(); // Initialize useDispatch
+
   const [currentWeight, setCurrentWeight] = useState(70); // kg
   const [currentHeight, setCurrentHeight] = useState(1.75); // meters
   const [bmi, setBmi] = useState(23.44);
@@ -12,7 +18,7 @@ const Dashboard = () => {
   const [durationWeeks, setDurationWeeks] = useState(12);
   const [weightProgress, setWeightProgress] = useState([]);
   const [plotDaily, setPlotDaily] = useState(false);
-
+  const token = localStorage.getItem('jwt'); 
   useEffect(() => {
     const daysInWeek = 7;
     const totalDays = durationWeeks * daysInWeek;
@@ -169,6 +175,12 @@ const Dashboard = () => {
       pointerLeft = '0%';
   }
 
+  const handleProceed = () => {
+   
+   
+      dispatch(createBmiplan( durationWeeks, currentWeight, currentHeight, bmi, targetWeight, token, navigate));
+   
+  }
   return (
     <Box sx={styles.dashboard}>
       <Card sx={{ flex: 2, padding: '20px' }}>
@@ -230,12 +242,12 @@ const Dashboard = () => {
       <Card sx={{ flex: 3, padding: '20px', height: '600px' }}>
         <CardContent>
           {bmi >= 18.5 && bmi < 25 ? (
-             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-             <img src={correctbmi} alt="Correct BMI" style={{ width: '500px', height: '400px', marginBottom: '20px' }} />
-             <Typography variant="h6">
-               You are in a Healthy BMI range!
-             </Typography>
-           </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={correctbmi} alt="Correct BMI" style={{ width: '500px', height: '400px', marginBottom: '20px' }} />
+              <Typography variant="h6">
+                You are in a Healthy BMI range!
+              </Typography>
+            </Box>
           ) : (
             <>
               <Box sx={styles.flexRow}>
@@ -259,6 +271,15 @@ const Dashboard = () => {
               <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '10px' }}>
                 Target Weight loss or gain: {targetWeight} kg
               </Typography>
+              <Box sx={{ marginLeft: '500px', marginTop: '20px' }}>
+                <Button
+                  variant="contained"
+                  style={{ whiteSpace: 'nowrap' }}
+                  onClick={handleProceed}
+                >
+                  Let's Proceed
+                </Button>
+              </Box>
             </>
           )}
         </CardContent>
@@ -267,4 +288,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default BMI;
