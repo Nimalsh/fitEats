@@ -76,9 +76,10 @@ const Profile = () => {
           
 
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />
-          <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
+          <Route path="/personalized-plan/:type" element={<Paidweightlossform />} />
+
           <Route path="/personalized-plan/view/:planId/:duration" element={<Mealprogress/>} />
-          <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
+          
           <Route path="/autoplan/view/:planId/:duration" element={<Automealplan/>} />
           <Route path="/BMI/plan/:duration/:planId" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />

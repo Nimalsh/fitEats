@@ -20,6 +20,9 @@ import {
   GET_REQUEST_BY_PLAN_ID_REQUEST,
   GET_REQUEST_BY_PLAN_ID_SUCCESS,
   GET_REQUEST_BY_PLAN_ID_FAILURE,
+  UPDATE_ACHIEVED_WEIGHT_REQUEST,
+  UPDATE_ACHIEVED_WEIGHT_SUCCESS,
+  UPDATE_ACHIEVED_WEIGHT_FAILURE,
 } from './ActionType';
 
 const initialState = {
@@ -39,6 +42,7 @@ const requestReducer = (state = initialState, action) => {
     case GET_USER_REQUESTS_REQUEST:
     case UPDATE_REQUEST_STATUS_REQUEST:
     case GET_REQUEST_BY_PLAN_ID_REQUEST:
+      case UPDATE_ACHIEVED_WEIGHT_REQUEST:
       return {
         ...state,
         loading: true,
@@ -84,6 +88,17 @@ const requestReducer = (state = initialState, action) => {
             requestByPlanId: action.payload,
           };
 
+          case UPDATE_ACHIEVED_WEIGHT_SUCCESS:
+            return {
+              ...state,
+              loading: false,
+              // Update the specific request if needed
+              requests: state.requests.map((request) =>
+                request.planId === action.payload.planId ? action.payload : request
+              ),
+            };
+      
+
     case CREATE_REQUEST_FAILURE:
     case GET_REQUESTS_BY_NUTRITIONIST_FAILURE:
     case GET_REQUEST_BY_ID_FAILURE:
@@ -91,6 +106,7 @@ const requestReducer = (state = initialState, action) => {
     case GET_USER_REQUESTS_FAILURE:
     case UPDATE_REQUEST_STATUS_FAILURE:
     case GET_REQUEST_BY_PLAN_ID_FAILURE:
+    case UPDATE_ACHIEVED_WEIGHT_FAILURE:
       return {
         ...state,
         loading: false,

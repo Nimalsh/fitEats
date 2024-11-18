@@ -9,6 +9,9 @@ import {
   CHECK_NUTRITIONIST_REQUEST_CONFIRMED,
   CHECK_NUTRITIONIST_REQUEST_CONFIRMED_SUCCESS,
   CHECK_NUTRITIONIST_REQUEST_CONFIRMED_FAILURE,
+  GET_NUTRITIONIST_BY_ID_REQUEST,
+  GET_NUTRITIONIST_BY_ID_SUCCESS,
+  GET_NUTRITIONIST_BY_ID_FAILURE,
 } from "./ActionType";
 
 export const createNutritionistRequest = (requestData) => {
@@ -70,6 +73,21 @@ export const checkNutritionistRequestByEmail = (email) => {
       } catch (error) {
         dispatch({ type: CHECK_NUTRITIONIST_REQUEST_CONFIRMED_FAILURE, payload: error.message });
         throw new Error(error.message); // Propagate error if needed
+      }
+    };
+  };
+
+  export const getNutritionistById = (id) => {
+    return async (dispatch) => {
+      dispatch({ type: GET_NUTRITIONIST_BY_ID_REQUEST });
+  
+      try {
+        const response = await api.get(`/auth/nutritionist/${id}`);
+        dispatch({ type: GET_NUTRITIONIST_BY_ID_SUCCESS, payload: response.data });
+        return response.data;
+      } catch (error) {
+        dispatch({ type: GET_NUTRITIONIST_BY_ID_FAILURE, payload: error.message });
+        throw new Error(error.message);
       }
     };
   };

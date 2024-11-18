@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Entity
@@ -17,6 +18,7 @@ public class Request {
     private Long userId;
     private Long planId;
     private Long nutritionistId; 
+    private String nutritionistName;
     private String name;
     private String status;
     private double currentWeight;
@@ -29,4 +31,10 @@ public class Request {
     private String dietaryRestrictions;
     private String activityLevel;
     private int mealsPerDay;
+    private double achivedweight;
+
+    // Newly added fields
+    private LocalDate completedDate; // To store the date when the request was completed
+    private LocalDate startedDate;   // To store the date when the request was started
+    private LocalDate repliedDate;   // To store the date when the request was replied
 }

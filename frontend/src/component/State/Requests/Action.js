@@ -24,6 +24,9 @@ import {
   GET_REQUEST_BY_PLAN_ID_REQUEST,
   GET_REQUEST_BY_PLAN_ID_SUCCESS,
   GET_REQUEST_BY_PLAN_ID_FAILURE,
+  UPDATE_ACHIEVED_WEIGHT_REQUEST,
+  UPDATE_ACHIEVED_WEIGHT_SUCCESS,
+  UPDATE_ACHIEVED_WEIGHT_FAILURE,
 } from './ActionType';
 
 // Action to create a new request
@@ -102,6 +105,7 @@ export const getRequestById = (id, token) => {
 
   export const completeRequestByPlanId = (planId, token) => {
     return async (dispatch) => {
+      console.log("Request  to Completed");
       dispatch({ type: COMPLETE_REQUEST_BY_PLAN_ID_REQUEST });
       try {
         await api.put(`/api/plan/requests/complete/${planId}`, null, {
@@ -171,5 +175,28 @@ export const getRequestByPlanId = (planId, token) => {
     }
   };
 };
+
+export const updateAchievedWeight = (planId, achievedWeight, token) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_ACHIEVED_WEIGHT_REQUEST });
+    try {
+      const { data } = await api.put(`/api/plan/requests/${planId}/achieved-weight`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          achievedWeight, // Send as query param
+        },
+      });
+      dispatch({ type: UPDATE_ACHIEVED_WEIGHT_SUCCESS, payload: data });
+      console.log("Achieved weight updated successfully");
+    } catch (error) {
+      console.error("Error updating achieved weight", error);
+      dispatch({ type: UPDATE_ACHIEVED_WEIGHT_FAILURE, payload: error.message });
+    }
+  };
+};
+
 
   

@@ -25,6 +25,8 @@ public class PlanController {
     @Autowired
     private UserService userService;
 
+    
+
     @PostMapping("/create")
     public ResponseEntity<Plan> createPlan(@RequestBody CreatePlanRequest request,
                                            @RequestHeader("Authorization") String jwt) throws Exception {
@@ -163,6 +165,11 @@ public ResponseEntity<String> updateMealStatus(
         } catch (Exception e) {
             return ResponseEntity.status(404).body(null); // Or return a more descriptive error message
         }
+    }
+
+    @PutMapping("/{planId}/achieved-weight")
+    public Request updateAchievedWeight(@PathVariable Long planId, @RequestParam double achievedWeight) throws Exception {
+        return planService.updateAchievedWeightByPlanId(planId, achievedWeight);
     }
 
 }
