@@ -30,12 +30,10 @@ import Goalselectfree from './Goalselectfree';
 import Freeweightgainform from './Freeweightgainform';
 import Freeweightlossform from './Freeweightlossform';
 import Dashboard from './Dashboard';
-import Complain from './ComplaintForm';
-import ComplaintForm from './ComplaintForm';
-
 import Completedplans from './Completedplans';
 
 import CustormizeOrder from './CustormizeOrder';
+import ComplaintPage from './ComplaintPage';
 
 
 
@@ -64,7 +62,7 @@ const Profile = () => {
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Goalselect/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
-          <Route path="/complain" element={<ComplaintForm/>} />
+          <Route path="/complain" element={<ComplaintPage/>} />
 
           <Route path="/meal-plan" element={<MealPlansPage />} />
           <Route path="/menu-suggest" element={<MenuSuggest/>} />

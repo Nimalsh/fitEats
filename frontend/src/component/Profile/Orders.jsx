@@ -74,7 +74,8 @@ const Orders = () => {
               <TableCellStyled>Restaurant</TableCellStyled>
               <TableCellStyled>Total Price</TableCellStyled>
               <TableCellStyled>Order Status</TableCellStyled>
-              <TableCellStyled>Food Items</TableCellStyled>
+              <TableCellStyled>Items</TableCellStyled>
+              <TableCellStyled>Delivery Address</TableCellStyled>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -83,7 +84,7 @@ const Orders = () => {
                 <TableCellStyled>{order.orderNo}</TableCellStyled>
                 <TableCellStyled>{new Date(order.createdAt).toLocaleDateString()}</TableCellStyled>
                 <TableCellStyled>{order.restaurant.name}</TableCellStyled>
-                <TableCellStyled>{`$${(order.totalPrice / 100).toFixed(2)}`}</TableCellStyled>
+                <TableCellStyled>${(order.totalPrice / 100).toFixed(2)}</TableCellStyled>
                 <TableCellStyled>
                   <StatusBadge status={order.orderStatus}>
                     {order.orderStatus}
@@ -91,13 +92,23 @@ const Orders = () => {
                 </TableCellStyled>
                 <TableCellStyled>
                   <FoodItemBox>
-                    {order.items.map((foodItem, index) => (
+                    {order.items.map((item, index) => (
                       <Box key={index} display="flex" alignItems="center" gap={1}>
-                        <FoodImage src={foodItem.food.image} alt={foodItem.food.name} />
-                        <Typography style={{ color: '#fff' }}>{foodItem.food.name}</Typography>
+                        <FoodImage src={item.food.image} alt={item.food.name} />
+                        <Typography style={{ color: '#fff' }}>{item.food.name} x {item.quantity}</Typography>
                       </Box>
                     ))}
                   </FoodItemBox>
+                </TableCellStyled>
+                <TableCellStyled>
+                  {order.deliveryAddress ? (
+                    <>
+                      <Typography>{order.deliveryAddress.street}</Typography>
+                      <Typography>{order.deliveryAddress.city}, {order.deliveryAddress.zipCode}</Typography>
+                    </>
+                  ) : (
+                    <Typography>No Address</Typography>
+                  )}
                 </TableCellStyled>
               </TableRow>
             ))}

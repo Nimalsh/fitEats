@@ -6,7 +6,7 @@ import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { useDispatch, useSelector } from "react-redux";
 import { store } from "../State/store";
 import { createOrder } from "../State/Order/Action";
-import { findCart } from "../State/Cart/Action";
+import { clearCartAction, findCart } from "../State/Cart/Action";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 
@@ -62,31 +62,35 @@ const Cart = () => {
 
   console.log("Cart Object:", cart);
 
-  // Handle form submission
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values, { resetForm }) => {
     const data = {
       jwt: localStorage.getItem("jwt"),
       order: {
         deliveryAddress: {
-          streetAddress: values.streetAddress || "",  
+          streetAddress: values.streetAddress || "",
           city: values.city || "",
           state: values.state || "",
-          postalCode: values.pincode || ""
-        }
-      }
+          postalCode: values.pincode || "",
+        },
+      },
     };
-  
-    dispatch(createOrder(data));
-    console.log("Order data:", data);
+
+    try {
+      await dispatch(createOrder(data)); // Create order
+      await dispatch(clearCartAction()); // Clear cart
+      resetForm(); // Clear form fields
+      setOpen(false); // Close modal
+      console.log("Order created and cart cleared successfully.");
+    } catch (error) {
+      console.error("Error in creating order or clearing cart:", error);
+    }
   };
-  
 
   const [open, setOpen] = React.useState(false);
 
   const handleOpenAddressModel = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Calculate the total price for all items in the cart
   const itemTotal = cart.cartItems.reduce((total, item) => total + item.totalPrice, 0);
   const deliveryFee = 100;
   const gstAndCharges = 500;
@@ -95,6 +99,7 @@ const Cart = () => {
   return (
     <div>
       <main className="lg:flex justify-between">
+        {/* Cart Items Section */}
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
           {cart.cartItems?.map((item) => (
             <CartItem key={item.id} item={item} />
@@ -129,6 +134,7 @@ const Cart = () => {
 
         <Divider orientation="vertical" flexItem />
 
+        {/* Address Section */}
         <section className="lg:w-[70%] flex flex-col items-center px-5 pb-10 lg:pb-0">
           <div className="text-center font-semibold text-2xl py-10">
             Choose Delivery Address
