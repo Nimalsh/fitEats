@@ -19,23 +19,27 @@ import {
 // Base API URL
 const API_URL = "/api/complaint";
 
-// Add Complaint
-export const addComplaint = (payload ) => {
+export const addComplaint = (payload) => {
   return async (dispatch) => {
-  dispatch({ type: ADD_COMPLAINT_REQUEST });
+    dispatch({ type: ADD_COMPLAINT_REQUEST });
 
-  try {
-    const {response} = await api.post(`/api/complaint`, payload, {
-      headers: { Authorization: `Bearer ${payload.jwt}` },
-    });
-    dispatch({ type: ADD_COMPLAINT_SUCCESS, payload: response.data });
-  } catch (error) {
-    console.log("error", error);
-    dispatch({ type: ADD_COMPLAINT_FAILURE, payload: error.message });
-  }
-};
-};
+    try {
+      // Correct the destructuring to get response directly
+      const response = await api.post(`/api/complaint`, payload, {
+        headers: { Authorization: `Bearer ${payload.jwt}` },
+      });
 
+      // Dispatch success action with the correct data
+      dispatch({ type: ADD_COMPLAINT_SUCCESS, payload: response.data });
+
+      return response.data; // Return the data to resolve the promise
+    } catch (error) {
+      console.error("Error adding complaint:", error);
+      dispatch({ type: ADD_COMPLAINT_FAILURE, payload: error.message });
+      throw error; // Throw error to propagate to handleSubmit
+    }
+  };
+};
 
 
 // Delete Complaint by ID

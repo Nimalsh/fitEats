@@ -34,7 +34,7 @@ const ComplaintHistory = () => {
   }
 
   return (
-    <Paper style={{ padding: "20px", backgroundColor: "#1C1B1A", color: "#fff" }}>
+    <Paper style={{ padding: "20px", marginTop: "20px", backgroundColor: "#1C1B1A", color: "#fff" }}>
       <Typography variant="h5" style={{ marginBottom: "20px", color: "#979533" }}>
         Complaint History
       </Typography>
