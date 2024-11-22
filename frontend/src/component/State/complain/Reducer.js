@@ -9,6 +9,9 @@ import {
   DELETE_COMPLAINT_REQUEST,
   DELETE_COMPLAINT_SUCCESS,
   DELETE_COMPLAINT_FAILURE,
+  FETCH_USER_COMPLAINTS_REQUEST,
+  FETCH_USER_COMPLAINTS_SUCCESS,
+  FETCH_USER_COMPLAINTS_FAILURE,
 } from "./ActionType";
 
 const initialState = {
@@ -16,10 +19,10 @@ const initialState = {
   loading: false,
   error: null,
 }
-const Reducer = (state = initialState, action) => {
+const complaintReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_COMPLAINT_REQUEST:
-    case FETCH_COMPLAINTS_REQUEST:
+    case FETCH_USER_COMPLAINTS_REQUEST:
     case DELETE_COMPLAINT_REQUEST:
       return { ...state, loading: true };
 
@@ -30,13 +33,10 @@ const Reducer = (state = initialState, action) => {
         complaints: [...state.complaints, action.payload],
       };
 
-    case FETCH_COMPLAINTS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        complaints: action.payload,
-      };
-
+     
+      case FETCH_USER_COMPLAINTS_SUCCESS:
+        return { ...state, loading: false, complaints: action.payload };
+      
     case DELETE_COMPLAINT_SUCCESS:
       return {
         ...state,
@@ -47,7 +47,7 @@ const Reducer = (state = initialState, action) => {
       };
 
     case ADD_COMPLAINT_FAILURE:
-    case FETCH_COMPLAINTS_FAILURE:
+    case FETCH_USER_COMPLAINTS_FAILURE:
     case DELETE_COMPLAINT_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
@@ -56,4 +56,4 @@ const Reducer = (state = initialState, action) => {
   }
 };
 
-export default Reducer;
+export default complaintReducer;

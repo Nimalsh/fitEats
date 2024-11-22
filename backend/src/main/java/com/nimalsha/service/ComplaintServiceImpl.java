@@ -1,6 +1,6 @@
 
 // Service Implementation
-package com.nimalsha.service.impl;
+package com.nimalsha.service;
 
 import com.nimalsha.model.Complaint;
 import com.nimalsha.repository.ComplaintRepository;
@@ -26,10 +26,12 @@ public class ComplaintServiceImpl implements ComplaintService {
         return complaintRepository.findAll();
     }
 
+
     @Override
-    public Complaint getComplaintById(Long id) throws Exception {
-        return complaintRepository.findById(id).orElseThrow(() -> new Exception("Complaint not found"));
+    public List<Complaint> getComplaintsByUserId(Long userId) throws Exception {
+        return complaintRepository.findByUserId(userId);
     }
+
 
     @Override
     public void deleteComplaint(Long id) throws Exception {

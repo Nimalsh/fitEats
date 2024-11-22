@@ -11,6 +11,9 @@ import {
   DELETE_COMPLAINT_REQUEST,
   DELETE_COMPLAINT_SUCCESS,
   DELETE_COMPLAINT_FAILURE,
+  FETCH_USER_COMPLAINTS_REQUEST,
+  FETCH_USER_COMPLAINTS_SUCCESS,
+  FETCH_USER_COMPLAINTS_FAILURE,
 } from "./ActionType";
 
 // Base API URL
@@ -33,17 +36,7 @@ export const addComplaint = (payload ) => {
 };
 };
 
-// Fetch All Complaints
-export const fetchComplaints = () => async (dispatch) => {
-  dispatch({ type: FETCH_COMPLAINTS_REQUEST });
 
-  try {
-    const response = await axios.get(API_URL);
-    dispatch({ type: FETCH_COMPLAINTS_SUCCESS, payload: response.data });
-  } catch (error) {
-    dispatch({ type: FETCH_COMPLAINTS_FAILURE, payload: error.message });
-  }
-};
 
 // Delete Complaint by ID
 export const deleteComplaint = (id) => async (dispatch) => {
@@ -54,5 +47,20 @@ export const deleteComplaint = (id) => async (dispatch) => {
     dispatch({ type: DELETE_COMPLAINT_SUCCESS, payload: id });
   } catch (error) {
     dispatch({ type: DELETE_COMPLAINT_FAILURE, payload: error.message });
+  }
+};
+
+
+// Fetch Complaints by User ID
+export const fetchUserComplaints = (reqData) => async (dispatch) => {
+  dispatch({ type: FETCH_USER_COMPLAINTS_REQUEST });
+  try {
+    const response = await api.get(`/api/complaint/user/${reqData.userId}`, {
+      headers: { Authorization: `Bearer ${reqData.jwt}` },
+    });
+    dispatch({ type: FETCH_USER_COMPLAINTS_SUCCESS, payload: response.data });
+    
+  } catch (error) {
+    dispatch({ type: FETCH_USER_COMPLAINTS_FAILURE, payload: error.message });
   }
 };

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserComplaints } from "../State/complain/Action";
+import React, { useEffect } from "react";
 import {
   Paper,
   Table,
@@ -8,21 +10,28 @@ import {
   TableBody,
   Typography,
 } from "@mui/material";
-import axios from "axios"; // Assuming you're using axios to fetch complaints from the backend
 
 const ComplaintHistory = () => {
-  const [complaints, setComplaints] = useState([]);
+  const dispatch = useDispatch();
+  const { complaints, loading, error } = useSelector((state) => state.complaint);
+  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Fetch complaints from the backend API
-    axios.get("/api/complaints") // Replace with your API endpoint
-      .then((response) => {
-        setComplaints(response.data); // Assuming the response is an array of complaints
-      })
-      .catch((error) => {
-        console.error("Error fetching complaints:", error);
-      });
-  }, []);
+    const userId = auth.user?.id; // Assuming `auth.user` contains logged-in user details
+    const jwt = localStorage.getItem("jwt"); // Retrieve JWT from localStorage
+
+    if (userId && jwt) {
+      dispatch(fetchUserComplaints({ userId, jwt }));
+    }
+  }, [dispatch, auth]);
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Paper style={{ padding: "20px", backgroundColor: "#1C1B1A", color: "#fff" }}>
@@ -42,7 +51,9 @@ const ComplaintHistory = () => {
           {complaints.map((complaint) => (
             <TableRow key={complaint.id}>
               <TableCell style={{ color: "#fff" }}>{complaint.id}</TableCell>
-              <TableCell style={{ color: "#fff" }}>{complaint.date}</TableCell>
+              <TableCell style={{ color: "#fff" }}>
+                {new Date(complaint.date).toLocaleDateString()}
+              </TableCell>
               <TableCell style={{ color: "#fff" }}>{complaint.title}</TableCell>
               <TableCell style={{ color: "#fff" }}>{complaint.complaint}</TableCell>
             </TableRow>

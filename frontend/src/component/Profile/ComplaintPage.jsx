@@ -7,14 +7,18 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import ComplaintForm from "./ComplaintForm"; // Assuming you have a separate ComplaintForm component
-import ComplaintHistory from "./ComplaintHistory"; // Assuming you have a separate ComplaintHistory component
+import ComplaintForm from "./ComplaintForm";
+import { useNavigate } from "react-router-dom";
 
 const ComplaintPage = () => {
-  const [activeTab, setActiveTab] = useState(0); // State to track active tab
+  const [activeTab, setActiveTab] = useState(0);
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue); // Change the active tab based on the user's selection
+    setActiveTab(newValue);
+    if (newValue === 1) {
+      navigate("/my-profile/complain-history"); // Navigate to Complaint History route
+    }
   };
 
   return (
@@ -27,11 +31,10 @@ const ComplaintPage = () => {
           color: "#fff",
         }}
       >
-        {/* Tabs to toggle between Complaint Form and Complaint History */}
         <Box mb={3}>
           <Tabs
-            value={activeTab} // Bind active tab value to state
-            onChange={handleTabChange} // Handle tab change
+            value={activeTab}
+            onChange={handleTabChange}
             centered
             indicatorColor="primary"
             textColor="primary"
@@ -47,8 +50,8 @@ const ComplaintPage = () => {
           </Tabs>
         </Box>
 
-        {/* Conditionally render based on active tab */}
-        {activeTab === 0 ? <ComplaintForm /> : <ComplaintHistory />}
+        {/* Render based on the active tab */}
+        {activeTab === 0 && <ComplaintForm />}
       </Paper>
     </Container>
   );

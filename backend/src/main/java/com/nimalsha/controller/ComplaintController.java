@@ -30,8 +30,8 @@ public class ComplaintController {
             // Extract user details using the JWT token
             User user = userService.findUserByJwtToken(jwt);
 
-            // Set user-related data (e.g., email) from the extracted user
-            complaint.setEmail(user.getEmail()); // Assuming User entity has an getEmail method
+
+            complaint.setUserId(user.getId());
 
             // Create the complaint
             Complaint savedComplaint = complaintService.createComplaint(complaint);
@@ -57,15 +57,18 @@ public class ComplaintController {
     }
 
     // Get Complaint by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Complaint> getComplaintById(@PathVariable Long id) {
-        try {
-            Complaint complaint = complaintService.getComplaintById(id);
-            return ResponseEntity.ok(complaint);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Complaint> getComplaintById(@PathVariable Long id) {
+//        try {
+//            Complaint complaint = complaintService.getComplaintById(id);
+//            return ResponseEntity.ok(complaint);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//
+//
+//
+//    }
 
     // Delete Complaint by ID
     @DeleteMapping("/{id}")
@@ -77,4 +80,17 @@ public class ComplaintController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+    @GetMapping("/complaint/user/{userId}")
+    public ResponseEntity<List<Complaint>> getComplaintsByUserId(@RequestHeader("Authorization") String jwt, @PathVariable Long userId) {
+        try {
+            User user = userService.findUserByJwtToken(jwt);
+            List<Complaint> complaints = (List<Complaint>) complaintService.getComplaintsByUserId(userId);
+            return ResponseEntity.ok(complaints);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
