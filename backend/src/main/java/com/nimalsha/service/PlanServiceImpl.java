@@ -157,7 +157,7 @@ public void completeRequestByPlanId(Long planId) throws Exception {
             .orElseThrow(() -> new Exception("Request not found for planId: " + planId));
 
     // Update the status to "Completed"
-    request.setStatus("Finished");
+    request.setStatus("Completed");
     request.setCompletedDate(LocalDate.now());
 
     // Save the updated request
@@ -281,6 +281,37 @@ public Request updateAchievedWeightByPlanId(Long planId, double achievedWeight) 
     // Save the updated request back to the database
     return requestRepository.save(request);
 }
+
+
+@Override
+public void updateRequestDescriptionAndComplete(Long requestId, String description) throws Exception {
+    // Find the request by ID
+    Request request = requestRepository.findById(requestId)
+            .orElseThrow(() -> new Exception("Request not found for requestId: " + requestId));
+
+    // Update the description field
+    request.setReply(description);
+
+    // Set the status to "Completed"
+    request.setStatus("Completed");
+
+    // Save the updated request
+    requestRepository.save(request);
+}
+
+@Override
+public void putcomments(Long requestId, String comments) throws Exception {
+    // Find the request by ID
+    Request request = requestRepository.findById(requestId)
+            .orElseThrow(() -> new Exception("Request not found for requestId: " + requestId));
+
+   
+    request.setComments(comments);
+
+    
+    requestRepository.save(request);
+}
+
 
 
 

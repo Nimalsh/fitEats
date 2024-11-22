@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.nimalsha.request.CreateothergoalRequest;
 import java.util.List;
 @RestController
 @RequestMapping("/api/users")
@@ -33,6 +34,15 @@ public class UserController {
                                                  @RequestHeader("Authorization") String jwt) throws Exception {
         // Create the request using the JWT token and the request data
         Request request = userService.createNewRequest(jwt, req);
+        
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/otherrequests")
+    public ResponseEntity<Request> createotherRequest(@RequestBody CreateothergoalRequest req,
+                                                 @RequestHeader("Authorization") String jwt) throws Exception {
+        // Create the request using the JWT token and the request data
+        Request request = userService.createotherRequest(jwt, req);
         
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }

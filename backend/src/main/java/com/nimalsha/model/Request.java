@@ -32,6 +32,10 @@ public class Request {
     private String activityLevel;
     private int mealsPerDay;
     private double achivedweight;
+    private String description;
+    private String reply;
+    private String comments;
+
 
     // Newly added fields
     private LocalDate completedDate; // To store the date when the request was completed

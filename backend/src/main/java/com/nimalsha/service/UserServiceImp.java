@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.nimalsha.request.CreateRequestRequest;
 import java.util.List;
 import java.util.Optional;
-
+import com.nimalsha.request.CreateothergoalRequest;
 @Service
 public class UserServiceImp implements  UserService{
 
@@ -76,6 +76,34 @@ public class UserServiceImp implements  UserService{
         // Save the request to the repository
         return requestRepository.save(request);
     }
+    @Override
+    public Request createotherRequest(String jwtToken, CreateothergoalRequest req) throws Exception {
+        // Find the user by JWT token
+        User user = findUserByJwtToken(jwtToken);
+    
+        // Create a new Request object
+        Request request = new Request();
+        request.setTitle(req.getTitle());
+        request.setUserId(user.getId()); // Use the ID of the user obtained from JWT
+        request.setDescription(req.getDescription());
+        request.setNutritionistId(102L);
+        request.setName(user.getFullName());
+        request.setStatus(req.getStatus());
+        request.setCurrentWeight(req.getCurrentWeight());
+        
+        
+        request.setAge(req.getAge());
+        request.setHeight(req.getHeight());
+        request.setGender(req.getGender());
+        request.setDietaryPreferences(req.getDietaryPreferences());
+        request.setDietaryRestrictions(req.getDietaryRestrictions());
+        request.setActivityLevel(req.getActivityLevel());
+        request.setMealsPerDay(req.getMealsPerDay());
+    
+        // Save the request to the repository
+        return requestRepository.save(request);
+    }
+
 
     @Override
     public List<Request> getRequestsByToken(String jwtToken) throws Exception {

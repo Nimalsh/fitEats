@@ -1,3 +1,4 @@
+import { ConstructionOutlined } from '@mui/icons-material';
 import { api } from '../../config/api'
 import {
   CREATE_REQUEST_REQUEST,
@@ -27,6 +28,12 @@ import {
   UPDATE_ACHIEVED_WEIGHT_REQUEST,
   UPDATE_ACHIEVED_WEIGHT_SUCCESS,
   UPDATE_ACHIEVED_WEIGHT_FAILURE,
+  UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_REQUEST,
+  UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_SUCCESS,
+  UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_FAILURE,
+  UPDATE_REQUEST_COMMENT_REQUEST,
+  UPDATE_REQUEST_COMMENT_SUCCESS,
+  UPDATE_REQUEST_COMMENT_FAILURE
 } from './ActionType';
 
 // Action to create a new request
@@ -169,9 +176,11 @@ export const getRequestByPlanId = (planId, token) => {
         },
       });
       dispatch({ type: GET_REQUEST_BY_PLAN_ID_SUCCESS, payload: data });
+      return data;  // Return the fetched data
     } catch (error) {
       console.error("Error fetching request by planId", error);
       dispatch({ type: GET_REQUEST_BY_PLAN_ID_FAILURE, payload: error.message });
+      throw new Error(error.message);  // Throw error for caller to handle
     }
   };
 };
@@ -197,6 +206,50 @@ export const updateAchievedWeight = (planId, achievedWeight, token) => {
     }
   };
 };
+
+
+export const updateRequestDescriptionAndComplete = (requestId, description, token) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_REQUEST });
+    try {
+      // Make the PUT request to the API with plain string body
+      console.log("reply",description);
+      await api.put(`/api/plan/requests/${requestId}/update-description-and-complete`, description, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "text/plain", // Indicate the body is plain text
+        },
+      });
+      dispatch({ type: UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_SUCCESS });
+      console.log("Request description updated and marked as completed");
+    } catch (error) {
+      console.error("Error updating request description and completing request", error);
+      dispatch({ type: UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_FAILURE, payload: error.message });
+    }
+  };
+};
+
+export const putcomments = (requestId, comments, token) => {
+  return async (dispatch) => {
+    dispatch({ type: UPDATE_REQUEST_COMMENT_REQUEST });
+    try {
+      // Make the PUT request to the API with plain string body
+      
+      await api.put(`/api/plan/requests/${requestId}/putcomments`, comments, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "text/plain", // Indicate the body is plain text
+        },
+      });
+      dispatch({ type: UPDATE_REQUEST_COMMENT_SUCCESS });
+      console.log("Request description updated and marked as completed");
+    } catch (error) {
+      console.error("Error updating request description and completing request", error);
+      dispatch({ type: UPDATE_REQUEST_COMMENT_FAILURE, payload: error.message });
+    }
+  };
+};
+
 
 
   

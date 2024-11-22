@@ -27,7 +27,7 @@ public class NutritionistServiceImpl implements NutritionistService {
     private JavaMailSender mailSender;
 
     @Override
-public Nutritionistrequests createNutritionistRequest(CreateNutritionistRequest request) throws IOException {
+    public Nutritionistrequests createNutritionistRequest(CreateNutritionistRequest request) throws IOException {
     Nutritionistrequests nutritionistRequest = new Nutritionistrequests();
     
     // Setting other fields
