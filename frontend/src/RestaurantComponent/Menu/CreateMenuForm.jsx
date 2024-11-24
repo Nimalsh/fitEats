@@ -44,7 +44,7 @@ export const CreateMenuForm = () => {
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {
-      values.restaurantId = 602;
+      values.restaurantId = restaurant.usersRestaurant.id;
       dispatch(createMenuItem({menu:values,jwt}))
       console.log("data ---", values);
 

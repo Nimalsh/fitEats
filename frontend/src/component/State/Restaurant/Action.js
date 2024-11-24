@@ -115,26 +115,48 @@ export const getRestaurantByUserId = (jwt) => {
 };
 
 
+// export const createRestaurant = (reqData) => {
+//   console.log("token---------", reqData.token);
+//   return async (dispatch) => {
+//     dispatch({ type: CREATE_RESTAURANT_REQUEST });
+//     try {
+//       const { data } = await api.post(`/api/admin/restaurant`, reqData.data, {
+//         headers: {
+//           Authorization: `Bearer ${reqData.token}`,
+//         },
+//       });
+//       dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: data });
+//       console.log("create restaurant", data);
+//     } catch (error) {
+//       console.log("error", error);
+//       dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: error });
+//     }
+//   };
+// };
+
 export const createRestaurant = (reqData) => {
-  console.log("token---------", reqData.token);
+  console.log("token---------", reqData.token);  // Check token safely
   return async (dispatch) => {
     dispatch({ type: CREATE_RESTAURANT_REQUEST });
+
     try {
       const { data } = await api.post(`/api/admin/restaurant`, reqData.data, {
         headers: {
           Authorization: `Bearer ${reqData.token}`,
         },
       });
+
       dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: data });
-      console.log("create restaurant", data);
+      console.log("create restaurant", data);  // Log the response for debugging
     } catch (error) {
-      console.log("error", error);
-      dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: error });
+      console.error("Error creating restaurant:", error.response ? error.response.data : error.message);
+      dispatch({ 
+        type: CREATE_RESTAURANT_FAILURE, 
+        payload: error.response ? error.response.data : error.message,
+      });
     }
   };
 };
-
-
 
 
 export const updateRestaurant = ({ restaurantId, restaurantData, jwt }) => {
