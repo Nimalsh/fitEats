@@ -26,5 +26,6 @@ public interface FoodService {
 
     public List<Food> getFoodItemsByCategory(Long categoryId);
 
+
     public Category getCategory(Long foodId) throws Exception;
 }

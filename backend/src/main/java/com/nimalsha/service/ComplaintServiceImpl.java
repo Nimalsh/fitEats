@@ -1,13 +1,14 @@
-package com.nimalsha.service;
 
+// Service Implementation
+package com.nimalsha.service;
 
 import com.nimalsha.model.Complaint;
 import com.nimalsha.repository.ComplaintRepository;
+import com.nimalsha.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
@@ -17,9 +18,6 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public Complaint createComplaint(Complaint complaint) throws Exception {
-        if (complaint == null) {
-            throw new Exception("Complaint cannot be null");
-        }
         return complaintRepository.save(complaint);
     }
 
@@ -28,20 +26,15 @@ public class ComplaintServiceImpl implements ComplaintService {
         return complaintRepository.findAll();
     }
 
+
     @Override
-    public Complaint getComplaintById(Long id) throws Exception {
-        Optional<Complaint> optionalComplaint = complaintRepository.findById(id);
-        if (optionalComplaint.isEmpty()) {
-            throw new Exception("Complaint not found with id " + id);
-        }
-        return optionalComplaint.get();
+    public List<Complaint> getComplaintsByUserId(Long userId) throws Exception {
+        return complaintRepository.findByUserId(userId);
     }
+
 
     @Override
     public void deleteComplaint(Long id) throws Exception {
-        if (!complaintRepository.existsById(id)) {
-            throw new Exception("Complaint not found with id " + id);
-        }
         complaintRepository.deleteById(id);
     }
 }
