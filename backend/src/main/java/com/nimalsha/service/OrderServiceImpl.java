@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.nimalsha.dto.OrderDTO;
+import com.nimalsha.dto.OrderItemDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ import com.nimalsha.model.User;
 import com.nimalsha.repository.AddressRepository;
 import com.nimalsha.repository.OrderItemRepository;
 import com.nimalsha.repository.OrderRepository;
-import com.nimalsha.repository.RestaurantRepository;
 import com.nimalsha.repository.UserRepository;
 import com.nimalsha.request.OrderRequest;
 
@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService{
     public void cancleOder(Long orderId) throws Exception {
         Order order = findOrderById(orderId);
         orderRepository.deleteById(orderId);
-        
+
     }
     @Transactional
     @Override
@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<Order> getRestaurantOrder(Long restaurantId, String oderStatus) throws Exception {
-        
+
         List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
         if(oderStatus != null) {                     //If need the order status
@@ -109,10 +109,27 @@ public class OrderServiceImpl implements OrderService{
         return orders;
     }
 
+    // Corrected the duplicate method
     @Override
-    public List<Order> getUsersOrder(Long userId) throws Exception {
+    public List<OrderDTO> getUsersOrder(Long userId) throws Exception {
+        List<Order> orders = orderRepository.findByCustomerId(userId);
 
-        return orderRepository.findByCustomerId(userId);
+        // Convert the list of orders to OrderDTOs
+        List<OrderDTO> orderDTOs = orders.stream().map(order -> {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream()
+                    .map(item -> new OrderItemDTO(item.getFood().getName(), item.getQuantity(), item.getTotalPrice()))
+                    .collect(Collectors.toList());
+
+            return new OrderDTO(
+                    order.getId(),
+                    order.getCreatedAt(),
+                    order.getOrderStatus(),
+                    order.getTotalPrice(),
+                    itemDTOs
+            );
+        }).collect(Collectors.toList());
+
+        return orderDTOs;
     }
 
 
@@ -137,5 +154,6 @@ public class OrderServiceImpl implements OrderService{
 
         return optionalOrder.get();
     }
-    
+
+
 }
