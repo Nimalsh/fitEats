@@ -35,14 +35,12 @@ public class AdminFoodController {
         // 1. Fetch user from JWT token
         User user = userService.findUserByJwtToken(jwt);
 
-        // 2. Get the restaurant by user ID
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
-        if (restaurant == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
-        // 3. Create food using the provided category ID and restaurant
-        Food food = foodService.createFood(req, restaurant);
+        // 2. Get the restaurant by user ID
+        Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
+        Food food = foodService.createFood(req,req.getCategory(), restaurant);
+        System.out.println("Restaurant ID: " + req.getRestaurantId());
+
 
         // 4. Return created food item
         return new ResponseEntity<>(food, HttpStatus.CREATED);

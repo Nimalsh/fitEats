@@ -15,6 +15,7 @@ import { OrderDetails } from '../RestaurantComponent/Orders/OrderDetails';
  
 export const RestaurantRoute = () => {
   const { restaurant } = useSelector(store => store);
+
   return (
     <div>
       <Routes>
