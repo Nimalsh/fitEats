@@ -111,7 +111,7 @@ export const Transactions = () => {
       </Col>
 
       <Col xs={20} md={24} xl={32}>
-      <ReportWidget />
+      <ReportWidget />""
       </Col>
      
     </Row>
