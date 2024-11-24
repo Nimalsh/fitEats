@@ -32,6 +32,7 @@ public class AdminFoodController {
     @PostMapping
     public ResponseEntity<Food> createFood(@RequestBody CreateFoodRequest req,
                                            @RequestHeader("Authorization") String jwt) throws Exception {
+
         // 1. Fetch user from JWT token
         User user = userService.findUserByJwtToken(jwt);
 
@@ -40,6 +41,7 @@ public class AdminFoodController {
         Restaurant restaurant = restaurantService.findRestaurantById(req.getRestaurantId());
         Food food = foodService.createFood(req,req.getCategory(), restaurant);
         System.out.println("Restaurant ID: " + req.getRestaurantId());
+
 
 
         // 4. Return created food item
@@ -63,10 +65,12 @@ public class AdminFoodController {
     }
 
     @PutMapping("/{id}")
+
     public ResponseEntity<Food> updateAvailabilityStatus(@PathVariable Long id,
                                                          @RequestHeader("Authorization") String jwt) throws Exception {
         // 1. Fetch user from JWT token
         User user = userService.findUserByJwtToken(jwt);
+
 
         // 2. Update food availability status
         Food food = foodService.updateAvailabilityStatus(id);
@@ -76,6 +80,7 @@ public class AdminFoodController {
     }
 
     @GetMapping("/{foodId}")
+
     public ResponseEntity<Food> getFoodDetails(@PathVariable Long foodId,
                                                @RequestHeader("Authorization") String jwt) throws Exception {
         // 1. Fetch user from JWT token
@@ -85,11 +90,13 @@ public class AdminFoodController {
         Food food = foodService.findFoodById(foodId);
 
         // 3. Return food details
+
         return new ResponseEntity<>(food, HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<Food>> getFoodItemsByCategory(@PathVariable Long categoryId) {
+
         // 1. Fetch food items by category
         List<Food> foodItems = foodService.getFoodItemsByCategory(categoryId);
 

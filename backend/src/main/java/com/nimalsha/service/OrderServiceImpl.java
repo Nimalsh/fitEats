@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,20 +52,21 @@ public class OrderServiceImpl implements OrderService{
         orderRepository.deleteById(orderId);
         
     }
-
+    @Transactional
     @Override
-    public Order createOrder(OrderRequest order, User user) throws Exception {
+    public Order createOrder(OrderRequest orderRequest, User user) throws Exception {
+        Cart cart = cartService.findCartByUserId(user.getId());
+        if (cart == null || cart.getItems().isEmpty()) {
+            throw new Exception("Cart is empty!");
+        }
 
-        Address shippAddress = order.getDeliveryAddress();
+        Restaurant restaurant = cart.getItems().get(0).getFood().getRestaurant();
 
-        Address savedAddress = addressRepository.save(shippAddress);
-
-        if(!user.getAddresses().contains(savedAddress)) {
+        Address savedAddress = addressRepository.save(orderRequest.getDeliveryAddress());
+        if (!user.getAddresses().contains(savedAddress)) {
             user.getAddresses().add(savedAddress);
             userRepository.save(user);
         }
-
-        Restaurant restaurant = restaurantService.findRestaurantById(order.getRestuarantId());
 
         Order createdOrder = new Order();
         createdOrder.setCustomer(user);
@@ -73,31 +75,26 @@ public class OrderServiceImpl implements OrderService{
         createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
 
-        Cart cart = cartService.findCartByUserId(user.getId());
-
         List<OrderItem> orderItems = new ArrayList<>();
-
-        for(CartItem cartItem : cart.getItems()) {
+        for (CartItem cartItem : cart.getItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
             orderItem.setIngredients(cartItem.getIngredients());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
+            orderItem.setOrder(createdOrder); // Set the relationship
 
-            OrderItem saveOrderItem = orderItemRepository.save(orderItem);
-            orderItems.add(saveOrderItem);
+            orderItems.add(orderItem);
         }
 
-        Long totalPrice = cartService.calculateCartTotals(cart);
+        createdOrder.setItems(orderItemRepository.saveAll(orderItems));
+        createdOrder.setTotalPrice(cartService.calculateCartTotals(cart));
+        createdOrder.setTotalItem(orderItems.size());
 
-        createdOrder.setItems(orderItems);
-        createdOrder.setTotalPrice(totalPrice);
-
-        Order saveOrder = orderRepository.save(createdOrder);
-        restaurant.getOrders().add(saveOrder);
-
-        return createdOrder;
+        return orderRepository.save(createdOrder);
     }
+
+
 
     @Override
     public List<Order> getRestaurantOrder(Long restaurantId, String oderStatus) throws Exception {
@@ -114,9 +111,11 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<Order> getUsersOrder(Long userId) throws Exception {
-         
+
         return orderRepository.findByCustomerId(userId);
     }
+
+
 
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {

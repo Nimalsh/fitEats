@@ -15,7 +15,7 @@ public class CreateFoodRequest {
     private String description;
     private Long price;
 
-    // private Long categoryId;  // Store only the category ID
+
     private Category category;
     private List<String> images;
 
@@ -24,4 +24,3 @@ public class CreateFoodRequest {
     private boolean seasonal;
     private List<IngredientsItem> ingredients;
 }
-

@@ -38,7 +38,7 @@ const rootReducer =combineReducers({
   bmi:bmiReducer,
 
   nutrion:NutrionReducer,
-  complaintReducer:complaintReducer,
+  complaint:complaintReducer,
 
 
 });
