@@ -51,14 +51,14 @@ export const ProfileNavigation = ({ open, handleClose }) => {
       sx={{ zIndex: 1300, position: 'fixed' }}
     >
       <div style={{ 
-        width: isSmallScreen ? '60vw' : '240px',
-        height: '100vh', 
+        width: isSmallScreen ? '60vw' : '250px',
+        height: '150vh', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'flex-start', 
         fontSize: '1.25rem', 
-        gap: '1rem',
-        marginTop: '4rem'
+        gap: '0.9rem',
+        marginTop: '5rem'
       }}>
         {menu.map((item, i) => (
           <React.Fragment key={i}>

@@ -65,7 +65,7 @@ public class CartServiceImpl implements CartService {
         Long total = 0L;
         
         for(CartItem cartItem : cart.getItems()) {
-            total = cartItem.getFood().getPrice() * cartItem.getQuantity();
+            total += cartItem.getFood().getPrice() * cartItem.getQuantity();
         }
 
         return total;

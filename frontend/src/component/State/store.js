@@ -5,6 +5,7 @@ import cartReducer from "./Cart/Reducer";
 import ingredientReducer from "./ingredients/Reduecr";
 import menuItemReducer from "./Menu/Reducer";
 import NutrionReducer from "./Nutrion/Reducer";
+
 import orderReducer from "./Order/Reducer";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
 import autoplansReducer from "./Autoplans/Reducer";
@@ -20,6 +21,9 @@ import nutritionistReducer from "./Nutritionist/Reducer";
 import queriesReducer from "./Queries/Reducer";
 import articlesReducer from "./Articles/Reducer";
 
+import complaintReducer from "./complain/Reducer";
+
+
 const rootReducer =combineReducers({
   auth:authReducer,
   restaurant:restaurantReducer,
@@ -29,10 +33,11 @@ const rootReducer =combineReducers({
   restaurantOrder:restaurantOrderReducer,
   ingredients:ingredientReducer,
 
+  foodItems:restaurantReducer,
+
   nutrion:NutrionReducer,
   event:restaurantReducer,
-
-
+  foodDetails:menuItemReducer,
   plan: planReducer, 
   request:requestReducer,
   bmi:bmiReducer,
@@ -40,7 +45,10 @@ const rootReducer =combineReducers({
   autoplans:autoplansReducer,
   nutritionist:nutritionistReducer,
   queries:queriesReducer,
-  articles:articlesReducer
+  articles:articlesReducer,
+
+  nutrion:NutrionReducer,
+  complaint:complaintReducer,
 
 
 });

@@ -1,6 +1,6 @@
 import { AddPhotoAlternate } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import { CircularProgress, Grid, IconButton, Modal, TextField } from "@mui/material";
+import { CardHeader, CircularProgress, Grid, IconButton, Modal, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createEventAction } from "../../component/State/Restaurant/Action";
 import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { EventTable } from "./EventTable";
-import { useFormik } from "formik";
+import AddIcon from "@mui/icons-material/Add";
 
 const style = {
   position: "absolute",
@@ -24,7 +24,7 @@ const style = {
 };
 
 const initialValues = {
-  images: "",
+  images: [],
   location: "",
   description: "",
   name: "",
@@ -43,6 +43,8 @@ export const Events = () => {
 
   const [formValues, setFormValues] = React.useState(initialValues);
 
+  const [uploadImages, setUploadImage] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submit", formValues);
@@ -57,6 +59,23 @@ export const Events = () => {
     handleClose();
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    setUploadImage(true);
+    const image = await uploadImageToCloudinary(file);
+    setFormValues((prevValues) => ({
+        ...prevValues,
+        images: [...prevValues.images, image],
+    }));
+    setUploadImage(false);
+};
+
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...formValues.images];
+    updatedImages.splice(index, 1); 
+  }
+
  
 
   const handleFormChange = (e) => {
@@ -70,13 +89,43 @@ export const Events = () => {
 
   return (
     <div className="p-5">
-      <button
+      {/* <button
         onClick={handleOpen}
         variant="contained"
         className="button add-button"
       >
         Create New Event
-      </button>
+      </button> */}
+      <CardHeader
+        action={
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "center",
+            }}
+          > 
+            <button
+              className="button add-button"
+              onClick={handleOpen}
+              sx={{
+                backgroundColor: "#95CD41",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#7baf30",
+                },
+                borderRadius: "20px",
+                padding: "10px 20px",
+                width: "150px",
+              }}
+            >
+              <AddIcon /> Create New Event
+            </button>
+          </Box>
+        }
+        title="Events and Offers"
+        sx={{ pt: 2, textAlign: "left" }}
+      />
 
       <EventTable />
 
@@ -90,13 +139,69 @@ export const Events = () => {
           <h1 className="text-center text-xl pb-10">Create New Event</h1>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
+                {/* <TextField
                   name="images"      
                   label="Image"
                   variant="outlined"
                   fullWidth
                   value={formValues.images}
+                  onChange={handleFormChange}
+                /> */}
+
+           <Grid className="flex flex-wrap gap-5" items xs={12}>
+              <input
+                accept="image/*"
+                id="fileInput"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+                type="file"
+              />
+              <label className="relative" htmlFor="fileInput">
+                <span
+                  className="w-24 h-24 cursor-pointer flex items-center justify-center
+                  p-3 border rounded-md bordergrey-600"
+                >
+                  <AddPhotoAlternate className="text-white" />
+                </span>
+                {uploadImages && (
+                  <div className="absolute left-0-right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center">
+                    <CircularProgress />
+                  </div>
+                )}
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {formValues.images.map((image, index) => (
+                  <div className="relative">
+                    <img
+                      className="w-24 h-24 object-cover"
+                      key={index}
+                      src={image}
+                      alt=""
+                    />
+                    <IconButton
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        outline: "none",
+                      }}
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      <CloseIcon sx={{ fontSize: "1rem" }} />
+                    </IconButton>
+                  </div>
+                ))}
+              </div>
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  name="name"
+                  label="Event Name"
+                  variant="outlined"
+                  fullWidth
+                  value={formValues.name}
                   onChange={handleFormChange}
                 />
               </Grid>
@@ -108,17 +213,6 @@ export const Events = () => {
                   variant="outlined"
                   fullWidth
                   value={formValues.location}
-                  onChange={handleFormChange}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  name="name"
-                  label="Event Name"
-                  variant="outlined"
-                  fullWidth
-                  value={formValues.name}
                   onChange={handleFormChange}
                 />
               </Grid>

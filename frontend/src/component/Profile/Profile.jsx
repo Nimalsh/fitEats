@@ -38,6 +38,11 @@ import Completedplans from './Completedplans';
 
 import CustormizeOrder from './CustormizeOrder';
 import Automealplan from './Automealplan'
+import Completedplans from './Completedplans';
+
+import CustormizeOrder from './CustormizeOrder';
+import ComplaintPage from './ComplaintPage';
+import ComplaintHistory from './ComplaintHistory';
 
 
 
@@ -66,7 +71,8 @@ const Profile = () => {
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Goalselect/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
-          <Route path="/complain" element={<ComplaintForm/>} />
+          <Route path="/complain" element={<ComplaintPage/>} />
+          <Route path="/complain-history" element={<ComplaintHistory />} />
 
           <Route path="/meal-plan" element={<MealPlansPage />} />
           <Route path="/menu-suggest" element={<MenuSuggest/>} />

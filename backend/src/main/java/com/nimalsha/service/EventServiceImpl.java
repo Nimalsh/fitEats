@@ -24,7 +24,8 @@ public class EventServiceImpl implements EventService{
     public Event createEvent(CreateEventRequest req, Restaurant restaurant) {
 
         Event event = new Event();
-        event.setRestaurant(restaurant);
+        event.setRestaurant(restaurant); 
+        event.setImages(req.getImages());
         event.setName(req.getName());
         event.setLocation(req.getLocation());
         event.setDescription(req.getDescription());

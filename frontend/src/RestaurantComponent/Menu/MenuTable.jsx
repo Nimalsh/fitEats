@@ -1,97 +1,205 @@
- import { Delete, MoreVert } from '@mui/icons-material'
-import { Avatar, Box, Card, CardActions, CardHeader, Chip, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React , {useEffect} from 'react'
-import CreateIcon from '@mui/icons-material/Create'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux' 
-import { deleteFoodAction, getMenuItemsByRestaurantId } from '../../component/State/Menu/Action'
+import { Delete } from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  deleteFoodAction,
+  getMenuItemsByRestaurantId,
+} from "../../component/State/Menu/Action";
+import { getRestaurantsCategory } from "../../component/State/Restaurant/Action";
 
 export const MenuTable = () => {
-
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-
-  const { restaurant , ingredients , menu } = useSelector((store)=>store)
-
+  const { restaurant, menu, ingredients } = useSelector((store) => store);
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     if (restaurant.usersRestaurant) {
-      dispatch(getMenuItemsByRestaurantId({ 
-
-        restaurantId: restaurant.usersRestaurant.id,
-        jwt,
-        vegetarian:false,
-        seasonal:false,
-        nonveg:false,
-        foodCategory:""
-      })); 
- 
+      dispatch(
+        getMenuItemsByRestaurantId({
+          restaurantId: restaurant.usersRestaurant.id,
+          jwt,
+          vegetarian: false,
+          seasonal: false,
+          nonveg: false,
+          foodCategory: selectedCategory,
+        })
+      );
+      dispatch(
+        getRestaurantsCategory({
+          jwt,
+          restaurantId: restaurant.usersRestaurant.id,
+        })
+      );
     }
-  }, [dispatch, jwt, restaurant.usersRestaurant]);
+  }, [dispatch, jwt, restaurant.usersRestaurant, selectedCategory]);
 
   const handleDeleteFood = (foodId) => {
-    dispatch(deleteFoodAction({foodId,jwt}))
-  }
+    dispatch(deleteFoodAction({ foodId, jwt }));
+  };
 
+  const handleViewDetails = (foodId) => {
+    navigate(`/admin/restaurant/menu/food-details/${foodId}`);
+  };
+
+  const filteredMenuItems = menu.menuItems.filter((item) => {
+    const matchesCategory =
+      selectedCategory === "" || item.foodCategory.name === selectedCategory;
+    const matchesSearchQuery = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearchQuery;
+  });
 
   return (
     <Box>
-      <Card className='mt-2'>
+      <Card className="mt-2">
         <CardHeader
-        action = {
-          <IconButton onClick={()=>navigate("/admin/restaurant/add-menu")} aria-label='settings'>
-            <CreateIcon />
-          </IconButton>
-        }
-        title={"Food Items"}
-        sx={{pt:2, alignItems:"center"}}
-        />
-
-        <CardActions 
-        />
-
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead >
-          <TableRow >
-            <TableCell>id</TableCell>
-            <TableCell align="left">Image</TableCell>
-            <TableCell align="right">Title</TableCell>
-            <TableCell align="right">Ingredients</TableCell> 
-            <TableCell align="right">Price</TableCell>
-            <TableCell align="right">Availability</TableCell>
-            <TableCell align="right">Delete</TableCell> 
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {menu.menuItems.map((item) => (
-            <TableRow
-              key={item.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          action={
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+              }}
             >
-              <TableCell component="th" scope="row">
-                {item.id}
-              </TableCell>
-              <TableCell component="th" scope="row">
-              <Avatar src={item.images[0]}></Avatar>
-              </TableCell>
-              <TableCell align="right">{item.name}</TableCell>
-              <TableCell align="right">{item.ingredients.map((ingredient)=><Chip label={ingredient.name}/>)}</TableCell>
-              <TableCell align="right">Rs.{item.price}/=</TableCell>
-              <TableCell align="right">{item.available? "in_stoke":"out_of_stoke"}</TableCell>
-              <TableCell align="right">
-                <IconButton color="error" onClick={()=> handleDeleteFood(item.id)}>
-                <Delete/>
-                </IconButton>
-                </TableCell> 
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-      </Card>
-    </Box>
-  )
-}
+              <button
+                className="button add-button"
+                onClick={() => navigate("/admin/restaurant/add-menu")}
+                sx={{
+                  backgroundColor: "#95CD41",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#7baf30",
+                  },
+                  borderRadius: "20px",
+                  padding: "10px 20px",
+                  width: "150px",
+                }}
+              >
+                <AddIcon /> Add Food
+              </button>
 
+              <TextField
+                variant="outlined"
+                placeholder="Search Food Item"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: <SearchIcon />,
+                }}
+                sx={{
+                  width: "250px",
+                  backgroundColor: "#555555",
+                  borderRadius: "4px",
+                  height: "55px",
+                }}
+              />
+
+              <Select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                displayEmpty
+                sx={{
+                  width: "200px",
+                  backgroundColor: "#555555",
+                  borderRadius: "4px",
+                }}
+              >
+                <MenuItem value="">
+                  <em>All Categories</em>
+                </MenuItem>
+                {restaurant.categories.map((category) => (
+                  <MenuItem key={category.id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+          }
+          title="All Food Items"
+          sx={{ pt: 2, textAlign: "left" }}
+        />
+      </Card>
+
+      <Grid container spacing={2} sx={{ marginTop: 2 }}>
+        {filteredMenuItems && filteredMenuItems.length > 0 ? (
+          filteredMenuItems.map((item) => (
+            <Grid item xs={12} sm={6} md={4} key={item.id}>
+              <Card style={{ background: "#555555" }}>
+                <CardContent>
+                  <Box display="flex" justifyContent="center">
+                    <img
+                      src={item.images[0]}
+                      alt={item.name}
+                      style={{
+                        width: 180,
+                        height: 150,
+                        borderRadius: "10%",
+                        marginBottom: "10px",
+                      }}
+                    />
+                  </Box>
+                  <Typography variant="h5" align="center" gutterBottom>
+                    {item.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    align="center"
+                  >
+                    Rs.{item.price}/=
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ justifyContent: "center" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ fontWeight: "bold" }}
+                    onClick={() => handleViewDetails(item.id)}
+                  >
+                    View Details
+                  </Button>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteFood(item.id)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="h6" align="center" sx={{ marginTop: 2 }}>
+              No Menu Items Found
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
+    </Box>
+  );
+};

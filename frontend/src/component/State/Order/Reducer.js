@@ -17,7 +17,7 @@ const initialState = {
   notifications: [], // Corrected from `Notification` to `notifications` for consistency
 };
 
-const orderReducer = (state = initialState, {type,payload}) => {
+const orderReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case GET_USERS_ORDERS_REQUEST:
       return {
@@ -25,8 +25,6 @@ const orderReducer = (state = initialState, {type,payload}) => {
         loading: true,
         error: null,
       };
-
-    
 
     case GET_USERS_ORDERS_SUCCESS:
       return {
@@ -36,8 +34,30 @@ const orderReducer = (state = initialState, {type,payload}) => {
         error: null,
       };
 
- 
     case GET_USERS_ORDERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: payload,
+      };
+
+    // **Handle Order Creation**
+    case CREATE_ORDER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case CREATE_ORDER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        orders: [...state.orders, payload], // Add the newly created order to the existing list
+        error: null,
+      };
+
+    case CREATE_ORDER_FAILURE:
       return {
         ...state,
         loading: false,

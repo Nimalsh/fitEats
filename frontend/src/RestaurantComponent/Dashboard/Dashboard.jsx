@@ -1,5 +1,6 @@
 import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 // import authHeader from '../../../services/auth-header';
 
@@ -7,6 +8,12 @@ export const Dashboard = () => {
   const [orderData, setOrderData] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
   const [popularFoodData, setPopularFoodData] = useState([]);
+  const navigate = useNavigate();  
+
+  const handleNavigate = () => {
+    navigate('ingredient-report');
+  };
+
 
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658'];
 
@@ -142,8 +149,23 @@ export const Dashboard = () => {
               <Typography variant="body1">You have 3 new reviews.</Typography>
             </CardContent>
             <CardContent >
-              <Typography variant="h6" gutterBottom>Analytics</Typography>
-              <Typography variant="body1">View analytics and reports.</Typography>
+              <Typography variant="h6" gutterBottom>Analytics</Typography> 
+              <button
+              className="button add-button"
+              onClick={handleNavigate}
+              sx={{
+                backgroundColor: "#95CD41",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#7baf30",
+                },
+                borderRadius: "20px",
+                padding: "10px 20px",
+                width: "150px",
+              }}
+            >
+             Ingredient Report
+            </button>
             </CardContent>
           </Card>
           
