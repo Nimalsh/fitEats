@@ -25,11 +25,10 @@ export const IngredientReport = () => {
 
   useEffect(() => {
     if (restaurant.usersRestaurant) {
-      console.log("Fetching ingredients for restaurant:", restaurant.usersRestaurant.id); // Debugging log
       dispatch(
         getIngredientsOfRestaurant({
           jwt,
-          id: restaurant.usersRestaurant.id, // Correct ID usage
+          id: restaurant.usersRestaurant.id,
         })
       );
     }
@@ -39,14 +38,11 @@ export const IngredientReport = () => {
     (ingredient) => ingredient.inStoke === false
   );
 
-  console.log("All ingredients data:", ingredients.ingredients); // Debugging log for all ingredients
-  console.log("Out of stock ingredients:", outOfStockIngredients); // Debugging log for out-of-stock ingredients
-
-  const currentDate = new Date().toLocaleDateString(); // Get current date
+  const currentDate = new Date().toLocaleDateString();
 
   // Function to download the report as a PDF
   const handleDownload = async () => {
-    const element = reportRef.current; // Get the DOM node for the report
+    const element = reportRef.current; // Get the DOM node for the entire page
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL("image/png");
 
@@ -59,80 +55,81 @@ export const IngredientReport = () => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ margin: 4 }}>
+    <Box
+      ref={reportRef} // Attach the ref to the outermost container
+      sx={{
+        padding: 4,
+        backgroundColor: "#000000",
+      }}
+    >
+      <Typography variant="h4" sx={{ marginBottom: 4 }}>
         Ingredient Report
       </Typography>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "60%",
+          marginBottom: 2,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h6"  >
+          Restaurant: {restaurant.usersRestaurant?.name || "Unknown"}
+        </Typography>
+        <Typography variant="subtitle1">Date: {currentDate}</Typography>
+      </Box>
+      <TableContainer
+        component={Paper}
+        sx={{
+          marginBottom: 4,
+          width: "100%",
+          maxWidth: "800px",
           margin: "0 auto",
         }}
       >
-        {/* Add restaurant name and date */}
-        <Box
-          sx={{
-            marginBottom: 2,
-            textAlign: "center",
-            width: "100%",
-            maxWidth: "800px",
-          }}
-        >
-          <Typography variant="h6">
-            Restaurant: {restaurant.usersRestaurant?.name || "Unknown"}
-          </Typography>
-          <Typography variant="subtitle1">Date: {currentDate}</Typography>
-        </Box>
-        {/* Report content wrapped in a container for PDF capture */}
-        <TableContainer
-          ref={reportRef} // Attach ref to this container
-          component={Paper}
-          sx={{ marginBottom: 4, width: "100%", maxWidth: "800px" }}
-        >
-          <Table>
-            <TableHead>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">
+                <Typography variant="h6">Ingredients Out of Stock</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {outOfStockIngredients && outOfStockIngredients.length > 0 ? (
+              outOfStockIngredients.map((ingredient) => (
+                <TableRow key={ingredient.id}>
+                  <TableCell align="center">{ingredient.name}</TableCell>
+                </TableRow>
+              ))
+            ) : (
               <TableRow>
                 <TableCell align="center">
-                  <Typography variant="h6">Ingredients Out of Stock</Typography>
+                  <Typography>No ingredients are out of stock.</Typography>
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {outOfStockIngredients && outOfStockIngredients.length > 0 ? (
-                outOfStockIngredients.map((ingredient) => (
-                  <TableRow key={ingredient.id}>
-                    <TableCell align="center">{ingredient.name}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell align="center">
-                    <Typography>No ingredients are out of stock.</Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Button
-          variant="contained"
-          sx={{
-            justifyContent: "space-between",
-            padding: "10px 20px",
-            fontSize: "16px",
-            fontWeight: "bold",
-            background: "#95CD41",
-            "&:hover": {
-              background: "#7baf30",
-            },
-          }}
-          onClick={handleDownload} // Attach download functionality
-        >
-          <FaDownload /> Download
-        </Button>
-      </Box>
-    </>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+
+<Button
+variant="contained"
+sx={{
+  justifyContent: "center", 
+  marginLeft: "45%",
+  marginTop: "5%",
+  padding: "10px 20px",
+  fontSize: "16px",
+  fontWeight: "bold",
+  background: "#95CD41",
+  "&:hover": {
+    background: "#7baf30",
+  },
+}}
+onClick={handleDownload}
+>
+<FaDownload /> Download
+</Button>
+</>
   );
 };
