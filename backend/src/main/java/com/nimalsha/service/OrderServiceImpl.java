@@ -97,17 +97,45 @@ public class OrderServiceImpl implements OrderService{
 
 
     @Override
-    public List<Order> getRestaurantOrder(Long restaurantId, String oderStatus) throws Exception {
-
+    public List<Order> getRestaurantOrder(Long restaurantId, String orderStatus) throws Exception {
+        // Fetch orders for the restaurant.
         List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
-        if(oderStatus != null) {                     //If need the order status
-            orders = orders.stream().filter(order->
-             order.getOrderStatus().equals(oderStatus)).collect(Collectors.toList() );
+        // Filter orders based on status if provided.
+        if (orderStatus != null) {
+            orders = orders.stream()
+                    .filter(order -> order.getOrderStatus().equalsIgnoreCase(orderStatus)) // Fixed case sensitivity.
+                    .collect(Collectors.toList());
         }
 
         return orders;
     }
+
+    @Override
+    public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
+        // Fetch orders by restaurantId
+        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+
+        // Map orders to OrderDTO
+        return orders.stream().map(order -> {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
+                new OrderItemDTO(
+                    item.getFood().getName(), 
+                    item.getQuantity(), 
+                    item.getTotalPrice()
+                )
+            ).collect(Collectors.toList());
+
+            return new OrderDTO(
+                order.getId(),
+                order.getCreatedAt(),
+                order.getOrderStatus(),
+                order.getTotalPrice(),
+                itemDTOs
+            );
+        }).collect(Collectors.toList());
+    }
+
 
     // Corrected the duplicate method
     @Override
@@ -154,6 +182,31 @@ public class OrderServiceImpl implements OrderService{
 
         return optionalOrder.get();
     }
+
+    // @Override
+    // public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
+    //     // Fetch orders by restaurantId
+    //     List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+
+    //     // Map orders to OrderDTO
+    //     return orders.stream().map(order -> {
+    //         List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
+    //             new OrderItemDTO(
+    //                 item.getFood().getName(), 
+    //                 item.getQuantity(), 
+    //                 item.getTotalPrice()
+    //             )
+    //         ).collect(Collectors.toList());
+
+    //         return new OrderDTO(
+    //             order.getId(),
+    //             order.getCreatedAt(),
+    //             order.getOrderStatus(),
+    //             order.getTotalPrice(),
+    //             itemDTOs
+    //         );
+    //     }).collect(Collectors.toList());
+    // }
 
 
 }

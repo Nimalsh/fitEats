@@ -22,6 +22,6 @@ OrderService {
 
     public Order findOrderById(Long orderId) throws Exception;
 
-
+    public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception;
     
 }

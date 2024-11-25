@@ -17,38 +17,20 @@ const restaurantOrderReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_RESTAURANTS_ORDER_REQUEST:
     case UPDATE_ORDER_STATUS_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
+      return { ...state, loading: true };
 
     case GET_RESTAURANTS_ORDER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        orders: action.payload,
-      };
+      return { ...state, loading: false, orders: action.payload };
 
     case UPDATE_ORDER_STATUS_SUCCESS:
-      // Assuming you want to update the specific order in the orders list
-
       const updatedOrders = state.orders.map((order) =>
         order.id === action.payload.id ? action.payload : order
       );
-      return {
-        ...state,
-        loading: false,
-        orders: updatedOrders,
-      };
+      return { ...state, loading: false, orders: updatedOrders };
 
     case GET_RESTAURANTS_ORDER_FAILURE:
     case UPDATE_ORDER_STATUS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.error,
-      };
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;
