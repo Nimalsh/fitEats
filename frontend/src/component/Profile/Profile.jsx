@@ -37,10 +37,10 @@ import ComplaintForm from './ComplaintForm';
 import Completedplans from './Completedplans';
 
 import CustormizeOrder from './CustormizeOrder';
-import Automealplan from './Automealplan'
-import Completedplans from './Completedplans';
+import Automealplan from './Automealplan';
 
-import CustormizeOrder from './CustormizeOrder';
+
+
 import ComplaintPage from './ComplaintPage';
 import ComplaintHistory from './ComplaintHistory';
 
