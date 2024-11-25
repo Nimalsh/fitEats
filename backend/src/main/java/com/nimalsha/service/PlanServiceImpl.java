@@ -14,6 +14,7 @@ import com.nimalsha.request.SetMealsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -157,6 +158,7 @@ public void completeRequestByPlanId(Long planId) throws Exception {
 
     // Update the status to "Completed"
     request.setStatus("Completed");
+    request.setCompletedDate(LocalDate.now());
 
     // Save the updated request
     requestRepository.save(request);
@@ -170,6 +172,22 @@ public void updateRequestStatus(Long requestId, String status) throws Exception 
 
     // Update the status
     request.setStatus(status);
+
+    // Update the relevant date field based on the status
+    LocalDate currentDate = LocalDate.now(); // Get the current date
+    switch (status.toLowerCase()) {
+        case "started":
+            request.setStartedDate(currentDate);
+            break;
+        case "replied":
+            request.setRepliedDate(currentDate);
+            break;
+        case "completed":
+            request.setCompletedDate(currentDate);
+            break;
+        default:
+            throw new IllegalArgumentException("Invalid status: " + status);
+    }
 
     // Save the updated request
     requestRepository.save(request);
@@ -250,6 +268,51 @@ public Request getRequestByPlanId(Long planId) throws Exception {
     return requestRepository.findByPlanId(planId)
             .orElseThrow(() -> new Exception("Request not found for planId: " + planId));
 }
+
+@Override
+public Request updateAchievedWeightByPlanId(Long planId, double achievedWeight) throws Exception {
+    // Find the request by planId
+    Request request = requestRepository.findByPlanId(planId)
+            .orElseThrow(() -> new Exception("Request not found for planId: " + planId));
+    
+    // Update the achieved weight
+    request.setAchivedweight(achievedWeight);
+
+    // Save the updated request back to the database
+    return requestRepository.save(request);
+}
+
+
+@Override
+public void updateRequestDescriptionAndComplete(Long requestId, String description) throws Exception {
+    // Find the request by ID
+    Request request = requestRepository.findById(requestId)
+            .orElseThrow(() -> new Exception("Request not found for requestId: " + requestId));
+
+    // Update the description field
+    request.setReply(description);
+
+    // Set the status to "Completed"
+    request.setStatus("Completed");
+
+    // Save the updated request
+    requestRepository.save(request);
+}
+
+@Override
+public void putcomments(Long requestId, String comments) throws Exception {
+    // Find the request by ID
+    Request request = requestRepository.findById(requestId)
+            .orElseThrow(() -> new Exception("Request not found for requestId: " + requestId));
+
+   
+    request.setComments(comments);
+
+    
+    requestRepository.save(request);
+}
+
+
 
 
 

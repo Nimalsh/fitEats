@@ -20,6 +20,8 @@ import com.nimalsha.repository.BsnackRepository;
 import com.nimalsha.repository.NutriconsumptionRepository;
 import com.nimalsha.request.AddMealRequest;
 import com.nimalsha.request.CreatebmiplanRequest;
+import com.nimalsha.service.UserServiceImp;
+import com.nimalsha.model.User;
 import java.util.Map;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -50,6 +52,10 @@ public class BmiServiceImpl implements BmiService {
     @Autowired
     private NutriconsumptionRepository NutriconsumptionRepository;
 
+    @Autowired
+    private UserServiceImp userService;
+
+
     @Override
 public Bmiplan createPlan(CreatebmiplanRequest request) throws Exception {
     // Create and save Bmiplan
@@ -61,9 +67,54 @@ public Bmiplan createPlan(CreatebmiplanRequest request) throws Exception {
     bmiplan.setHeight(request.getHeight());
     bmiplan.setBmi(request.getBmi());
     bmiplan.setTarget(request.getTarget());
+    bmiplan.setActivitylevel(request.getActivitylevel());
+    bmiplan.setGender(request.getGender());
+    bmiplan.setAge(request.getAge());
+    bmiplan.setStatus("Active");
+   
+    double currentWeight = request.getWeight();
+    double targetWeight = request.getTarget();
+    int durationDays = request.getDuration(); // Duration in days
+    int age = request.getAge();
+    String gender = request.getGender();
+    
+    double bmr = calculateBMR(currentWeight, request.getHeight(), age, gender);
+    double tdee = calculateTDEE(bmr, request.getActivitylevel());
+
+    double weightDifference = currentWeight - targetWeight;
+    double dailyWeightChange = 0.143; // Weight change needed per day
+
+    // Calculate daily caloric need adjustment
+    double dailyCalorieChange = dailyWeightChange * 7700;
+
+    double calories;
+    if (weightDifference > 0) { // Weight loss
+        calories = tdee - dailyCalorieChange;
+    } else if (weightDifference < 0) { // Weight gain
+        calories = tdee + dailyCalorieChange;
+    } else {
+        calories = tdee; // Maintain current weight
+    }
+
+    double protein = 0.3 * calories / 4; // 30% of calories from protein
+    double fat = 0.3 * calories / 9; // 30% of calories from fat
+    double carbohydrates = 0.4 * calories / 4; // 40% of calories from carbohydrates
+    double fiber = 25; // daily fiber intake in grams
+    double sodium = 2300; // daily sodium intake in milligrams
+    double sugar = 25; // daily sugar intake in grams
+   
+
+    bmiplan.setCalories(calories);
+    bmiplan.setProtein(protein);
+    bmiplan.setFat(fat);
+    bmiplan.setCarbohydrates(carbohydrates);
+    bmiplan.setFiber(fiber);
+    bmiplan.setSodium(sodium);
+    bmiplan.setSugar(sugar);
+
     bmiplan = bmiplanRepository.save(bmiplan);
 
-    // Create and save Bmidata for each day
+    // Create and save Bmidata for each day with calculated values
     for (int day = 1; day <= request.getDuration(); day++) {
         Bmidata bmidata = new Bmidata();
         bmidata.setPlanId(bmiplan.getPlanId());
@@ -81,9 +132,13 @@ public Bmiplan createPlan(CreatebmiplanRequest request) throws Exception {
         bmidata.setDinnerId(dinnerId);
         bmidata.setSnackId(snackId);
 
+        // Set calculated values
+       
+
         bmidataRepository.save(bmidata);
     }
 
+    // Create and save Nutriconsumption data
     for (int day = 1; day <= request.getDuration(); day++) {
         Nutriconsumption consumption = new Nutriconsumption();
         consumption.setPlanId(bmiplan.getPlanId());
@@ -94,7 +149,34 @@ public Bmiplan createPlan(CreatebmiplanRequest request) throws Exception {
 
     return bmiplan;
 }
-  
+
+// Example BMR calculation using the Mifflin-St Jeor formula
+private double calculateBMR(double weight, double height, int age, String gender) {
+    if (gender.equalsIgnoreCase("male")) {
+        return 10 * weight + 6.25 * height - 5 * age + 5;
+    } else {
+        return 10 * weight + 6.25 * height - 5 * age - 161;
+    }
+}
+
+// Example TDEE calculation based on activity level
+private double calculateTDEE(double bmr, String activityLevel) {
+    switch (activityLevel.toLowerCase()) {
+        case "sedentary":
+            return bmr * 1.2;
+        case "light":
+            return bmr * 1.375;
+        case "moderate":
+            return bmr * 1.55;
+        case "active":
+            return bmr * 1.725;
+        case "very active":
+            return bmr * 1.9;
+        default:
+            return bmr; // Default to sedentary if no match
+    }
+}
+
 private Long generateUniqueLongId() {
     // Generate a unique Long ID using a timestamp or other logic
     return System.currentTimeMillis(); // Example
@@ -276,7 +358,23 @@ public Map<String, Double> getNutritionValues(Long planId, int daysId) {
     return nutritionValues;
 }
      
+
+
+@Override
+public Bmiplan getBmiplanByPlanId(Long planId) {
+    // Use the repository to fetch the Bmiplan by planId
+    return bmiplanRepository.findById(planId)
+            .orElseThrow(() -> new RuntimeException("No BMI plan found with ID: " + planId));
 }
+
+@Override
+public List<Bmiplan> getActivePlansByUserId(Long userId) {
+    // Assuming you have a method in your repository to find plans by userId and status
+    return bmiplanRepository.findByUserIdAndStatus(userId, "Active");
+}
+
+}
+
 
     
 
