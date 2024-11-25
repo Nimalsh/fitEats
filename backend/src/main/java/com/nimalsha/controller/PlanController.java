@@ -25,6 +25,8 @@ public class PlanController {
     @Autowired
     private UserService userService;
 
+    
+
     @PostMapping("/create")
     public ResponseEntity<Plan> createPlan(@RequestBody CreatePlanRequest request,
                                            @RequestHeader("Authorization") String jwt) throws Exception {
@@ -164,6 +166,39 @@ public ResponseEntity<String> updateMealStatus(
             return ResponseEntity.status(404).body(null); // Or return a more descriptive error message
         }
     }
+
+    @PutMapping("/{planId}/achieved-weight")
+    public Request updateAchievedWeight(@PathVariable Long planId, @RequestParam double achievedWeight) throws Exception {
+        return planService.updateAchievedWeightByPlanId(planId, achievedWeight);
+    }
+
+
+    @PutMapping("/requests/{requestId}/update-description-and-complete")
+public ResponseEntity<String> updateRequestDescriptionAndComplete(
+        @PathVariable Long requestId,
+        @RequestBody String description) {
+    try {
+        // Call the service to update the request
+        planService.updateRequestDescriptionAndComplete(requestId, description.trim());
+        return ResponseEntity.ok("Request updated with new description and marked as Completed");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found for requestId: " + requestId);
+    }
+}
+
+@PutMapping("/requests/{requestId}/putcomments")
+public ResponseEntity<String> putcomments(
+        @PathVariable Long requestId,
+        @RequestBody String comments) {
+    try {
+        // Call the service to update the request
+        planService.putcomments(requestId, comments.trim());
+        return ResponseEntity.ok("Request updated with comments");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found for requestId: " + requestId);
+    }
+}
+
 
 }
 

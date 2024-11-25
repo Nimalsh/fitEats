@@ -1,5 +1,6 @@
 package com.nimalsha.controller;
 
+import com.nimalsha.dto.OrderDTO;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nimalsha.model.CartItem;
@@ -48,14 +49,12 @@ public class OrderController {
 
     }
 
-    @GetMapping ("/order/user") 
-    public ResponseEntity<List<Order>> getOrderHistory(@RequestHeader("Authorization") String jwt) throws Exception {
-
+    @GetMapping("/order/user")
+    public ResponseEntity<List<OrderDTO>> getUserOrders(@RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        List<Order> orders = orderService.getUsersOrder(user.getId());
+        List<OrderDTO> orders = orderService.getUsersOrder(user.getId());
 
         return new ResponseEntity<>(orders, HttpStatus.OK);
-
     }
 
     

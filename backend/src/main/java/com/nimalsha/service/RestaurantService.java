@@ -1,6 +1,7 @@
 package com.nimalsha.service;
 
 import com.nimalsha.dto.RestaurantDto;
+import com.nimalsha.model.Category;
 import com.nimalsha.model.Restaurant;
 import com.nimalsha.model.User;
 import com.nimalsha.request.CreateRestaurantRequest;

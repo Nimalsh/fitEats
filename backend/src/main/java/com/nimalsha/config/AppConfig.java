@@ -26,9 +26,11 @@ public class AppConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize -> Authorize
+                        .requestMatchers("/auth/nutritionist-request").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER","ADMIN")
                         .requestMatchers("api/**").authenticated()
                         .anyRequest().permitAll()
+                       
 
                 ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)

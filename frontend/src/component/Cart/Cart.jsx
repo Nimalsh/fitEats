@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 import CartItem from "./CartItem";
 import { AddressCard } from "./AddressCard";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { store } from "../State/store";
 import { createOrder } from "../State/Order/Action";
-import { findCart } from "../State/Cart/Action";
+import { clearCartAction, findCart } from "../State/Cart/Action";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+
 
 const items = [1, 1];
 
@@ -23,6 +24,7 @@ export const style = {
   p: 4,
 };
 
+// Initial values for the address form
 const initialValues = {
   streetAddress: "",
   state: "",
@@ -30,12 +32,28 @@ const initialValues = {
   city: "",
 };
 
-
+// Validation function
+const validateForm = (values) => {
+  const errors = {};
+  if (!values.streetAddress) {
+    errors.streetAddress = "Street address is required";
+  }
+  if (!values.state) {
+    errors.state = "State is required";
+  }
+  if (!values.city) {
+    errors.city = "City is required";
+  }
+  if (!values.pincode) {
+    errors.pincode = "Postal code is required";
+  }
+  return errors;
+};
 
 const Cart = () => {
- 
-  const { cart ,auth} = useSelector((store) => store);
+  const { cart, auth } = useSelector((store) => store);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (!cart.id) {
       dispatch(findCart(auth.jwt));
@@ -43,40 +61,36 @@ const Cart = () => {
   }, [cart.id, dispatch, auth.jwt]);
 
   console.log("Cart Object:", cart);
-  const handleSubmit = (values) => {
-    const restaurantId = cart.cartItems[0]?.food?.restaurant?.id;
-    const cartId = cart.id;
 
-    if (!restaurantId) {
-        console.error("Restaurant ID is missing!");
-        return;
-    }
-
+  const handleSubmit = async (values, { resetForm }) => {
     const data = {
-        jwt: localStorage.getItem("jwt"),
-        order: {
-            restaurantId: restaurantId,
-            deliveryAddress: {
-                streetAddress: values.streetAddress,
-                city: values.city,
-                state: values.state,
-                postalCode: values.pincode,
-                country: "Sri Lanka"
-            }
-        }
+      jwt: localStorage.getItem("jwt"),
+      order: {
+        deliveryAddress: {
+          streetAddress: values.streetAddress || "",
+          city: values.city || "",
+          state: values.state || "",
+          postalCode: values.pincode || "",
+        },
+      },
     };
 
-    dispatch(createOrder(data));
-    console.log("Order data:", data);
-};
-
+    try {
+      await dispatch(createOrder(data)); // Create order
+      await dispatch(clearCartAction()); // Clear cart
+      resetForm(); // Clear form fields
+      setOpen(false); // Close modal
+      console.log("Order created and cart cleared successfully.");
+    } catch (error) {
+      console.error("Error in creating order or clearing cart:", error);
+    }
+  };
 
   const [open, setOpen] = React.useState(false);
 
   const handleOpenAddressModel = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Calculate the total price for all items in the cart
   const itemTotal = cart.cartItems.reduce((total, item) => total + item.totalPrice, 0);
   const deliveryFee = 100;
   const gstAndCharges = 500;
@@ -85,6 +99,7 @@ const Cart = () => {
   return (
     <div>
       <main className="lg:flex justify-between">
+        {/* Cart Items Section */}
         <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
           {cart.cartItems?.map((item) => (
             <CartItem key={item.id} item={item} />
@@ -119,6 +134,7 @@ const Cart = () => {
 
         <Divider orientation="vertical" flexItem />
 
+        {/* Address Section */}
         <section className="lg:w-[70%] flex flex-col items-center px-5 pb-10 lg:pb-0">
           <div className="text-center font-semibold text-2xl py-10">
             Choose Delivery Address
@@ -153,6 +169,7 @@ const Cart = () => {
         </section>
       </main>
 
+      {/* Modal for adding new address */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -160,16 +177,21 @@ const Cart = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={initialValues}
+            validate={validateForm}
+            onSubmit={handleSubmit}
+          >
             <Form>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="streetAddress"
-                    label="StreetAddress"
+                    label="Street Address"
                     fullWidth
                     variant="outlined"
+                    helperText={<ErrorMessage name="streetAddress" />}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -179,6 +201,7 @@ const Cart = () => {
                     label="State"
                     fullWidth
                     variant="outlined"
+                    helperText={<ErrorMessage name="state" />}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -188,6 +211,7 @@ const Cart = () => {
                     label="City"
                     fullWidth
                     variant="outlined"
+                    helperText={<ErrorMessage name="city" />}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -197,6 +221,7 @@ const Cart = () => {
                     label="Pincode"
                     fullWidth
                     variant="outlined"
+                    helperText={<ErrorMessage name="pincode" />}
                   />
                 </Grid>
                 <Grid item xs={12}>

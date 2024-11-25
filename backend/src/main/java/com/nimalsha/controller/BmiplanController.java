@@ -135,4 +135,48 @@ public class BmiplanController {
         }
     }
 
+    @GetMapping("/{planId}")
+    public ResponseEntity<Bmiplan> getBmiplanByPlanId(
+        @PathVariable Long planId,
+        @RequestHeader("Authorization") String jwt) {
+
+        try {
+            // Authenticate user from JWT
+            User user = userService.findUserByJwtToken(jwt);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+
+            // Call service method to get the Bmiplan
+            Bmiplan bmiplan = bmiService.getBmiplanByPlanId(planId);
+            return ResponseEntity.ok(bmiplan);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/active-plans")
+public ResponseEntity<List<Bmiplan>> getActivePlansByUserId(
+    @RequestHeader("Authorization") String jwt) {
+
+    try {
+        // Authenticate user from JWT
+        User user = userService.findUserByJwtToken(jwt);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        // Get active plans for the authenticated user
+        List<Bmiplan> activePlans = bmiService.getActivePlansByUserId(user.getId());
+        return ResponseEntity.ok(activePlans);
+
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+
+}
+
 }

@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,4 +38,8 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Address> addresses =new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
 }

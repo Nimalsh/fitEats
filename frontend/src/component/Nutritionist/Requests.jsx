@@ -17,7 +17,7 @@ function Requests() {
   const { requests, loading, error } = useSelector(state => state.request); // Adjust according to your state structure
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt"  ); // Adjust based on how you store the token
+    const token = localStorage.getItem("jwt"); // Adjust based on how you store the token
     console.log("Token:", token);
     if (token) {
       dispatch(getRequestsByNutritionistId(token));
@@ -35,13 +35,20 @@ function Requests() {
     }
   };
 
-  const handleViewClick = (title, status, requestId,planId,duration) => {
+  const handleViewClick = (title, status, requestId, planId, duration) => {
     // Convert title to lowercase
     const lowerCaseTitle = title.toLowerCase();
-  
-    if (status === 'Completed') {
-      navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}/${status}`);
-  
+    
+    if (status === 'Finished' || status === 'Completed') {
+      if (lowerCaseTitle === 'other' || lowerCaseTitle === 'others') {
+        if (planId) {
+          navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}`);
+        } else {
+          navigate(`/nutri/other/view/${requestId}`);
+        }
+      } else {
+        navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}`);
+      }
     } else {
       switch (lowerCaseTitle) {
         case 'weight loss':
@@ -60,8 +67,6 @@ function Requests() {
       }
     }
   };
-  
-   
 
   const handleUserClick = (user) => {
     setClickedUser(user);
@@ -72,7 +77,7 @@ function Requests() {
     setSelectedTab(newValue);
   };
 
-  const filteredOrders = requests.filter(order => 
+  const filteredOrders = requests.filter(order =>
     selectedTab === 'All' || order.status === selectedTab
   );
 
@@ -93,7 +98,9 @@ function Requests() {
             <TableHead>
               <TableRow>
                 <TableCell align="left">User</TableCell>
-                <TableCell align="center">Request Date</TableCell>
+                <TableCell align="center">
+                  {selectedTab === 'Finished' ? 'Completed Date' : 'Request Date'}
+                </TableCell>
                 <TableCell align="center">Title</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center"></TableCell>
@@ -121,7 +128,7 @@ function Requests() {
                     </ButtonBase>
                   </TableCell>
                   <TableCell align="center">
-                    {row.requestDate}
+                    {selectedTab === 'Finished' ? row.completedDate : row.requestDate}
                   </TableCell>
                   <TableCell align="center">
                     {row.title}
@@ -143,7 +150,7 @@ function Requests() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => handleViewClick(row.title, row.status,row.requestId,row.planId,row.duration,row.status)}
+                      onClick={() => handleViewClick(row.title, row.status, row.requestId, row.planId, row.duration, row.status)}
                     >
                       View
                     </Button>

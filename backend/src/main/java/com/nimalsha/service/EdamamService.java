@@ -6,5 +6,5 @@ import java.util.List;
 public interface EdamamService {
 
 
-    public List<Map<String, Object>> getNutritionData(String foodName, String quantity) throws Exception;
+    public List<Map<String, Object>> getNutritionData(String foodName, String quantity, String foodPreparationStatus) throws Exception;
 }
