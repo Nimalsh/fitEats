@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.nimalsha.dto.OrderDTO;
+import com.nimalsha.dto.OrderItemDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,6 @@ import com.nimalsha.model.User;
 import com.nimalsha.repository.AddressRepository;
 import com.nimalsha.repository.OrderItemRepository;
 import com.nimalsha.repository.OrderRepository;
-import com.nimalsha.repository.RestaurantRepository;
 import com.nimalsha.repository.UserRepository;
 import com.nimalsha.request.OrderRequest;
 
@@ -49,22 +50,23 @@ public class OrderServiceImpl implements OrderService{
     public void cancleOder(Long orderId) throws Exception {
         Order order = findOrderById(orderId);
         orderRepository.deleteById(orderId);
-        
+
     }
-
+    @Transactional
     @Override
-    public Order createOrder(OrderRequest order, User user) throws Exception {
+    public Order createOrder(OrderRequest orderRequest, User user) throws Exception {
+        Cart cart = cartService.findCartByUserId(user.getId());
+        if (cart == null || cart.getItems().isEmpty()) {
+            throw new Exception("Cart is empty!");
+        }
 
-        Address shippAddress = order.getDeliveryAddress();
+        Restaurant restaurant = cart.getItems().get(0).getFood().getRestaurant();
 
-        Address savedAddress = addressRepository.save(shippAddress);
-
-        if(!user.getAddresses().contains(savedAddress)) {
+        Address savedAddress = addressRepository.save(orderRequest.getDeliveryAddress());
+        if (!user.getAddresses().contains(savedAddress)) {
             user.getAddresses().add(savedAddress);
             userRepository.save(user);
         }
-
-        Restaurant restaurant = restaurantService.findRestaurantById(order.getRestuarantId());
 
         Order createdOrder = new Order();
         createdOrder.setCustomer(user);
@@ -73,50 +75,92 @@ public class OrderServiceImpl implements OrderService{
         createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
 
-        Cart cart = cartService.findCartByUserId(user.getId());
-
         List<OrderItem> orderItems = new ArrayList<>();
-
-        for(CartItem cartItem : cart.getItems()) {
+        for (CartItem cartItem : cart.getItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
             orderItem.setIngredients(cartItem.getIngredients());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
+            orderItem.setOrder(createdOrder); // Set the relationship
 
-            OrderItem saveOrderItem = orderItemRepository.save(orderItem);
-            orderItems.add(saveOrderItem);
+            orderItems.add(orderItem);
         }
 
-        Long totalPrice = cartService.calculateCartTotals(cart);
+        createdOrder.setItems(orderItemRepository.saveAll(orderItems));
+        createdOrder.setTotalPrice(cartService.calculateCartTotals(cart));
+        createdOrder.setTotalItem(orderItems.size());
 
-        createdOrder.setItems(orderItems);
-        createdOrder.setTotalPrice(totalPrice);
-
-        Order saveOrder = orderRepository.save(createdOrder);
-        restaurant.getOrders().add(saveOrder);
-
-        return createdOrder;
+        return orderRepository.save(createdOrder);
     }
 
+
+
     @Override
-    public List<Order> getRestaurantOrder(Long restaurantId, String oderStatus) throws Exception {
-        
+    public List<Order> getRestaurantOrder(Long restaurantId, String orderStatus) throws Exception {
+        // Fetch orders for the restaurant.
         List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
-        if(oderStatus != null) {                     //If need the order status
-            orders = orders.stream().filter(order->
-             order.getOrderStatus().equals(oderStatus)).collect(Collectors.toList() );
+        // Filter orders based on status if provided.
+        if (orderStatus != null) {
+            orders = orders.stream()
+                    .filter(order -> order.getOrderStatus().equalsIgnoreCase(orderStatus)) // Fixed case sensitivity.
+                    .collect(Collectors.toList());
         }
 
         return orders;
     }
 
     @Override
-    public List<Order> getUsersOrder(Long userId) throws Exception {
-         
-        return orderRepository.findByCustomerId(userId);
+    public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
+        // Fetch orders by restaurantId
+        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+
+        // Map orders to OrderDTO
+        return orders.stream().map(order -> {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
+                new OrderItemDTO(
+                    item.getFood().getName(), 
+                    item.getQuantity(), 
+                    item.getTotalPrice()
+                )
+            ).collect(Collectors.toList());
+
+            return new OrderDTO(
+                order.getId(),
+                order.getCreatedAt(),
+                order.getOrderStatus(),
+                order.getTotalPrice(),
+                itemDTOs
+            );
+        }).collect(Collectors.toList());
     }
+
+
+    // Corrected the duplicate method
+    @Override
+    public List<OrderDTO> getUsersOrder(Long userId) throws Exception {
+        List<Order> orders = orderRepository.findByCustomerId(userId);
+
+        // Convert the list of orders to OrderDTOs
+        List<OrderDTO> orderDTOs = orders.stream().map(order -> {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream()
+                    .map(item -> new OrderItemDTO(item.getFood().getName(), item.getQuantity(), item.getTotalPrice()))
+                    .collect(Collectors.toList());
+
+            return new OrderDTO(
+                    order.getId(),
+                    order.getCreatedAt(),
+                    order.getOrderStatus(),
+                    order.getTotalPrice(),
+                    itemDTOs
+            );
+        }).collect(Collectors.toList());
+
+        return orderDTOs;
+    }
+
+
 
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
@@ -138,5 +182,31 @@ public class OrderServiceImpl implements OrderService{
 
         return optionalOrder.get();
     }
-    
+
+    // @Override
+    // public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
+    //     // Fetch orders by restaurantId
+    //     List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+
+    //     // Map orders to OrderDTO
+    //     return orders.stream().map(order -> {
+    //         List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
+    //             new OrderItemDTO(
+    //                 item.getFood().getName(), 
+    //                 item.getQuantity(), 
+    //                 item.getTotalPrice()
+    //             )
+    //         ).collect(Collectors.toList());
+
+    //         return new OrderDTO(
+    //             order.getId(),
+    //             order.getCreatedAt(),
+    //             order.getOrderStatus(),
+    //             order.getTotalPrice(),
+    //             itemDTOs
+    //         );
+    //     }).collect(Collectors.toList());
+    // }
+
+
 }

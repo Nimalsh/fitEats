@@ -1,26 +1,43 @@
-package com.example.driver.service;
+package com.nimalsha.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.example.driver.model.DriverNotification;
-import com.example.driver.repository.DriverrRepository;
-import com.example.driver.repository.NotificationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.nimalsha.model.DriverNotification;
+import com.nimalsha.repository.DriverrRepository;
+import com.nimalsha.repository.NotificationRepository;
 
 @Service
 public class NotificationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
     @Autowired
     private DriverrRepository driverrRepository;
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+
+    @Autowired
+    public NotificationService(NotificationRepository notificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
+
+    public void updateAssignmentStatus(Long driverId, String status) {
+        // Find the notification for the given driver ID
+        List<DriverNotification> notifications = notificationRepository.findByDriverId(driverId);
+
+        // Update each notification with the new status
+        for (DriverNotification notification : notifications) {
+            notification.setStatus(status); // "Accepted" or "Cancelled"
+            notificationRepository.save(notification); // Save updated status
+        }
+    }
 
     // Send notification to all available drivers
     public void sendNotificationToAvailableDrivers(String message) {
@@ -32,15 +49,15 @@ public class NotificationService {
     }
 
     public List<DriverNotification> getNotificationsForDriver(Long driverId) {
-        return notificationRepository.findByDriverId(driverId);
+        // Fetch only active notifications
+        return notificationRepository.findActiveNotifications(driverId);
     }
     
-
-    // Get notification for a specific driver
     public List<DriverNotification> getNotificationForDriver(Long driverId) {
-        // Retrieve the notification or return null if not present
-        return notificationRepository.findByDriverId(driverId);
+        // Fetch only active notifications
+        return notificationRepository.findActiveNotifications(driverId);
     }
+    
     
     
 
@@ -64,16 +81,8 @@ public class NotificationService {
 }
 
 
-    @Service
-    public class NotificationCleanupService {
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
-    @Scheduled(fixedRate = 5 * 60 * 1000) // Every 5 minutes
-    public void removeExpiredNotifications() {
-        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(5);
-        notificationRepository.deleteByCreatedAtBefore(cutoffTime);
-    }
-    }
+public void deleteOldNotifications() {
+    LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(115);
+    notificationRepository.deleteByCreatedAtBefore(cutoffTime);
+}
 }

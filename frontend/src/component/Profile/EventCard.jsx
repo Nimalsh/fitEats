@@ -31,9 +31,7 @@ export const EventCard=()=> {
                 </IconButton>
              </CardActions>}
         </Card>
-
-
-
+        
     </div>
   )
 }

@@ -1,18 +1,54 @@
-import React from 'react'
-import OrderCard from './OrderCard'
-export const Orders = ()=> {
+import React, { useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsersOrders } from '../State/Order/Action';
+
+const Orders = () => {
+  const dispatch = useDispatch();
+  const { orders, loading, error } = useSelector((state) => state.order);
+  const jwt = localStorage.getItem("jwt");
+
+  useEffect(() => {
+    if (jwt) dispatch(getUsersOrders(jwt));
+  }, [dispatch, jwt]);
+
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography><div>{error?.message || "Unknown error occurred"}</div></Typography>;
+
   return (
-    <div className='flex items-center flex-col'>
-    <h1 className='text-xl text-center py-7 font-semibold'>My Orders</h1>
-    <div className='space-y-5 w-full lg:w-1/2'>
-    {
-          [1,1,1,1].map((item)=><OrderCard/>)
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Order No</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Total Price</TableCell>
+            <TableCell>Items</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {orders.map((order) => (
+            <TableRow key={order.id}>
+              <TableCell>{order.id}</TableCell>
+              <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+              <TableCell>{order.orderStatus}</TableCell>
+              <TableCell>${(order.totalPrice / 100).toFixed(2)}</TableCell>
+              <TableCell>
+                <ul>
+                  {order.items.map((item) => (
+                    <li key={item.foodName}>
+                      {item.foodName} (x{item.quantity}) - ${((item.totalPrice / 100).toFixed(2))}
+                    </li>
+                  ))}
+                </ul>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
 
-
-    }</div>
-
-    </div>
-  )
-}
-
-export default Orders
+export default Orders;

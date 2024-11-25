@@ -1,32 +1,63 @@
-import React from 'react';
-import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import {Dialog ,DialogContent,DialogActions,DialogTitle,Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import * as Yup from 'yup'; // Import Yup
 import { useNavigate } from 'react-router-dom';
-import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Replace with a more fitting icon
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { registerUser } from '../State/Authentication/Action';
 import { useDispatch } from 'react-redux';
+import { checkNutritionistRequestByEmail, checkNutritionistRequestConfirmed } from '../State/Nutritionist/Action';
+
+
 
 const initialValues = {
   fullName: "",
   email: "",
   password: "",
-  // address: "",
-  // mobileNumber: "",
-  // passwordConfirmation: "",
-  role:"ROLE_CUSTOMER"
+  role: "ROLE_CUSTOMER"
 };
+
+// Define validation schema using Yup
+const validationSchema = Yup.object({
+  fullName: Yup.string().required('Full Name is required'),
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+  role: Yup.string().required('Role is required')
+});
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [adminPermissionDialogOpen, setAdminPermissionDialogOpen] = useState(false);
+
+  const handleSubmit = async (values) => {
+    if (values.role === "ROLE_NUTRITION") {
+      try {
+        // Dispatch the action and wait for the response
+        const emailExistsResponse = await dispatch(checkNutritionistRequestByEmail(values.email));
+        console.log("email exsist",emailExistsResponse);
+      
+        // Handle the response directly (response will be in action.payload)
+        if (emailExistsResponse) {
+          console.log("email exsistssss",emailExistsResponse.payload);
+          const confirmedResponse = await dispatch(checkNutritionistRequestConfirmed(values.email));
   
-  const dispatch=useDispatch()
-
-  const handleSubmit = (values) => {
-   dispatch(registerUser({userData:values,navigate}))
-    // Handle registration logic here (e.g., API calls, state updates)
+          if (confirmedResponse) {
+            dispatch(registerUser({ userData: values, navigate }));
+          } else {
+            setAdminPermissionDialogOpen(true);
+          }
+        } else {
+          navigate("/account/nutritionist/form");  // Navigate to the specified page if email check fails
+        }
+      } catch (error) {
+        console.error("Error checking nutritionist request status:", error);
+      }
+    } else {
+      dispatch(registerUser({ userData: values, navigate }));
+    }
   };
-
+  
   return (
     <Container component="main" maxWidth="xs" sx={{ backgroundColor: 'transparent' }}>
       <CssBaseline />
@@ -46,6 +77,7 @@ export const RegisterForm = () => {
         </Typography>
         <Formik
           initialValues={initialValues}
+          validationSchema={validationSchema} // Apply validation schema
           onSubmit={handleSubmit}
         >
           {({ values, errors, touched }) => (
@@ -70,7 +102,7 @@ export const RegisterForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="email"
@@ -90,27 +122,7 @@ export const RegisterForm = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* <Field
-                    as={TextField}
-                    name="mobileNumber"
-                    label="Mobile Number"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    autoComplete="tel"
-                    required
-                    error={touched.mobileNumber && Boolean(errors.mobileNumber)}
-                    helperText={touched.mobileNumber && errors.mobileNumber}
-                    InputLabelProps={{
-                      style: { color: '#fff' },
-                    }}
-                    InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
-                    }}
-                  /> */}
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     as={TextField}
                     name="password"
@@ -130,26 +142,6 @@ export const RegisterForm = () => {
                       style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
                     }}
                   />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* <Field
-                    as={TextField}
-                    name="passwordConfirmation"
-                    label="Confirm Password"
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    type="password"
-                    required
-                    error={touched.passwordConfirmation && Boolean(errors.passwordConfirmation)}
-                    helperText={touched.passwordConfirmation && errors.passwordConfirmation}
-                    InputLabelProps={{
-                      style: { color: '#fff' },
-                    }}
-                    InputProps={{
-                      style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white', height: '50px' },
-                    }}
-                  /> */}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
@@ -172,14 +164,14 @@ export const RegisterForm = () => {
                           color: '#fff',
                         },
                         '& .MuiInputBase-input': {
-                          height: '40px', // Reduced height for the role field
+                          height: '40px',
                         }
                       }}
                     >
                       <MenuItem value={"ROLE_CUSTOMER"}>Customer</MenuItem>
-                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Rstaurnat Owner</MenuItem>
-                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>Delivery driver</MenuItem>
-                      <MenuItem value={"ROLE_NUTRITION"}>Nutrition</MenuItem>
+                      <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Restaurant Owner</MenuItem>
+                      <MenuItem value={"ROLE_DELIVERY_DRIVER"}>Delivery Driver</MenuItem>
+                      <MenuItem value={"ROLE_NUTRITION"}>Nutritionist</MenuItem>
                       <MenuItem value={"ROLE_ADMIN"}>Admin</MenuItem>
                     </Field>
                   </FormControl>
@@ -209,6 +201,16 @@ export const RegisterForm = () => {
             Login
           </Button>
         </Typography>
+
+        <Dialog open={adminPermissionDialogOpen} onClose={() => setAdminPermissionDialogOpen(false)}>
+          <DialogTitle>Admin Permission Required</DialogTitle>
+          <DialogContent>
+            You haven't got  admin permission to register as a Nutritionist.
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setAdminPermissionDialogOpen(false)} color="primary">OK</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Container>
   );

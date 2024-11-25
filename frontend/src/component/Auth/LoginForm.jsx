@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, Paper, ButtonBase } from '@mui/material';
+import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup'; // Import Yup
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../State/Authentication/Action';
@@ -11,15 +12,22 @@ const initialValues = {
   password: ""
 };
 
+// Define validation schema using Yup
+const validationSchema = Yup.object({
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
+});
+
 export const LoginForm = () => {
-  const navigate=useNavigate()
-  const dispatch=useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleSubmit = (values) => {
-    dispatch(loginUser({userData:values,navigate}))
+    dispatch(loginUser({ userData: values, navigate }));
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ backgroundColor: 'transpredarent' }}>
+    <Container component="main" maxWidth="xs" sx={{ backgroundColor: 'transparent' }}>
       <CssBaseline />
       <Box
         sx={{
@@ -35,18 +43,12 @@ export const LoginForm = () => {
         <Typography component="h1" variant="h5" sx={{ color: 'white' }}>
           Sign in
         </Typography>
-        {/* <Paper
-          elevation={6}
-          sx={{
-            padding: 4,
-            backgroundColor: 'rgba(0, 0, 0, 0.6)', // Transparent black background
-            borderRadius: '8px',
-            mt: 3,
-            width: '100%',
-            color: 'white' // Ensure text is readable on dark background
-          }}
-        > */}
-          <Formik onSubmit={handleSubmit} initialValues={initialValues}>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema} // Apply validation schema
+          onSubmit={handleSubmit}
+        >
+          {({ errors, touched }) => (
             <Form>
               <Field
                 as={TextField}
@@ -57,11 +59,13 @@ export const LoginForm = () => {
                 margin="normal"
                 required
                 autoComplete="email"
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
                 InputLabelProps={{
-                  style: { color: '#fff' }, // Label color white
+                  style: { color: '#fff' },
                 }}
                 InputProps={{
-                  style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' }, // Input field background and text color
+                  style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
                 }}
               />
               <Field
@@ -74,11 +78,13 @@ export const LoginForm = () => {
                 type="password"
                 required
                 autoComplete="current-password"
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
                 InputLabelProps={{
-                  style: { color: '#fff' }, // Label color white
+                  style: { color: '#fff' },
                 }}
                 InputProps={{
-                  style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' }, // Input field background and text color
+                  style: { backgroundColor: 'rgba(255, 255, 255, 0.1)', color: 'white' },
                 }}
               />
               <Grid container spacing={2} sx={{ mt: 2 }}>
@@ -92,7 +98,7 @@ export const LoginForm = () => {
                       padding: '10px 0',
                       fontSize: '16px',
                       borderRadius: '8px',
-                      bgcolor: 'primary.main', // Match button background color
+                      bgcolor: 'primary.main',
                     }}
                   >
                     Login
@@ -100,18 +106,17 @@ export const LoginForm = () => {
                 </Grid>
               </Grid>
             </Form>
-          </Formik>
-            <Typography variant='body2' align='center' sx={{mt:3}}>
-              Don't have account ?
-              <Button size='small' onClick={()=>navigate("/account/register")}>
-                register
-                </Button> 
-            </Typography>
-        {/* </Paper> */}
+          )}
+        </Formik>
+        <Typography variant='body2' align='center' sx={{ mt: 3, color: 'white' }}>
+          Don't have an account?
+          <Button size='small' onClick={() => navigate("/account/register")} sx={{ color: 'primary.main', fontWeight: 'bold', marginLeft: '4px' }}>
+            Register
+          </Button>
+        </Typography>
       </Box>
     </Container>
   );
 };
-
 
 

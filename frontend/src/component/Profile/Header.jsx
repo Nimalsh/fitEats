@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Button, Tabs, Tab, Box, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Toolbar, Button, Tabs, Tab, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ onTabChange }) => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const navigate = useNavigate(); // Import the useNavigate hook
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     onTabChange(newValue);
   };
 
+  const handleSuggestMenuClick = () => {
+    navigate('/my-profile/custormize-order'); // Navigate to MenuSuggest
+  };
+
   return (
     <AppBar position="static" color="default">
       <Toolbar>
-        
         <Tabs
           value={selectedTab}
           onChange={handleTabChange}
@@ -46,9 +50,7 @@ const Header = ({ onTabChange }) => {
           <Tab label="Dinner" />
         </Tabs>
         <Box sx={{ marginLeft: 'auto' }}>
-          <Button variant="contained"  style={{ whiteSpace: 'nowrap' }}>
-  Customize menus
-</Button>
+         
         </Box>
       </Toolbar>
     </AppBar>

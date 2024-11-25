@@ -1,14 +1,20 @@
 import React from 'react' 
 import { Route, Routes } from 'react-router-dom' 
-import { AdminRoute } from './AdminRoute'
-import  CustomRoutes from './CustomRoutes'
+import { RestaurantRoute } from './RestaurantRoute';
+import  CustomRoutes from './CustomRoutes' 
+// import { AdminRoute } from './AdminRoute'
 
 const Routers = () => {
   return (
     <div>
          <Routes>
-            <Route path='/admin/restaurants/*' element={<AdminRoute/>}></Route> 
+            <Route path='/admin/restaurant/*' element={<RestaurantRoute/>}></Route> 
             <Route path='/*' element={<CustomRoutes/>}></Route> 
+
+            {/* <Route path='/admin/admin/*' element={<AdminRoute/>}></Route> */}
+
+            
+
          </Routes>
     </div>
   )
