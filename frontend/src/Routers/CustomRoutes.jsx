@@ -12,6 +12,7 @@ import NutritionInfo from '../component/Profile/Nutricontent';
 
 import Nutritionistbase from '../component/Nutritionist/Nutritionistbase';
 import Nutricontent from '../component/Profile/Nutricontent';
+import Nutritionistregisterform from '../component/Home/Nutritionistregisterform'
 
 export default function CustomRoutes() {
   return (
@@ -26,6 +27,7 @@ export default function CustomRoutes() {
         <Route path="/nutrition-content/:foodName" element={<Nutricontent />} />
 
         <Route path='/nutri/*' element={<Nutritionistbase />} />
+        <Route path='/account/nutritionist/form' element={<Nutritionistregisterform />} />
         
 
 

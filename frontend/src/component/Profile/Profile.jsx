@@ -30,9 +30,17 @@ import Goalselectfree from './Goalselectfree';
 import Freeweightgainform from './Freeweightgainform';
 import Freeweightlossform from './Freeweightlossform';
 import Dashboard from './Dashboard';
+import Complain from './ComplaintForm';
+import ComplaintForm from './ComplaintForm';
+
+
 import Completedplans from './Completedplans';
 
 import CustormizeOrder from './CustormizeOrder';
+import Automealplan from './Automealplan';
+
+
+
 import ComplaintPage from './ComplaintPage';
 import ComplaintHistory from './ComplaintHistory';
 
@@ -74,9 +82,11 @@ const Profile = () => {
           
 
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />
-          <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
+          <Route path="/personalized-plan/:type" element={<Paidweightlossform />} />
+
           <Route path="/personalized-plan/view/:planId/:duration" element={<Mealprogress/>} />
-          <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
+          
+          <Route path="/autoplan/view/:planId/:duration" element={<Automealplan/>} />
           <Route path="/BMI/plan/:duration/:planId" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
           <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />

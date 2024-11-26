@@ -1,99 +1,191 @@
-import React, { useState } from 'react';
-import { Container, Grid, TextField, Paper, Typography, Box, Avatar, Button, Card, CardContent } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Container, Grid, TextField, Paper, Typography, Box, Avatar, Button, Card, CardContent,Dialog,DialogActions,DialogContent,DialogTitle } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRequestById, updateRequestDescriptionAndComplete } from '../State/Requests/Action';
+import { createPlan } from '../State/Plan/Action';
 
 
 const Othergoal = () => {
+  const { requestId } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Initialize with initial values and disable
-  const [currentWeight, setCurrentWeight] = useState('75'); // Initial value
-  const [targetWeightLoss, setTargetWeightLoss] = useState('5'); // Initial value
-  const [duration, setDuration] = useState('12'); // Initial value
-  const [age, setAge] = useState('24');
-  const [gender, setGender] = useState('Male');
-  const [height, setHeight] = useState('154');
-  const [activityLevel, setActivityLevel] = useState('Moderately active');
-  const [dietaryPreferences, setDietaryPreferences] = useState('Vegan');
-  const [dietaryRestrictions, setDietaryRestrictions] = useState('Nut free');
-  const [mealsPerDay, setMealsPerDay] = useState('3');
-  const [goal, setGoal] = useState('rfghhjjjsjsj ffhhrhhhssh');
+  const token = localStorage.getItem('jwt');
+  const [UserName, setUserName] = useState('');
+  const [currentWeight, setCurrentWeight] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [height, setHeight] = useState('');
+  const [activityLevel, setActivityLevel] = useState('');
+  const [dietaryPreferences, setDietaryPreferences] = useState('');
+  const [dietaryRestrictions, setDietaryRestrictions] = useState('');
+  const [mealsPerDay, setMealsPerDay] = useState('');
+  const [userId, setUserId] = useState('');
+  const [nutritionistId, setNutritionistId] = useState('');
+  const [goal, setGoal] = useState('');
+  const [description, setDescription] = useState('');
+  const [duration, setDuration] = useState('');
+  const [openDialog, setOpenDialog] = useState(false); // State to open/close dialog
+  const [durationInput, setDurationInput] = useState(''); // Input value for duration
 
   // Assume we have the user's name
   const userName = 'John Doe';
 
   // Mock data for previously achieved goals
-  const achievedGoals = [
-    { description: 'Lost 5kg in 8 weeks', duration: '8 weeks', weightLost: '5kg' },
-    { description: 'Lost 3kg in 4 weeks', duration: '4 weeks', weightLost: '3kg' },
-    { description: 'Lost 2kg in 3 weeks', duration: '3 weeks', weightLost: '2kg' },
-  ];
-  const handleProceedClick = () => {
-    // Navigate to the article page
-   navigate('/nutri/other/view/proceed');
+
+  
+
+  const request = useSelector(state => state.request.requestById);
+
+  useEffect(() => {
+    if (requestId) {
+      console.log('Dispatching getRequestById with requestId:', requestId, 'and token:', token);
+      dispatch(getRequestById(requestId, token));
+    }
+  }, [requestId, dispatch, token]);
+
+  useEffect(() => {
+    if (request) {
+      setUserId(request.userId || '');
+      setNutritionistId(request.nutritionistId || '');
+      setUserName(request.name || '');
+      setCurrentWeight(request.currentWeight || '');
+
+
+      setAge(request.age || '');
+      setGender(request.gender || '');
+      setHeight(request.height || '');
+      setActivityLevel(request.activityLevel || '');
+      setDietaryPreferences(request.dietaryPreferences || '');
+      setDietaryRestrictions(request.dietaryRestrictions || '');
+      setMealsPerDay(request.mealsPerDay || '');
+      setGoal(request.description || '');
+      setDescription(request.reply || '');
+    }
+  }, [request]);
+
+  const handleSaveClick = () => {
+    // Ensure the description is updated before dispatching
+    if (description.trim()) {
+      // Dispatch the action to save the description
+      dispatch(updateRequestDescriptionAndComplete(requestId, description, token));
+    } else {
+      // Optionally handle empty description (e.g., show a message)
+      console.log('Description cannot be empty');
+    }
   };
 
+  const handleProceedClick = () => {
+    setOpenDialog(true); // Open dialog box
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false); // Close the dialog without saving
+  };
+
+
+  const handleDialogSubmit = () => {
+    if (durationInput.trim()) {
+      setDuration(durationInput); // Set duration from input
+      dispatch(createPlan(durationInput, userId, nutritionistId, requestId, token, navigate)); // Dispatch createPlan with new duration
+      setOpenDialog(false); // Close the dialog
+    } else {
+      console.log('Duration cannot be empty');
+    }
+  };
+
+
+
   return (
-    
-   
+
+
     <Container>
       <Grid container spacing={2}>
         {/* Left Tile */}
-        <Grid item xs={12} sm={8} >
-          <Box mt={5} ml={-5} width={'600px'} marginLeft={'5px'}>
-            <Paper style={{ padding: 20 }}>
-              <Typography variant="h6" gutterBottom>
-                Current Goal
-              </Typography>
-              <Box display="flex" alignItems="center">
-                <Box display="flex" flexDirection="column" alignItems="center" mr={5} mt={5}>
-                  <Avatar
-                    alt="User Image"
-                    src="path_to_user_image.jpg"
-                    sx={{ width: 60, height: 60 }}
-                  />
-                  <Typography variant="subtitle1" mt={1}>
-                    {userName}
-                  </Typography>
-                </Box>
-                <Box>
-                  <form noValidate autoComplete="off">
-                    <TextField
-                      label="Goal"
-                      fullWidth
-                      margin="normal"
-                      type="text"
-                      name="goal"
-                      value={goal}
-                      disabled // Make the field disabled
-                    />
-                  </form>
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
+        <Grid item xs={12} sm={7}>
+  <Box mt={5} ml={-5} width={'100%'} maxWidth={'600px'} marginLeft={'5px'}>
+    <Paper style={{ padding: 20 }}>
+      <Typography variant="h6" gutterBottom>
+        Current Goal
+      </Typography>
+      <Box display="flex" alignItems="center">
+        {/* User Avatar Section */}
+        <Box display="flex" flexDirection="column" alignItems="center" mr={5} mt={5}>
+          <Avatar
+            alt="User Image"
+            src="path_to_user_image.jpg"
+            sx={{ width: 60, height: 60 }}
+          />
+          <Typography variant="subtitle1" mt={1}>
+            {userName}
+          </Typography>
+        </Box>
+        {/* Input Field Section */}
+        <Box flex={1}>
+          <form noValidate autoComplete="off">
+            <TextField
+              label="Goal"
+              fullWidth
+              multiline
+              rows={6}
+              margin="normal"
+              type="text"
+              name="goal"
+              value={goal}
+              disabled
+              sx={{ width: '100%' }}
+            />
+          </form>
+        </Box>
+      </Box>
+    </Paper>
+  </Box>
 
-          {/* New Tile for Previously Achieved Goals */}
-          <Box mt={2} ml={-5} width={'600px'} minHeight={'200px'} marginLeft={'5px'}>
-            <Paper style={{ padding: 20 }}>
-              <Typography variant="h6" gutterBottom>
-                Previously Achieved Goals
-              </Typography>
-              <Box>
-                {achievedGoals.map((goal, index) => (
-                  <Card key={index} variant="outlined" style={{ marginBottom: 10, display: 'flex', alignItems: 'center' }}>
-                    <CheckCircleIcon color="success" style={{ marginLeft: 10, marginRight: 10 }} />
-                    <CardContent>
-                      <Typography variant="subtitle1">{goal.description}</Typography>
-                      <Typography variant="body2">Duration: {goal.duration}</Typography>
-                      <Typography variant="body2">Weight Lost: {goal.weightLost}</Typography>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
-            </Paper>
-          </Box>
-        </Grid>
+  <Box mt={2} ml={-5} width={'600px'} minHeight={'500px'} marginLeft={'5px'}>
+    <Paper style={{ padding: 20, minHeight: '250px' }}>
+      <Box>
+        <TextField
+          label="Enter your comments"
+          fullWidth
+          multiline
+          rows={6}
+          variant="outlined"
+          margin="normal"
+          name="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          disabled={request?.status === "Completed"}
+        />
+      </Box>
+      {/* Buttons Section */}
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        mt={3} // Adjust margin-top to ensure proper spacing from the text field
+      >
+        {/* Save Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSaveClick}
+          disabled={request?.status === "Completed"}
+          style={{ marginRight: '10px' }} // Add spacing between buttons
+        >
+          Save
+        </Button>
+        {/* Create a Plan Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleProceedClick}
+         // Your create plan handler
+        >
+          Create a Plan
+        </Button>
+      </Box>
+    </Paper>
+  </Box>
+</Grid>
 
         {/* Right Tile */}
         <Grid item xs={12} sm={4}>
@@ -183,6 +275,29 @@ const Othergoal = () => {
           </Box>
         </Grid>
       </Grid>
+      <Dialog open={openDialog} onClose={handleDialogClose} sx={{ '& .MuiDialog-paper': { width: '400px', maxWidth: '600px' } }}>
+        <DialogTitle>Enter Duration</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Duration (in days)"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            value={durationInput}
+            onChange={(e) => setDurationInput(e.target.value)}
+            type="number"
+            inputProps={{ min: 1 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleDialogSubmit} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

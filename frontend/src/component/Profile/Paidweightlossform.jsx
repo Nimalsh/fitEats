@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createRequest } from '../State/Requests/Action';
 
@@ -18,7 +18,7 @@ const Paidweightlossform = () => {
     
     // Create a requestData object with all the form data
     const requestData = {
-      title: "Weight loss", // Example static title, replace if needed
+      title, // Example static title, replace if needed
       status: "Pending",
       currentWeight: parseFloat(currentWeight) || 0,
       weightGoal: parseFloat(targetWeightLoss) || 0,
@@ -55,6 +55,23 @@ const Paidweightlossform = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState([]);
   const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
   const [mealsPerDay, setMealsPerDay] = useState('');
+  const [title, setTitle] = useState('');
+  const [chartLabel, setChartLabel] = useState('');
+  const [chartYAxisTitle, setChartYAxisTitle] = useState('');
+  const { type } = useParams();
+
+  useEffect(() => {
+    if (type === 'weightloss') {
+      setTitle('Weight Loss');
+      setChartLabel('Weight Loss (kg)');
+      setChartYAxisTitle('Weight (kg)');
+    } else if (type === 'weightgain') {
+      setTitle('Weight Gain');
+      setChartLabel('Weight Gain (kg)');
+      setChartYAxisTitle('Weight (kg)');
+    }
+  }, [type]);
+  console.log(title);
 
   // Function to handle input changes
   const handleInputChange = (event) => {
@@ -108,11 +125,16 @@ const Paidweightlossform = () => {
   const generateChartData = () => {
     const currentWeightNum = parseFloat(currentWeight) || 0;
     const targetWeightLossNum = parseFloat(targetWeightLoss) || 0;
-    const durationNum = parseFloat(duration) || 0;
+    const durationNum = Math.ceil((parseFloat(duration) || 0) / 7);
 
     const labels = Array.from({ length: durationNum }, (_, i) => `Week ${i + 1}`);
     const weightLossPerWeek = targetWeightLossNum / durationNum;
-    const weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - (weightLossPerWeek * (i + 1)));
+    let weightLossData;
+    if (type === 'weightLoss') {
+      weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - weightLossPerWeek * (i + 1));
+    } else {
+      weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum + weightLossPerWeek * (i + 1));
+    }
 
     return {
       labels,
@@ -159,9 +181,10 @@ const Paidweightlossform = () => {
         <Grid item xs={12} sm={6}>
           <Box mt={5} ml={-1}>
             <Paper style={{ padding: 20 }}>
-              <Typography variant="h6" gutterBottom>
-                Weight Loss Plan
-              </Typography>
+            <Typography variant="h6" gutterBottom>
+  {`${title}  Form`}
+</Typography>
+
               <form noValidate autoComplete="off">
                 <TextField
                   label="Current Weight (kg)"
@@ -173,7 +196,8 @@ const Paidweightlossform = () => {
                   onChange={handleInputChange}
                 />
                 <TextField
-                  label="Weight Loss (kg)"
+                label={chartLabel}
+
                   fullWidth
                   margin="normal"
                   type="number"
@@ -182,7 +206,7 @@ const Paidweightlossform = () => {
                   onChange={handleInputChange}
                 />
                 <TextField
-                  label="Duration (weeks)"
+                  label="Duration (days)"
                   fullWidth
                   margin="normal"
                   type="number"
@@ -193,9 +217,9 @@ const Paidweightlossform = () => {
               </form>
               {/* Chart Component */}
               <Box mt={3}>
-                <Typography variant="h6" gutterBottom>
-                  Weight Loss and Duration Chart
-                </Typography>
+              <Typography variant="h6" gutterBottom>
+  {`${title} Duration Chart`}
+</Typography>
                 <Line data={data} options={options} />
               </Box>
             </Paper>
@@ -205,9 +229,8 @@ const Paidweightlossform = () => {
         <Grid item xs={12} sm={4}>
           <Box mt={5} width={'550px'} marginLeft={'3px'}>
             <Paper style={{ padding: 20, width: '100%' }}>
-              <Typography variant="h6" gutterBottom>
-               
-              </Typography>
+
+
               <Grid >
                 {/* Age, Gender, Height */}
                 <Grid item xs={12} sm={4}>

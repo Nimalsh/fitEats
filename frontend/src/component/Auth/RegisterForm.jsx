@@ -1,13 +1,14 @@
-
-
-import React from 'react';
-import { Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState } from 'react';
+import {Dialog ,DialogContent,DialogActions,DialogTitle,Container, CssBaseline, Grid, TextField, Typography, Box, Button, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup'; // Import Yup
 import { useNavigate } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { registerUser } from '../State/Authentication/Action';
 import { useDispatch } from 'react-redux';
+import { checkNutritionistRequestByEmail, checkNutritionistRequestConfirmed } from '../State/Nutritionist/Action';
+
+
 
 const initialValues = {
   fullName: "",
@@ -27,11 +28,36 @@ const validationSchema = Yup.object({
 export const RegisterForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [adminPermissionDialogOpen, setAdminPermissionDialogOpen] = useState(false);
 
-  const handleSubmit = (values) => {
-    dispatch(registerUser({ userData: values, navigate }));
+  const handleSubmit = async (values) => {
+    if (values.role === "ROLE_NUTRITION") {
+      try {
+        // Dispatch the action and wait for the response
+        const emailExistsResponse = await dispatch(checkNutritionistRequestByEmail(values.email));
+        console.log("email exsist",emailExistsResponse);
+      
+        // Handle the response directly (response will be in action.payload)
+        if (emailExistsResponse) {
+          console.log("email exsistssss",emailExistsResponse.payload);
+          const confirmedResponse = await dispatch(checkNutritionistRequestConfirmed(values.email));
+  
+          if (confirmedResponse) {
+            dispatch(registerUser({ userData: values, navigate }));
+          } else {
+            setAdminPermissionDialogOpen(true);
+          }
+        } else {
+          navigate("/account/nutritionist/form");  // Navigate to the specified page if email check fails
+        }
+      } catch (error) {
+        console.error("Error checking nutritionist request status:", error);
+      }
+    } else {
+      dispatch(registerUser({ userData: values, navigate }));
+    }
   };
-
+  
   return (
     <Container component="main" maxWidth="xs" sx={{ backgroundColor: 'transparent' }}>
       <CssBaseline />
@@ -175,6 +201,16 @@ export const RegisterForm = () => {
             Login
           </Button>
         </Typography>
+
+        <Dialog open={adminPermissionDialogOpen} onClose={() => setAdminPermissionDialogOpen(false)}>
+          <DialogTitle>Admin Permission Required</DialogTitle>
+          <DialogContent>
+            You haven't got  admin permission to register as a Nutritionist.
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setAdminPermissionDialogOpen(false)} color="primary">OK</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Container>
   );
