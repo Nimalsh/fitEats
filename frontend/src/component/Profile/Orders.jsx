@@ -33,15 +33,17 @@ const Orders = () => {
               <TableCell>{order.id}</TableCell>
               <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
               <TableCell>{order.orderStatus}</TableCell>
-              <TableCell>${(order.totalPrice / 100).toFixed(2)}</TableCell>
+              <TableCell>${order.totalPrice}</TableCell>
+
               <TableCell>
-                <ul>
-                  {order.items.map((item) => (
-                    <li key={item.foodName}>
-                      {item.foodName} (x{item.quantity}) - ${((item.totalPrice / 100).toFixed(2))}
-                    </li>
-                  ))}
-                </ul>
+              <ul>
+  {order.items.map((item) => (
+    <li key={item.foodName}>
+      {item.foodName} ({item.quantity} items) - ${item.totalPrice}
+    </li>
+  ))}
+</ul>
+
               </TableCell>
             </TableRow>
           ))}
