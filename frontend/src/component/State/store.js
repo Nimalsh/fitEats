@@ -8,6 +8,7 @@ import NutrionReducer from "./Nutrion/Reducer";
 
 import orderReducer from "./Order/Reducer";
 import restaurantOrderReducer from "./Restaurant Order/Reducer";
+import autoplansReducer from "./Autoplans/Reducer";
 
 import restaurantReducer from "./Restaurant/Reducer";
 
@@ -15,6 +16,10 @@ import restaurantReducer from "./Restaurant/Reducer";
 import planReducer from "./Plan/Reducer";
 import requestReducer from "./Requests/Reducer";
 import  bmiReducer from "./Bmi/Reducer";
+import  MeallogReducer from "./Meallog/Reducer";
+import nutritionistReducer from "./Nutritionist/Reducer";
+import queriesReducer from "./Queries/Reducer";
+import articlesReducer from "./Articles/Reducer";
 
 import complaintReducer from "./complain/Reducer";
 
@@ -36,9 +41,14 @@ const rootReducer =combineReducers({
   plan: planReducer, 
   request:requestReducer,
   bmi:bmiReducer,
+  meallog:MeallogReducer,
+  autoplans:autoplansReducer,
+  nutritionist:nutritionistReducer,
+  queries:queriesReducer,
+  articles:articlesReducer,
 
   nutrion:NutrionReducer,
-  complaintReducer:complaintReducer,
+  complaint:complaintReducer,
 
 
 });

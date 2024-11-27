@@ -1,73 +1,53 @@
-import React, { useState } from 'react';
-import { Tabs, Tab, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Tabs, Tab, Box, Dialog, DialogContent, TextField, Button } from '@mui/material';
 import { Articlecard } from './Articlecard';
 import Newarticleform from './Newarticleform';
+import { getArticles, getArticleById, updateArticle } from '../State/Articles/Action'; // Import actions
 
 function Articles() {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingArticle, setEditingArticle] = useState(null); // State for the article being edited
+  const dispatch = useDispatch();
+  const token = localStorage.getItem('jwt'); // Get JWT token from localStorage
+
+  const { articles, loading, error } = useSelector((state) => state.articles);
+
+  useEffect(() => {
+    dispatch(getArticles(token));
+  }, [dispatch, token]);
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
 
-  const articles = [
-    {
-      image: 'https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=2048x2048&w=is&k=20&c=rRlOrFqCQn8kBDwvZnN75XFxiD0CA6S2LkgVKQRYJ3k=',
-      title: 'Fast Food',
-      description: 'Effects of a cafeteria-based sustainable diet intervention on the adherence to the EAT-Lancet planetary health diet and greenhouse gas emissions of consumers...',
-      location: 'Mumbai',
-      datePublished: 'February 14, 2024 12:00 AM',
-      dateUpdated: 'February 14, 2024 12:00 AM',
-      showDelete: true,
-    },
-    {
-      image: 'https://cdn.pixabay.com/photo/2023/06/29/07/44/ai-generated-8095874_640.png',
-      title: 'The Impact of Protein Supplements',
-      description: 'An overview of the benefits and risks associated with the consumption of protein supplements among athletes and bodybuilders...',
-      location: 'New York',
-      datePublished: 'March 10, 2024 08:30 AM',
-      dateUpdated: 'March 11, 2024 09:00 AM',
-      showDelete: true,
-    },
-    {
-      image: 'https://cdn.pixabay.com/photo/2024/05/23/00/44/almonds-8781985_640.png',
-      title: 'The Rise of the Keto Diet',
-      description: 'Exploring the popularity of the ketogenic diet, its health benefits, and potential risks for long-term health...',
-      location: 'Los Angeles',
-      datePublished: 'April 22, 2024 10:15 AM',
-      dateUpdated: 'April 23, 2024 11:00 AM',
-      showDelete: true,
-    },
-    {
-      image: 'https://cdn.pixabay.com/photo/2024/04/20/01/23/generated-to-8707537_640.png',
-      title: 'Plant-Based Diets and Sustainability',
-      description: 'A look into how plant-based diets can contribute to environmental sustainability and personal health...',
-      location: 'London',
-      datePublished: 'May 5, 2024 01:00 PM',
-      dateUpdated: 'May 6, 2024 02:30 PM',
-      showDelete: true,
-    },
-    {
-      image: 'https://cdn.pixabay.com/photo/2019/12/12/15/40/diet-4691012_1280.png',
-      title: 'Intermittent Fasting: Pros and Cons',
-      description: 'Examining the health effects of intermittent fasting, including its benefits for weight loss and metabolic health...',
-      location: 'Sydney',
-      datePublished: 'June 15, 2024 09:00 AM',
-      dateUpdated: 'June 16, 2024 10:30 AM',
-      showDelete: true,
-    },
-    {
-      image: 'https://cdn.pixabay.com/photo/2023/06/02/22/10/ai-generated-8036516_1280.png',
-      title: 'The Cultural Significance of Indian Cuisine',
-      description: 'Exploring the diverse flavors and rich cultural heritage of Indian cuisine, from regional specialties to festive foods...',
-      location: 'Delhi',
-      datePublished: 'July 1, 2024 07:45 AM',
-      dateUpdated: 'July 2, 2024 08:00 AM',
-      showDelete: true,
-    },
-  
-  ];
-  
+  const handleArticleCreated = () => {
+    setSelectedTab(0); // Switch to the "Articles" tab after an article is created
+  };
+
+  const handleEditButtonClick = (articleId) => {
+    dispatch(getArticleById(token, articleId))
+      .then((response) => {
+        console.log("article", response)
+        setEditingArticle(response); // Ensure the action returns the article data in the payload
+        setEditDialogOpen(true); // Open the dialog
+      })
+      .catch((err) => {
+        console.error('Error fetching article for editing:', err);
+      });
+  };
+
+
+  const handleDialogClose = () => {
+    setEditDialogOpen(false);
+    setEditingArticle(null);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingArticle((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
     <Box className="mt-5 px-5">
@@ -76,17 +56,125 @@ function Articles() {
         <Tab label="New Article" />
       </Tabs>
       <TabPanel value={selectedTab} index={0}>
-        <div className="flex flex-wrap gap-5">
-          {articles.map((article, index) => (
-            <Articlecard key={index} {...article} />
-          ))}
-        </div>
+        {loading ? (
+          <p>Loading articles...</p>
+        ) : error ? (
+          <p>Error fetching articles: {error.message || 'An unexpected error occurred'}</p>
+        ) : (
+          <div className="flex flex-wrap gap-5">
+            {articles.map((article) => (
+              <Articlecard
+                key={article.id}
+                image={article.image}
+                title={article.title}
+                content={article.content}
+                publishedDate={article.publishedDate}
+                author={article.author}
+                onEdit={() => handleEditButtonClick(article.id)} // Pass edit handler
+              />
+            ))}
+          </div>
+        )}
       </TabPanel>
       <TabPanel value={selectedTab} index={1}>
         <Box sx={{ mt: 2 }}>
-          <Newarticleform />
+          <Newarticleform onArticleCreated={handleArticleCreated} />
         </Box>
       </TabPanel>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onClose={handleDialogClose} maxWidth="md">
+        <DialogContent className="flex">
+          {/* Left: Image */}
+          <Box flex={1} display="flex" justifyContent="center" alignItems="center">
+            {editingArticle?.image ? (
+              <img
+                src={
+                  typeof editingArticle.image === 'string'
+                    ? `data:image/png;base64,${editingArticle.image}`
+                    : URL.createObjectURL(editingArticle.image) // Preview for new image
+                }
+                alt={editingArticle.title}
+                style={{ maxWidth: '100%', maxHeight: '300px' }}
+              />
+            ) : (
+              <p>No Image Available</p>
+            )}
+          </Box>
+
+          {/* Right: Form */}
+          <Box flex={1} ml={2}>
+            <TextField
+              label="Title"
+              name="title"
+              value={editingArticle?.title || ''}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Content"
+              name="content"
+              value={editingArticle?.content || ''}
+              onChange={handleInputChange}
+              fullWidth
+              multiline
+              rows={6}
+              margin="normal"
+            />
+            <Box mt={2}>
+              <label htmlFor="image-upload">Change Image:</label>
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setEditingArticle((prev) => ({
+                      ...prev,
+                      image: file, // Update the image with the new file
+                    }));
+                  }
+                }}
+                style={{ marginTop: '8px' }}
+              />
+            </Box>
+            <Box mt={2} display="flex" justifyContent="flex-end">
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  if (!editingArticle) return;
+
+                  const formData = new FormData();
+                  formData.append('title', editingArticle.title || '');
+                  formData.append('content', editingArticle.content || '');
+                  if (editingArticle.image instanceof File) {
+                    formData.append('image', editingArticle.image);
+                  }
+
+                  dispatch(updateArticle(token, editingArticle.id, formData))
+                    .then(() => {
+                      console.log('Article updated successfully!');
+                      // Fetch the updated articles
+                      dispatch(getArticles(token));
+                      handleDialogClose();
+                    })
+                    .catch((error) => {
+                      console.error('Error updating article:', error);
+                    });
+                }}
+              >
+                Save
+              </Button>
+
+
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
+
     </Box>
   );
 }
@@ -102,11 +190,7 @@ function TabPanel(props) {
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }

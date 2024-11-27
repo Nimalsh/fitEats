@@ -1,14 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createRequest } from '../State/Autoplans/Action';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
 const Freeweightlossform = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleProceed = () => {
+    const token = localStorage.getItem('jwt'); // Or wherever your token is stored
+    
+    // Create a requestData object with all the form data
+    const requestData = {
+      title: "Weight loss", // Example static title, replace if needed
+      status: "Pending",
+      weight: parseFloat(currentWeight) || 0,
+     
+      duration: parseInt(duration) || 0,
+      age: parseInt(age) || 0,
+      height: parseFloat(height) || 0,
+      gender: gender,
+      dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
+      dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
+      activitylevel: activityLevel,
+     
+      target: parseFloat(currentWeight) - parseFloat(targetWeightLoss) || 0,
+      bmi: height > 0 ? parseFloat(currentWeight) / Math.pow(parseFloat(height) / 100, 2) : 0
+
+    };
+  
+    // Dispatch the createRequest action with requestData and token
+    dispatch(createRequest(requestData, token))
+    .then((data) => {
+      // Use planId and duration from the response to navigate
+      const { planId, duration } = data;  // Assuming these are in the response
+      console.log("dataa",data);
+      navigate(`/my-profile/autoplan/view/${planId}/${duration}`);
+    })
+    .catch((error) => {
+      console.error("Error creating request", error);
+    });
+  };
+
+  
+  
+
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -18,8 +60,16 @@ const Freeweightlossform = () => {
   const [activityLevel, setActivityLevel] = useState('');
   const [dietaryPreferences, setDietaryPreferences] = useState([]);
   const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
-  const [mealsPerDay, setMealsPerDay] = useState('');
-
+  
+  useEffect(() => {
+    if (currentWeight && targetWeightLoss) {
+     
+      if (targetWeightLoss > 0) {
+        const calculatedDuration = Math.ceil(targetWeightLoss / 0.5); // Divide by 0.5 and round up
+        setDuration(calculatedDuration); // Set the calculated duration
+      }
+    }
+  }, [currentWeight, targetWeightLoss]);
   // Function to handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -47,9 +97,7 @@ const Freeweightlossform = () => {
       case 'activityLevel':
         setActivityLevel(value);
         break;
-      case 'mealsPerDay':
-        setMealsPerDay(value);
-        break;
+      
       default:
         break;
     }
@@ -153,6 +201,7 @@ const Freeweightlossform = () => {
                   name="duration"
                   value={duration}
                   onChange={handleInputChange}
+                  disabled  
                 />
               </form>
               {/* Chart Component */}
@@ -229,16 +278,16 @@ const Freeweightlossform = () => {
           <FormControlLabel value="sedentary" control={<Radio />} label="Sedentary" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="lightlyActive" control={<Radio />} label="Lightly Active" />
+          <FormControlLabel value="light" control={<Radio />} label="Lightly Active" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="moderatelyActive" control={<Radio />} label="Moderately Active" />
+          <FormControlLabel value="moderate" control={<Radio />} label="Moderately Active" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="veryActive" control={<Radio />} label="Very Active" />
+          <FormControlLabel value="active" control={<Radio />} label="Very Active" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="superActive" control={<Radio />} label="Super Active" />
+          <FormControlLabel value="very active" control={<Radio />} label="Super Active" />
         </Grid>
       </Grid>
     </RadioGroup>
@@ -246,88 +295,289 @@ const Freeweightlossform = () => {
 </Grid>
 
 <Grid item xs={12}>
+<FormControl component="fieldset">
+  <FormLabel component="legend">Dietary Preferences</FormLabel>
+  <Grid container spacing={0}>
+    <Grid item xs={6} sm={4}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dietaryPreferences.includes('Balanced')}
+            onChange={(e) => handleCheckboxChange(e, 'preferences')}
+            name="Balanced"
+          />
+        }
+        label="Balanced"
+      />
+    </Grid>
+    <Grid item xs={6} sm={4}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dietaryPreferences.includes('High-Fiber')}
+            onChange={(e) => handleCheckboxChange(e, 'preferences')}
+            name="High-Fiber"
+          />
+        }
+        label="High-Fiber"
+      />
+    </Grid>
+    <Grid item xs={6} sm={4}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dietaryPreferences.includes('High-Protein')}
+            onChange={(e) => handleCheckboxChange(e, 'preferences')}
+            name="High-Protein"
+          />
+        }
+        label="High-Protein"
+      />
+    </Grid>
+    <Grid item xs={6} sm={4}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dietaryPreferences.includes('Low-Carb')}
+            onChange={(e) => handleCheckboxChange(e, 'preferences')}
+            name="Low-Carb"
+          />
+        }
+        label="Low-Carb"
+      />
+    </Grid>
+    <Grid item xs={6} sm={4}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dietaryPreferences.includes('Low-Fat')}
+            onChange={(e) => handleCheckboxChange(e, 'preferences')}
+            name="Low-Fat"
+          />
+        }
+        label="Low-Fat"
+      />
+    </Grid>
+    <Grid item xs={6} sm={4}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={dietaryPreferences.includes('Low-Sodium')}
+            onChange={(e) => handleCheckboxChange(e, 'preferences')}
+            name="Low-Sodium"
+          />
+        }
+        label="Low-Sodium"
+      />
+    </Grid>
+  </Grid>
+</FormControl>
+
+  </Grid>
+  {/* Dietary Restrictions */}
+  <Grid item xs={12}>
   <FormControl component="fieldset">
-    <FormLabel component="legend">Dietary Preferences</FormLabel>
+    <FormLabel component="legend">Dietary Restrictions</FormLabel>
     <Grid container spacing={0}>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('vegetarian')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="vegetarian"
+              checked={dietaryRestrictions.includes('Alcohol-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Alcohol-Free"
             />
           }
-          label="Vegetarian"
+          label="Alcohol-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('vegan')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="vegan"
+              checked={dietaryRestrictions.includes('Celery-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Celery-Free"
             />
           }
-          label="Vegan"
+          label="Celery-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('lowFat')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="lowFat"
+              checked={dietaryRestrictions.includes('Dairy-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Dairy-Free"
             />
           }
-          label="Low-fat"
+          label="Dairy-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('keto')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="keto"
+              checked={dietaryRestrictions.includes('Egg-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Egg-Free"
             />
           }
-          label="Keto"
+          label="Egg-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('glutenFree')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="glutenFree"
+              checked={dietaryRestrictions.includes('Fish-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Fish-Free"
             />
           }
-          label="Gluten-free"
+          label="Fish-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('lowCarb')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="lowCarb"
+              checked={dietaryRestrictions.includes('Gluten-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Gluten-Free"
             />
           }
-          label="Low-carb"
+          label="Gluten-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('paleo')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="paleo"
+              checked={dietaryRestrictions.includes('Immuno-Supportive')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Immuno-Supportive"
+            />
+          }
+          label="Immuno-Supportive"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Keto-Friendly')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Keto-Friendly"
+            />
+          }
+          label="Keto-Friendly"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Kosher')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Kosher"
+            />
+          }
+          label="Kosher"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Low Potassium')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Low Potassium"
+            />
+          }
+          label="Low Potassium"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Low Sugar')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Low Sugar"
+            />
+          }
+          label="Low Sugar"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Lupine-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Lupine-Free"
+            />
+          }
+          label="Lupine-Free"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Mediterranean')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Mediterranean"
+            />
+          }
+          label="Mediterranean"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Mollusk-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Mollusk-Free"
+            />
+          }
+          label="Mollusk-Free"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Mustard-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Mustard-Free"
+            />
+          }
+          label="Mustard-Free"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('No oil added')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="No oil added"
+            />
+          }
+          label="No oil added"
+        />
+      </Grid>
+      <Grid item xs={6} sm={4}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={dietaryRestrictions.includes('Paleo')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Paleo"
             />
           }
           label="Paleo"
@@ -337,137 +587,93 @@ const Freeweightlossform = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('lactoseIntolerant')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="lactoseIntolerant"
+              checked={dietaryRestrictions.includes('Peanut-Free')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Peanut-Free"
             />
           }
-          label="Lactose intolerant"
+          label="Peanut-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('flexitarian')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="flexitarian"
-            />
-          }
-          label="Flexitarian"
-        />
-      </Grid>
-      <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryPreferences.includes('pescatarian')}
-              onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="pescatarian"
+              checked={dietaryRestrictions.includes('Pescatarian')}
+              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+              name="Pescatarian"
             />
           }
           label="Pescatarian"
         />
       </Grid>
-    </Grid>
-  </FormControl>
-</Grid>
-  {/* Dietary Restrictions */}
-<Grid item xs={12}>
-  <FormControl component="fieldset">
-    <FormLabel component="legend">Dietary Restrictions</FormLabel>
-    <Grid container spacing={0}>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('nutFree')}
+              checked={dietaryRestrictions.includes('Pork-Free')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="nutFree"
+              name="Pork-Free"
             />
           }
-          label="Nut-free"
+          label="Pork-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('glutenFree')}
+              checked={dietaryRestrictions.includes('Red-Meat-Free')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="glutenFree"
+              name="Red-Meat-Free"
             />
           }
-          label="Gluten-free"
+          label="Red-Meat-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('lactoseIntolerant')}
+              checked={dietaryRestrictions.includes('Soy-Free')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="lactoseIntolerant"
+              name="Soy-Free"
             />
           }
-          label="Lactose intolerant"
+          label="Soy-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('shellfishFree')}
+              checked={dietaryRestrictions.includes('Sugar-Conscious')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="shellfishFree"
+              name="Sugar-Conscious"
             />
           }
-          label="Shellfish-free"
+          label="Sugar-Conscious"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('soyFree')}
+              checked={dietaryRestrictions.includes('Tree-Nut-Free')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="soyFree"
+              name="Tree-Nut-Free"
             />
           }
-          label="Soy-free"
+          label="Tree-Nut-Free"
         />
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('dairyFree')}
+              checked={dietaryRestrictions.includes('Vegan')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="dairyFree"
-            />
-          }
-          label="Dairy-free"
-        />
-      </Grid>
-      <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('vegetarian')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="vegetarian"
-            />
-          }
-          label="Vegetarian"
-        />
-      </Grid>
-      <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('vegan')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="vegan"
+              name="Vegan"
             />
           }
           label="Vegan"
@@ -477,56 +683,19 @@ const Freeweightlossform = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryRestrictions.includes('eggFree')}
+              checked={dietaryRestrictions.includes('Vegetarian')}
               onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="eggFree"
+              name="Vegetarian"
             />
           }
-          label="Egg-free"
-        />
-      </Grid>
-      <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('halal')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="halal"
-            />
-          }
-          label="Halal"
-        />
-      </Grid>
-      <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('kosher')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="kosher"
-            />
-          }
-          label="Kosher"
+          label="Vegetarian"
         />
       </Grid>
     </Grid>
   </FormControl>
 </Grid>
               {/* Number of Meals and Snacks per day */}
-                <Grid item xs={12}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">Number of Meals and Snacks per day</FormLabel>
-                    <RadioGroup
-                      aria-label="mealsPerDay"
-                      name="mealsPerDay"
-                      value={mealsPerDay}
-                      onChange={handleInputChange}
-                    >
-                      <FormControlLabel value="2" control={<Radio />} label="2" />
-                      <FormControlLabel value="3" control={<Radio />} label="3" />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
+             
                 {/* Preferred Times */}
                 <Button
                   variant="contained"
@@ -534,7 +703,7 @@ const Freeweightlossform = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                  onClick={() => navigate('/my-profile/personalized-plan/view')}  >
+                  onClick={handleProceed}  >
                   Proceed
                 </Button>
               </Grid>
