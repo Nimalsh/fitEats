@@ -17,6 +17,7 @@ import requestReducer from "./Requests/Reducer";
 import  bmiReducer from "./Bmi/Reducer";
 
 import complaintReducer from "./complain/Reducer";
+import { eventReducer } from "./event/Reducer";
 
 
 const rootReducer =combineReducers({
@@ -39,7 +40,7 @@ const rootReducer =combineReducers({
 
   nutrion:NutrionReducer,
   complaint:complaintReducer,
-
+  event:eventReducer
 
 });
 
