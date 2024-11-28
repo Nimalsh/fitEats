@@ -1,15 +1,30 @@
-import { Box, Button, Card, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, ButtonBase, Avatar, Typography, Tabs, Tab } from '@mui/material';
+import {
+    Box,
+    Button,
+    Card,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    ButtonBase,
+    Avatar,
+    Typography,
+    Tabs,
+    Tab,
+} from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserRequests,updateRequestStatus } from '../State/Requests/Action'; // Import the action to fetch user requests
+import { getUserRequests, updateRequestStatus } from '../State/Requests/Action'; // Import the action to fetch user requests
 
 const Plans = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [tabIndex, setTabIndex] = useState(0);
     const token = localStorage.getItem('jwt');
-    console.log("token",token)
 
     // Function to return a color based on the status
     const getStatusColor = (status) => {
@@ -28,7 +43,7 @@ const Plans = () => {
     };
 
     useEffect(() => {
-        // Assuming token is stored in localStorage
+        // Fetch user requests on component mount
         dispatch(getUserRequests(token));
     }, [dispatch]);
 
@@ -44,31 +59,26 @@ const Plans = () => {
                 return orders.filter(order => order.status === 'Started');
             case 1: // Completed
                 return orders.filter(order => order.status === 'Finished');
-            case 2: // Requested
-                return orders.filter(order => order.status === 'Pending');
-            case 3: // Replied
+          
+            case 2: // Replied
                 return orders.filter(order => order.status === 'Completed');
             default:
                 return orders;
         }
     };
 
-    const handleViewClick = (planId,duration) => {
+    const handleViewClick = (planId, duration) => {
         navigate(`/my-profile/personalized-plan/view/${planId}/${duration}`);
     };
-    
-
 
     const handleStartClick = (requestId) => {
         // Dispatch the update request status action
         dispatch(updateRequestStatus(requestId, 'Started', token))
             .then(() => {
-                // Update local state if needed or re-fetch requests
-                dispatch(getUserRequests(token)); // Re-fetch requests to ensure state is updated
+                // Re-fetch requests to ensure state is updated
+                dispatch(getUserRequests(token));
             });
     };
-    
-
 
     const filteredOrders = filterOrders(requests, tabIndex);
 
@@ -81,7 +91,7 @@ const Plans = () => {
                 <Tabs value={tabIndex} onChange={handleTabChange} centered>
                     <Tab label="In Progress" />
                     <Tab label="Completed" />
-                    <Tab label="Requested" />
+                  
                     <Tab label="Replied" />
                 </Tabs>
 
@@ -91,8 +101,22 @@ const Plans = () => {
                             <TableRow>
                                 <TableCell align="left">Request Plan Title</TableCell>
                                 <TableCell align="center">Nutritionist</TableCell>
-                                <TableCell align="center">Request Date</TableCell>
-                                <TableCell align="center">Status</TableCell>
+                                <TableCell align="center">
+                                    {(() => {
+                                        switch (tabIndex) {
+                                            case 0: // In Progress
+                                                return "Started Date";
+                                            case 1: // Completed
+                                                return "Completed Date";
+                                            
+                                            case 2: // Replied
+                                                return "Replied Date";
+                                            default:
+                                                return "Request Date"; // Default case
+                                        }
+                                    })()}
+                                </TableCell>
+
                                 <TableCell align="center"></TableCell>
                             </TableRow>
                         </TableHead>
@@ -110,13 +134,22 @@ const Plans = () => {
                                             <Box display="flex" alignItems="center" justifyContent="center">
                                                 <Avatar src={row.userImage} alt={row.user} sx={{ width: 32, height: 32 }} />
                                                 <Typography variant="body2" sx={{ marginLeft: 1 }}>
-                                                    {row.user}
+                                                    {row.nutritionistName}
                                                 </Typography>
                                             </Box>
                                         </ButtonBase>
                                     </TableCell>
                                     <TableCell align="center">
-                                        {row.requestDate}
+                                        {row.status === "Finished" && row.completedDate ? (
+                                            row.completedDate
+                                        ) : row.status === "Started" && row.startedDate ? (
+                                            row.startedDate
+                                        ) : row.status === "Completed" && row.repliedDate ? (
+                                            row.repliedDate
+                                        ) : (
+                                            "N/A"
+                                        )}
+
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box
@@ -144,7 +177,7 @@ const Plans = () => {
                                             <Button
                                                 variant="contained"
                                                 color="primary"
-                                                onClick={() => handleViewClick(row.planId,row.duration)}
+                                                onClick={() => handleViewClick(row.planId, row.duration)}
                                             >
                                                 View
                                             </Button>
@@ -158,6 +191,6 @@ const Plans = () => {
             </Card>
         </Box>
     );
-}
+};
 
 export default Plans;

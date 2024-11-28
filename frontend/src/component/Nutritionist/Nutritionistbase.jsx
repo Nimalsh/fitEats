@@ -14,6 +14,7 @@ import Plangeneration from './Plangeneration';
 import Dashboard from './Dashboard';
 import Completedplans from './Completedplans';
 import Queryreplied from './Queryreplied';
+import Mealprogress from './Mealprogress';
 
 
 
@@ -37,7 +38,7 @@ const Nutritionistbase = () => {
             <Route path="/queries/reply" element={<Queryanswer />} />
             <Route path="/weightgain/view/:requestId" element={<WeightGain />} />
             <Route path="/weightloss/view/:requestId" element={<Weightloss />} />
-            <Route path="/other/view" element={<Othergoal />} />
+            <Route path="/other/view/:requestId" element={<Othergoal />} />
             <Route path="/other/view/proceed" element={<Plangeneration />} />
             <Route path="/weightloss/view/proceed/:planId/:duration/:status" element={<Plangeneration />} />
 
@@ -45,6 +46,7 @@ const Nutritionistbase = () => {
             <Route path="requests/view/completed" element={<Completedplans/>} />
             <Route path="/queries/replied" element={<Queryreplied />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/weightloss/view/proceed/:planId/:duration" element={<Mealprogress />} />
              
           </Routes>
         </div>
