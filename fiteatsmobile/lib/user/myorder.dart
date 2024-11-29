@@ -3,35 +3,40 @@ import 'package:flutter/material.dart';
 class MyOrderPage extends StatelessWidget {
   final List<Map<String, dynamic>> orders = [
     {
-      'photo': 'assets/image/plate.png',
-      'name': 'Grilled Chicken Salad',
-      'price': 12.99,
+      'orderNumber': '#12345',
+      'date': '2024-11-25',
+      'restaurant': 'Healthy Bites',
+      'totalPrice': 35.99,
       'status': 'Completed',
+      'items': [
+        {'name': 'Grilled Chicken Salad', 'price': 12.99},
+        {'name': 'Oatmeal', 'price': 7.99},
+        {'name': 'Smoothie', 'price': 15.00},
+      ],
     },
     {
-      'photo': 'assets/image/plate.png',
-      'name': 'Salmon with Veggies',
-      'price': 15.99,
+      'orderNumber': '#12346',
+      'date': '2024-11-26',
+      'restaurant': 'Fresh Diner',
+      'totalPrice': 45.99,
       'status': 'Pending',
+      'items': [
+        {'name': 'Salmon with Veggies', 'price': 15.99},
+        {'name': 'Fruit Salad', 'price': 10.99},
+        {'name': 'Iced Tea', 'price': 5.00},
+      ],
     },
     {
-      'photo': 'assets/image/plate.png',
-      'name': 'Oatmeal',
-      'price': 7.99,
+      'orderNumber': '#12347',
+      'date': '2024-11-27',
+      'restaurant': 'Veggie Hub',
+      'totalPrice': 27.99,
       'status': 'Completed',
-    },
-     {
-      'photo': 'assets/image/plate.png',
-      'name': 'Salmon with Veggies',
-      'price': 15.99,
-      'status': 'Pending',
-    },
-
-     {
-      'photo': 'assets/image/plate.png',
-      'name': 'Oatmeal',
-      'price': 7.99,
-      'status': 'pending',
+      'items': [
+        {'name': 'Veggie Burger', 'price': 12.99},
+        {'name': 'Caesar Salad', 'price': 9.99},
+        {'name': 'Water', 'price': 5.00},
+      ],
     },
   ];
 
@@ -54,53 +59,72 @@ class MyOrderPage extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 8.0),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset(
-                      order['photo'],
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
+                  // Order Number and Date
+                  Text(
+                    'Order Number: ${order['orderNumber']}',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Date: ${order['date']}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Restaurant: ${order['restaurant']}',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  
+                  // Food Items
+                  Text(
+                    'Food Items:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Column(
+                    children: order['items'].map<Widget>((item) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                item['name'],
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            Text(
+                              '\$${item['price'].toStringAsFixed(2)}',
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16),
+                  
+                  // Total Price
+                  Text(
+                    'Total Price: \$${order['totalPrice'].toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  
+                  // Order Status
+                  Text(
+                    'Status: ${order['status']}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: order['status'] == 'Completed' ? Colors.green : Colors.orange,
                     ),
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          order['name'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          '\$${order['price'].toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Status: ${order['status']}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: order['status'] == 'Completed' ? Colors.green : Colors.orange,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(
-                    order['status'] == 'Completed' ? Icons.check_circle : Icons.hourglass_empty,
-                    color: order['status'] == 'Completed' ? Colors.green : Colors.orange,
-                  ),
+                  SizedBox(height: 16),
                 ],
               ),
             ),

@@ -1,3 +1,7 @@
+import 'package:fiteatsmobile/user/Favourite.dart';
+import 'package:fiteatsmobile/user/complaint.dart';
+import 'package:fiteatsmobile/user/offers.dart';
+import 'package:fiteatsmobile/user/payments.dart';
 import 'package:flutter/material.dart';
 
 import 'logout.dart';
@@ -42,15 +46,35 @@ class MenuDrawer extends StatelessWidget {
               ],
             ),
           ),
+
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            leading: Icon(Icons.food_bank),
+            title: Text('Payments'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()));
+                  MaterialPageRoute(builder: (context) => PaymentPage()));
             },
           ),
+          ListTile(
+            leading: Icon(Icons.food_bank),
+            title: Text('Offers'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => OffersPage()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.food_bank),
+            title: Text('Complains'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ComplaintPage()));
+            },
+          ),
+          
           ListTile(
             leading: Icon(Icons.food_bank),
             title: Text('Nutrigoals'),
@@ -68,7 +92,29 @@ class MenuDrawer extends StatelessWidget {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => RestaurantPage()));
             },
+
           ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Favourite'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FavouritePage()));
+            },
+          ),
+
+          
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Setings'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()));
+            },
+          ),
+
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Log out'),
@@ -78,6 +124,7 @@ class MenuDrawer extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => LogoutPage()));
             },
           ),
+          
         ],
       ),
     );

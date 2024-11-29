@@ -20,19 +20,20 @@ class NutriGoals extends StatelessWidget {
       ),
       body: Column(
         children: [
-         ClipPath(
-  clipper: BottomWaveClipper(),
-  child: Container(
-    height: MediaQuery.of(context).size.height * 0.4,
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/image/nutrigoals.jpg'), // Ensure the path is correct
-        fit: BoxFit.cover,
-      ),
-    ),
-  ),
-),
-
+          // Top Image Section
+          ClipPath(
+            clipper: BottomWaveClipper(),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/image/nutrigoals.jpg'), // Ensure the path is correct
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          // Navigation Grid Section
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -52,6 +53,12 @@ class NutriGoals extends StatelessWidget {
                     'Lose Weight',
                     Icons.fitness_center,
                     LoseWeightPage(),
+                  ),
+                  buildNavButton(
+                    context,
+                    'Meal Log',
+                    Icons.restaurant_menu,
+                    MealLogPage(),
                   ),
                   buildNavButton(
                     context,
@@ -78,7 +85,7 @@ class NutriGoals extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(16.0),
-        backgroundColor:  Colors.greenAccent, // Button color
+        backgroundColor: Colors.greenAccent, // Button color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -134,16 +141,6 @@ class BottomWaveClipper extends CustomClipper<Path> {
 }
 
 // Placeholder pages for navigation
-// class BMIAnalysisPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('BMI Analysis')),
-//       body: Center(child: Text('BMI Analysis Page')),
-//     );
-//   }
-// }
-
 class LoseWeightPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -154,15 +151,15 @@ class LoseWeightPage extends StatelessWidget {
   }
 }
 
-// class PersonalizePlanPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Personalize Plan')),
-//       body: Center(child: Text('Personalize Plan Page')),
-//     );
-//   }
-// }
+class MealLogPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Meal Log')),
+      body: Center(child: Text('Meal Log Page')),
+    );
+  }
+}
 
 class NutriQueriesPage extends StatelessWidget {
   @override
