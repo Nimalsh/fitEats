@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+ import React, { useState, useEffect } from 'react';
 import { Box, Button, Card, CardContent, Grid, Typography, IconButton,DialogTitle,Dialog,DialogContent,DialogContentText,DialogActions,TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { getPlanData, getMealStatus,updateMealStatus, countCompletedMeals  } from '../State/Plan/Action';
 import { getRequestByPlanId } from '../State/Requests/Action'; // Import the action
 import { ContactMailOutlined } from '@mui/icons-material';
+import { completeRequestByPlanId ,updateAchievedWeight} from '../State/Requests/Action';
 
 const Mealprogress = () => {
   const navigate = useNavigate();
@@ -92,16 +93,42 @@ const Mealprogress = () => {
   }, [mealStatus]);
 
   useEffect(() => {
+    if (requestData?.achivedweight) {
+      setCurrentWeight(requestData.achivedweight);
+    }
+  }, [requestData]);
+
+  useEffect(() => {
     setProgress((completedCount / (3 * duration)) * 100); 
     console.log("progress",progress)
   }, [completedCount, duration]);
 
+ 
   const handleDialogSubmit = () => {
-    // Here you can dispatch an action if needed, but primarily this will close the dialog
-    setCurrentWeight(currentWeight); // Set the currentWeight state
+    // Dispatch the action to update the achieved weight
+    dispatch(updateAchievedWeight(planId, currentWeight, token))
+      .then(() => {
+        // After successfully updating the weight, complete the request
+        return dispatch(completeRequestByPlanId(planId, token));
+      })
+      .then(() => {
+        // Fetch the updated request data
+        return dispatch(getRequestByPlanId(planId, token));
+      })
+      .then(() => {
+        // Update currentWeight with the latest achievedWeight
+        if (requestData?.achivedweight) {
+          setCurrentWeight(requestData.achivedweight);
+        }
+      })
+      .catch(error => console.error("Error during the flow:", error));
+    
     setOpenDialog(false);
   };
-  console.log("CurrentWeight",currentWeight);
+
+  
+  
+ 
   const handleCompleteClick = () => {
     const completedMeals = Object.keys(checkedMeals).filter(mealType => checkedMeals[mealType]);
   
@@ -186,18 +213,19 @@ const Mealprogress = () => {
             {renderMealCard('Lunch', planData.lunch)}
             {renderMealCard('Dinner', planData.dinner)}
             <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#A09E0E',
-                color: '#fff',
-                width: '100%',
-                borderRadius: '8px',
-                marginTop: '20px'
-              }}
-              onClick={handleCompleteClick}
-            >
-              COMPLETED
-            </Button>
+          variant="contained"
+          sx={{
+            backgroundColor: requestData?.status === 'Completed' ? '#B0B0B0' : '#A09E0E', // Grey out when disabled
+            color: '#fff',
+            width: '100%',
+            borderRadius: '8px',
+            marginTop: '20px',
+          }}
+          disabled={requestData?.status === 'Finished'} // Disable button if status is 'Completed'
+          onClick={handleCompleteClick}
+        >
+          COMPLETED
+        </Button>
           </Card>
         </Grid>
 
@@ -254,6 +282,8 @@ const Mealprogress = () => {
                   />
                 </div>
               </Box>
+              {requestData?.status === 'Finished' && (
+                <>
               <Typography variant="h6" sx={{ marginTop: '50px' }}>Weight Loss Progress</Typography>
 
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%', marginTop: '30px' }}>
@@ -269,6 +299,8 @@ const Mealprogress = () => {
                   />
                 </div>
               </Box>
+              </>
+              )}
             </CardContent>
           </Card>
         </Grid>

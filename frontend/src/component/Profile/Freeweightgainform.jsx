@@ -3,12 +3,48 @@ import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, Radi
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createRequest } from '../State/Autoplans/Action';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
-const Freeweightgainform = () => {
+const Freeweightlossform = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleProceed = () => {
+    const token = localStorage.getItem('jwt'); // Or wherever your token is stored
+    
+    // Create a requestData object with all the form data
+    const requestData = {
+      title: "Weight loss", // Example static title, replace if needed
+      status: "Pending",
+      currentWeight: parseFloat(currentWeight) || 0,
+      weightGoal: parseFloat(targetWeightLoss) || 0,
+      duration: parseInt(duration) || 0,
+      age: parseInt(age) || 0,
+      height: parseFloat(height) || 0,
+      gender: gender,
+      dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
+      dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
+      activityLevel: activityLevel,
+      mealsPerDay: parseInt(mealsPerDay) || 0
+    };
+  
+    // Dispatch the createRequest action with requestData and token
+    dispatch(createRequest(requestData, token))
+    .then(() => {
+      // Navigate to another page upon successful request creation
+      navigate('/my-profile/mm'); // Adjust the path as needed
+    })
+    .catch((error) => {
+      console.error("Error creating request", error);
+      // Handle errors if needed
+    });
+  };
+  
+
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -69,30 +105,28 @@ const Freeweightgainform = () => {
   };
 
   // Generate chart data based on input
- // Generate chart data based on input
-const generateChartData = () => {
+  const generateChartData = () => {
     const currentWeightNum = parseFloat(currentWeight) || 0;
-    const targetWeightGainNum = parseFloat(targetWeightLoss) || 0; // Changed variable name to targetWeightGain
+    const targetWeightLossNum = parseFloat(targetWeightLoss) || 0;
     const durationNum = parseFloat(duration) || 0;
-  
+
     const labels = Array.from({ length: durationNum }, (_, i) => `Week ${i + 1}`);
-    const weightGainPerWeek = targetWeightGainNum / durationNum;
-    const weightGainData = Array.from({ length: durationNum }, (_, i) => currentWeightNum + (weightGainPerWeek * (i + 1)));
-  
+    const weightLossPerWeek = targetWeightLossNum / durationNum;
+    const weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - (weightLossPerWeek * (i + 1)));
+
     return {
       labels,
       datasets: [
         {
           label: 'Weight (kg)',
-          data: [currentWeightNum, ...weightGainData],
-          borderColor: 'rgba(34, 139, 34, 1)', // Changed to green
-        backgroundColor: 'rgba(34, 139, 34, 0.2)', // Changed to green
+          data: [currentWeightNum, ...weightLossData],
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
           fill: true,
         },
       ],
     };
   };
-  
 
   const data = generateChartData();
 
@@ -123,51 +157,50 @@ const generateChartData = () => {
       <Grid container spacing={3}>
         {/* Left Tile */}
         <Grid item xs={12} sm={6}>
-  <Box mt={5} ml={-1}>
-    <Paper style={{ padding: 20 }}>
-      <Typography variant="h6" gutterBottom>
-        Weight Gain Plan
-      </Typography>
-      <form noValidate autoComplete="off">
-        <TextField
-          label="Current Weight (kg)"
-          fullWidth
-          margin="normal"
-          type="number"
-          name="currentWeight"
-          value={currentWeight}
-          onChange={handleInputChange}
-        />
-        <TextField
-          label="Weight Gain (kg)" // Changed label to "Weight Gain"
-          fullWidth
-          margin="normal"
-          type="number"
-          name="targetWeightLoss" // Consider renaming this to targetWeightGain for consistency
-          value={targetWeightLoss}
-          onChange={handleInputChange}
-        />
-        <TextField
-          label="Duration (weeks)"
-          fullWidth
-          margin="normal"
-          type="number"
-          name="duration"
-          value={duration}
-          onChange={handleInputChange}
-        />
-      </form>
-      {/* Chart Component */}
-      <Box mt={3}>
-        <Typography variant="h6" gutterBottom>
-          Weight Gain and Duration Chart // Changed label to "Weight Gain"
-        </Typography>
-        <Line data={generateChartData()} options={options} />
-      </Box>
-    </Paper>
-  </Box>
-</Grid>
-
+          <Box mt={5} ml={-1}>
+            <Paper style={{ padding: 20 }}>
+              <Typography variant="h6" gutterBottom>
+                Weight Loss Plan
+              </Typography>
+              <form noValidate autoComplete="off">
+                <TextField
+                  label="Current Weight (kg)"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="currentWeight"
+                  value={currentWeight}
+                  onChange={handleInputChange}
+                />
+                <TextField
+                  label="Weight Loss (kg)"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="targetWeightLoss"
+                  value={targetWeightLoss}
+                  onChange={handleInputChange}
+                />
+                <TextField
+                  label="Duration (weeks)"
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  name="duration"
+                  value={duration}
+                  onChange={handleInputChange}
+                />
+              </form>
+              {/* Chart Component */}
+              <Box mt={3}>
+                <Typography variant="h6" gutterBottom>
+                  Weight Loss and Duration Chart
+                </Typography>
+                <Line data={data} options={options} />
+              </Box>
+            </Paper>
+          </Box>
+        </Grid>
         {/* Right Tile */}
         <Grid item xs={12} sm={4}>
           <Box mt={5} width={'550px'} marginLeft={'3px'}>
@@ -232,16 +265,16 @@ const generateChartData = () => {
           <FormControlLabel value="sedentary" control={<Radio />} label="Sedentary" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="lightlyActive" control={<Radio />} label="Lightly Active" />
+          <FormControlLabel value="light" control={<Radio />} label="Lightly Active" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="moderatelyActive" control={<Radio />} label="Moderately Active" />
+          <FormControlLabel value="moderate" control={<Radio />} label="Moderately Active" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="veryActive" control={<Radio />} label="Very Active" />
+          <FormControlLabel value="active" control={<Radio />} label="Very Active" />
         </Grid>
         <Grid item xs={6} sm={4}>
-          <FormControlLabel value="superActive" control={<Radio />} label="Super Active" />
+          <FormControlLabel value="very active" control={<Radio />} label="Super Active" />
         </Grid>
       </Grid>
     </RadioGroup>
@@ -256,9 +289,9 @@ const generateChartData = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={dietaryPreferences.includes('vegetarian')}
+              checked={dietaryPreferences.includes('balanced')}
               onChange={(e) => handleCheckboxChange(e, 'preferences')}
-              name="vegetarian"
+              name="Balanced"
             />
           }
           label="Vegetarian"
@@ -489,16 +522,17 @@ const generateChartData = () => {
         />
       </Grid>
       <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('halal')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="halal"
-            />
-          }
-          label="Halal"
-        />
+      <FormControlLabel
+  control={
+    <Checkbox
+      checked={dietaryRestrictions.includes('halal')}
+      onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+      name="halal"
+    />
+  }
+  label="Halal"
+/>
+
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
@@ -537,7 +571,7 @@ const generateChartData = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                  onClick={() => navigate('/my-profile/personalized-plan/view')}  >
+                  onClick={handleProceed}  >
                   Proceed
                 </Button>
               </Grid>
@@ -549,4 +583,4 @@ const generateChartData = () => {
   );
 };
 
-export default Freeweightgainform;
+export default Freeweightlossform;

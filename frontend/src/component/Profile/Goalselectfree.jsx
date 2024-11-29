@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, Typography, Grid, Box, ButtonBase, Tabs, Tab } from '@mui/material';
 import diet from './diet.png';
 import { useNavigate } from 'react-router-dom';
-import  Plans from './Plans';
+import  Plans from './Freegainedplans';
 
 const Goalselectfree = () => {
     const navigate = useNavigate();
