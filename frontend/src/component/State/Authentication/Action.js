@@ -85,4 +85,27 @@ export const logout=()=>async(dispatch)=>{
   }catch(error){
     console.log("error",error)
   }
-}
+};
+
+export const updateProfile = (formData, navigate) => async (dispatch) => {
+  dispatch({ type: "UPDATE_PROFILE_REQUEST" });
+
+  try {
+    const jwt = localStorage.getItem("jwt");
+    const { data } = await axios.put(
+      `${API_URL}/api/users/profile`,
+      formData,
+      {
+        headers: { Authorization: `Bearer ${jwt}` },
+      }
+    );
+
+    dispatch({ type: "UPDATE_PROFILE_SUCCESS", payload: data });
+    navigate("/my-profile/dashboard");
+  } catch (error) {
+    dispatch({
+      type: "UPDATE_PROFILE_FAILURE",
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};

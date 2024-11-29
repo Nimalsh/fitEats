@@ -74,6 +74,16 @@ export const authReducer = (state = initialState, action) => {
         success: null,
       };
 
+      case "UPDATE_PROFILE_REQUEST":
+  return { ...state, isLoading: true, error: null };
+
+case "UPDATE_PROFILE_SUCCESS":
+  return { ...state, isLoading: false, user: action.payload, success: "Profile updated successfully!" };
+
+case "UPDATE_PROFILE_FAILURE":
+  return { ...state, isLoading: false, error: action.payload };
+
+
     default:
       return state;
   }
