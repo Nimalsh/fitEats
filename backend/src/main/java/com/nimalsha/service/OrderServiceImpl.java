@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import com.nimalsha.dto.OrderDTO;
 import com.nimalsha.dto.OrderItemDTO;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,8 @@ import com.nimalsha.repository.OrderItemRepository;
 import com.nimalsha.repository.OrderRepository;
 import com.nimalsha.repository.UserRepository;
 import com.nimalsha.request.OrderRequest;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -86,10 +87,13 @@ public class OrderServiceImpl implements OrderService {
             System.out.println("Adding item: " + cartItem.getFood().getName() + ", Quantity: " + cartItem.getQuantity());
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
-            orderItem.setIngredients(cartItem.getIngredients());
+            orderItem.setIngredients(cartItem.getIngredients()); // Set ingredients from CartItem
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
             orderItem.setOrder(createdOrder); // Set the relationship
+
+            // Log ingredients for this OrderItem
+            System.out.println("OrderItem Ingredients: " + orderItem.getIngredients());
 
             orderItems.add(orderItem);
         }
@@ -124,13 +128,20 @@ public class OrderServiceImpl implements OrderService {
 
         // Map orders to OrderDTO
         return orders.stream().map(order -> {
-            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
-                new OrderItemDTO(
+            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> {
+                // Log the ingredients of each order item
+                System.out.println("OrderItem Ingredients: " + item.getIngredients());
+
+                // Use the ingredients directly from the OrderItem model
+                List<String> ingredients = item.getIngredients();
+
+                return new OrderItemDTO(
                     item.getFood().getName(), 
                     item.getQuantity(), 
-                    item.getTotalPrice()
-                )
-            ).collect(Collectors.toList());
+                    item.getTotalPrice(),
+                    ingredients // Pass ingredients directly to DTO
+                );
+            }).collect(Collectors.toList());
 
             System.out.println("Mapped order ID " + order.getId() + " with " + itemDTOs.size() + " items.");
             
@@ -154,7 +165,14 @@ public class OrderServiceImpl implements OrderService {
         // Convert the list of orders to OrderDTOs
         return orders.stream().map(order -> {
             List<OrderItemDTO> itemDTOs = order.getItems().stream()
-                    .map(item -> new OrderItemDTO(item.getFood().getName(), item.getQuantity(), item.getTotalPrice()))
+                    .map(item -> {
+                        // Log the ingredients of each order item
+                        System.out.println("OrderItem Ingredients: " + item.getIngredients());
+
+                        // Use the ingredients directly from the OrderItem model
+                        List<String> ingredients = item.getIngredients();
+                        return new OrderItemDTO(item.getFood().getName(), item.getQuantity(), item.getTotalPrice(), ingredients);
+                    })
                     .collect(Collectors.toList());
 
             System.out.println("Mapped user order ID: " + order.getId());
