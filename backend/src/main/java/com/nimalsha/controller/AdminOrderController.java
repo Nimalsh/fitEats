@@ -48,15 +48,29 @@ public class AdminOrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    // New function to get restaurant-specific orders
+    // New function to get restaurant-specific orders along with customer details
     @GetMapping("/orders/{restaurantId}")
     public ResponseEntity<List<OrderDTO>> getRestaurantOrders(
             @PathVariable Long restaurantId,
             @RequestHeader("Authorization") String jwt) throws Exception {
 
         User user = userService.findUserByJwtToken(jwt); // Validating the JWT for user context.
-        List<OrderDTO> orders = orderService.getRestaurantOrders(restaurantId); // Fixed mapping error if any.
+        List<OrderDTO> orders = orderService.getRestaurantOrders(restaurantId); // Fetching restaurant orders.
+        
+        // Debugging log to confirm orders fetched
         System.out.println("Fetched orders from database: " + orders); 
+
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    // New function to get restaurant orders along with customer details (using the new service method)
+    @GetMapping("/orders/details/{restaurantId}")
+    public ResponseEntity<List<Order>> getRestaurantOrdersWithCustomer(
+            @PathVariable Long restaurantId,
+            @RequestHeader("Authorization") String jwt) throws Exception {
+
+        User user = userService.findUserByJwtToken(jwt); // Validating the JWT for user context.
+        List<Order> orders = orderService.getRestaurantOrdersWithCustomer(restaurantId); // Fetch orders with customer details.
 
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }

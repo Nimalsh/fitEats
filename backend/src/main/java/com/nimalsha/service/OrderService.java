@@ -7,21 +7,23 @@ import com.nimalsha.model.Order;
 import com.nimalsha.model.User;
 import com.nimalsha.request.OrderRequest;
 
-public interface
-OrderService {
+public interface OrderService {
 
-    public Order createOrder(OrderRequest order, User user ) throws Exception;
+    public Order createOrder(OrderRequest order, User user) throws Exception;
 
     public Order updateOrder(Long orderId, String orderStatus) throws Exception;
 
     public void cancleOder(Long orderId) throws Exception;
 
-    public List<OrderDTO> getUsersOrder (Long userId) throws Exception;
+    public List<OrderDTO> getUsersOrder(Long userId) throws Exception;
 
     public List<Order> getRestaurantOrder(Long restaurantId, String oderStatus) throws Exception;
 
     public Order findOrderById(Long orderId) throws Exception;
 
     public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception;
-    
+
+    // Added a new method to fetch orders with customer details
+    public List<Order> getRestaurantOrdersWithCustomer(Long restaurantId) throws Exception; // Added this method
+
 }
