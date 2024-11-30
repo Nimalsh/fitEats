@@ -1,7 +1,7 @@
 
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'user/getstart.dart';
+import 'screens/getstart.dart';
 
 void main() =>runApp(
       DevicePreview(

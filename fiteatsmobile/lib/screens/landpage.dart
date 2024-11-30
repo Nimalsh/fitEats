@@ -1,4 +1,4 @@
-import 'package:fiteatsmobile/user/personalizePlan.dart';
+import 'package:fiteatsmobile/screens/personalizePlan.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'myorder.dart'; // Import the MyOrdersPage

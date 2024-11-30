@@ -1,7 +1,7 @@
-import 'package:fiteatsmobile/user/Favourite.dart';
-import 'package:fiteatsmobile/user/complaint.dart';
-import 'package:fiteatsmobile/user/offers.dart';
-import 'package:fiteatsmobile/user/payments.dart';
+import 'package:fiteatsmobile/screens/Favourite.dart';
+import 'package:fiteatsmobile/screens/complaint.dart';
+import 'package:fiteatsmobile/screens/offers.dart';
+import 'package:fiteatsmobile/screens/payments.dart';
 import 'package:flutter/material.dart';
 
 import 'logout.dart';
