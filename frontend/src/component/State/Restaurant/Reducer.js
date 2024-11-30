@@ -22,13 +22,21 @@ const restaurantReducer = (state = initialState, action) => {
     case actionTypes.GET_RESTAURANT_BY_ID_REQUEST:
     case actionTypes.CREATE_CATEGORY_REQUEST:
     case actionTypes.GET_RESTAURANTS_CATEGORY_REQUEST:
-    case actionTypes.GET_FOOD_ITEMS_BY_CATEGORY_REQUEST:  
+    case actionTypes.GET_FOOD_ITEMS_BY_CATEGORY_REQUEST:
+    // case actionTypes.GET_ALL_EVENTS_REQUEST:  
       return {
         ...state,
         loading: true,
         error: null,
       };
-
+      case actionTypes.GET_RESTAURANT_BY_ID_SUCCESS:
+        console.log("Reducer received restaurant details:", action.payload);
+        return {
+          ...state,
+          loading: false,
+          restaurant: action.payload,
+        };
+      
     case actionTypes.CREATE_RESTAURANT_SUCCESS:
       return {
         ...state,
@@ -88,12 +96,12 @@ const restaurantReducer = (state = initialState, action) => {
         restaurantsEvents: [...state.restaurantsEvents, action.payload],
       };
 
-    case actionTypes.GET_ALL_EVENTS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        events: action.payload,
-      };
+    // case actionTypes.GET_ALL_EVENTS_SUCCESS:
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     events: action.payload,
+    //   };
 
     case actionTypes.DELETE_EVENTS_SUCCESS:
       return {
