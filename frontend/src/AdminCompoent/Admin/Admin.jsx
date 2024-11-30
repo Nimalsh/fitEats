@@ -20,10 +20,11 @@ export const Admin = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Navbar />
+      {/* <Navbar /> */}
+      <p></p>
       <div style={{ display: 'flex', flexGrow: 1 }}>
         <AdminSideBar handleClose={handleClose} />
-        <div style={{ flexGrow: 1, padding: '20px', marginLeft: '20vw', marginTop: '0' }}>
+        <div style={{ flexGrow: 1, padding: '20px', marginTop: '0' }}>
           <Routes>
             <Route path='/' element={<Dashboard/>} />
             <Route path='/Users' element={<Users/>} />

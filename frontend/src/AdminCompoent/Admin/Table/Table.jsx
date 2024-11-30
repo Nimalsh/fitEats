@@ -2,35 +2,46 @@ import React, { useState } from "react";
 import { Table, Button, Input, Space, Popconfirm, Divider } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
-const AdminTable = ({title, columns, data }) => {
+const AdminTable = ({ title, columns, data, keyField = "id" }) => {
     const [searchText, setSearchText] = useState("");
-    const [blockedRestaurants, setBlockedRestaurants] = useState([]);
-    const [restaurants, setRestaurants] = useState(data);
+    const [blockedData, setBlockedData] = useState([]);
+    const [activeData, setActiveData] = useState(data);
 
     // Filter logic for search
-    const filteredData = restaurants.filter((item) =>
+    const filteredData = activeData.filter((item) =>
         Object.values(item).some((value) =>
             String(value).toLowerCase().includes(searchText.toLowerCase())
         )
     );
 
-    // Block and Unblock Logic
-    const handleBlock = (id) => {
-        const restaurantToBlock = restaurants.find((item) => item.id === id);
-        setBlockedRestaurants([...blockedRestaurants, { ...restaurantToBlock, blockedDate: new Date().toLocaleDateString() }]);
-        setRestaurants(restaurants.filter((item) => item.id !== id));
+    // Block logic using keyField
+    const handleBlock = (keyValue) => {
+        const itemToBlock = activeData.find((item) => item[keyField] === keyValue);
+        if (itemToBlock) {
+            setBlockedData([
+                ...blockedData,
+                { ...itemToBlock, blockedDate: new Date().toLocaleDateString() },
+            ]);
+            setActiveData(activeData.filter((item) => item[keyField] !== keyValue));
+        }
     };
 
-    const handleUnblock = (id) => {
-        const restaurantToUnblock = blockedRestaurants.find((item) => item.id === id);
-        setRestaurants([...restaurants, { ...restaurantToUnblock, blockedDate: null }]);
-        setBlockedRestaurants(blockedRestaurants.filter((item) => item.id !== id));
+    // Unblock logic using keyField
+    const handleUnblock = (keyValue) => {
+        const itemToUnblock = blockedData.find((item) => item[keyField] === keyValue);
+        if (itemToUnblock) {
+            setActiveData([
+                ...activeData,
+                { ...itemToUnblock, blockedDate: null },
+            ]);
+            setBlockedData(blockedData.filter((item) => item[keyField] !== keyValue));
+        }
     };
 
     return (
         <Space direction="vertical" style={{ width: "100%" }}>
             <Input
-                placeholder="Search ..."
+                placeholder={`Search ${title}...`}
                 prefix={<SearchOutlined />}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
@@ -47,8 +58,8 @@ const AdminTable = ({title, columns, data }) => {
                         key: "actions",
                         render: (text, record) => (
                             <Popconfirm
-                                title="Are you sure to block?"
-                                onConfirm={() => handleBlock(record.id)}
+                                title={`Are you sure to block this ${title.toLowerCase()}?`}
+                                onConfirm={() => handleBlock(record[keyField])}
                                 okText="Yes"
                                 cancelText="No"
                             >
@@ -59,13 +70,13 @@ const AdminTable = ({title, columns, data }) => {
                         ),
                     },
                 ]}
-                rowKey="id"
+                rowKey={keyField}
                 pagination={{ pageSize: 5 }}
             />
 
             <Divider orientation="left">Blocked {title}</Divider>
             <Table
-                dataSource={blockedRestaurants}
+                dataSource={blockedData}
                 columns={[
                     ...columns,
                     {
@@ -78,8 +89,8 @@ const AdminTable = ({title, columns, data }) => {
                         key: "actions",
                         render: (text, record) => (
                             <Popconfirm
-                                title="Are you sure to unblock?"
-                                onConfirm={() => handleUnblock(record.id)}
+                                title={`Are you sure to unblock this ${title.toLowerCase()}?`}
+                                onConfirm={() => handleUnblock(record[keyField])}
                                 okText="Yes"
                                 cancelText="No"
                             >
@@ -88,7 +99,7 @@ const AdminTable = ({title, columns, data }) => {
                         ),
                     },
                 ]}
-                rowKey="id"
+                rowKey={keyField}
                 pagination={{ pageSize: 5 }}
             />
         </Space>
