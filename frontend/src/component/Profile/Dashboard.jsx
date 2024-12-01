@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Line, Pie } from 'react-chartjs-2';
 import { Card, Typography, Container, Grid, Paper, List, ListItem, ListItemText, Table, TableBody, TableRow, TableCell, TableHead, Button } from '@mui/material';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement } from 'chart.js';
@@ -7,11 +7,25 @@ import MealIcon from '@mui/icons-material/Restaurant';
 import { AccountCircle } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsersOrders } from '../State/Order/Action';
 
 // Register Chart.js components
-ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
+ ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
 
 const Dashboard = () => {
+  
+  const dispatch = useDispatch();
+  const { orders } = useSelector((state) => state.order); // Assuming orders come from Redux state
+  const jwt = localStorage.getItem("jwt");
+  useEffect(() => {
+    if (jwt) dispatch(getUsersOrders(jwt));
+  }, [dispatch, jwt]);
+
+  // Get the last three orders
+  const recentOrders = orders.slice(-3);
+   // Retrieve user data from Redux state
+   const { user } = useSelector((state) => state.auth);
   // Dummy data for charts and tables
   const userProgressData = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
@@ -140,11 +154,6 @@ const Dashboard = () => {
     maintainAspectRatio: false,
   };
 
-  const recentOrders = [
-    { id: 1, date: '2024-07-01', items: ['Burger', 'Fries'], totalCalories: 1200 },
-    { id: 2, date: '2024-07-02', items: ['Salad', 'Juice'], totalCalories: 600 },
-    { id: 3, date: '2024-07-03', items: ['Pizza', 'Soda'], totalCalories: 1500 },
-  ];
 
   const mealPlan = [
     { id: 1, name: 'Breakfast: Oatmeal', calories: 300 },
@@ -227,27 +236,39 @@ const Dashboard = () => {
 
             {/* Recent Orders */}
             <Grid item xs={12}>
-              <Paper style={{ padding: '10px', backgroundColor: '#181816' }}>
-                <Typography variant="h6" style={{ color: '#979533' }}>Recent Orders</Typography>
-                <Table>
-                  <TableHead>
-                    <TableRow style={{ backgroundColor: '#333' }}>
-                      <TableCell style={{ color: '#fff' }}>Date</TableCell>
-                      <TableCell style={{ color: '#fff' }}>Items</TableCell>
-                      <TableCell style={{ color: '#fff' }}>Total Calories</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {recentOrders.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell style={{ color: '#fff' }}>{order.date}</TableCell>
-                        <TableCell style={{ color: '#fff' }}>{order.items.join(', ')}</TableCell>
-                        <TableCell style={{ color: '#fff' }}>{order.totalCalories} Calories</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Paper>
+            <Paper style={{ padding: '10px', backgroundColor: '#181816', color: '#fff' }}>
+        <Typography variant="h6" style={{ color: '#979533' }}>Recent Orders</Typography>
+        <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Order No</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Total Price</TableCell>
+            <TableCell>Items</TableCell>
+          </TableRow>
+        </TableHead>
+          <TableBody>
+          {recentOrders.map((order) => (
+            <TableRow key={order.id}>
+              <TableCell>{order.id}</TableCell>
+              <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+              <TableCell>{order.orderStatus}</TableCell>
+              <TableCell>${(order.totalPrice / 100).toFixed(2)}</TableCell>
+              <TableCell>
+                <ul>
+                  {order.items.map((item) => (
+                    <li key={item.foodName}>
+                      {item.foodName} (x{item.quantity}) - ${((item.totalPrice / 100).toFixed(2))}
+                    </li>
+                  ))}
+                </ul>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        </Table>
+      </Paper>
             </Grid>
           </Grid>
         </Grid>
@@ -256,11 +277,23 @@ const Dashboard = () => {
         <Grid item xs={12} sm={3}>
           <Paper style={{ padding: '10px', backgroundColor: '#181816', color: '#fff', marginBottom: '10px' }}>
             <Typography variant="h6" style={{ marginBottom: '10px', color: '#979533' }}>Profile</Typography>
-            <Card style={{ backgroundColor: '#424242', marginBottom: '10px', display: 'flex', alignItems: 'center', padding: '10px' }}>
+            <Card
+              style={{
+                backgroundColor: '#424242',
+                marginBottom: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '10px',
+              }}
+            >
               <AccountCircle style={{ marginRight: '10px', fontSize: 40, color: '#fff' }} />
               <div>
-                <Typography variant="h6" style={{ color: '#fff' }}>Nimalsha</Typography>
-                <Typography variant="body1" style={{ color: '#fff' }}>nimalsha@example.com</Typography>
+                <Typography variant="h6" style={{ color: '#fff' }}>
+                  {user?.fullName || 'Name Not Available'}
+                </Typography>
+                <Typography variant="body1" style={{ color: '#fff' }}>
+                  {user?.email || 'Email Not Available'}
+                </Typography>
               </div>
             </Card>
             <Typography variant="h6" style={{ marginBottom: '10px', color: '#979533' }}>Today's Meal Plan</Typography>
