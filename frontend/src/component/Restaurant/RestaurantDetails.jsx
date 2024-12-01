@@ -26,6 +26,7 @@ const RestaurantDetails = () => {
   const { id, city } = useParams();
 
   useEffect(() => {
+    console.log("Fetching restaurant details for ID:", id);
     // Load restaurant details and categories on component mount
     dispatch(getRestaurantById({ jwt, restaurantId: id }));
     dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
