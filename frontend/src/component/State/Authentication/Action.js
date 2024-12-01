@@ -60,21 +60,34 @@ export const getUser=(jwt)=>async(dispatch)=>{
     console.log("error",error)
   }
 }
+export const addToFavorites = (restaurantId) => async (dispatch) => {
+  const jwt = localStorage.getItem('jwt');  // Get JWT token from local storage
 
-export const addToFavorites = ({ jwt, restaurantId }) => async (dispatch) => {
-  dispatch({ type: ADD_TO_FAVOURITE_REQUEST });
+  dispatch({ type: 'ADD_TO_FAVOURITE_REQUEST' });
+
   try {
-    const { data } = await axios.put(`/api/restaurants/${restaurantId}/add-favorites`, {}, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
-    dispatch({ type: ADD_TO_FAVOURITE_SUCCESS, payload: data });
+      // Send a PUT request to add the restaurant to favorites
+      const { data } = await axios.put(
+          `/api/restaurant/${restaurantId}/add-favorites`, // Correct URL format
+          {},  // No body needed for this request
+          {
+              headers: {
+                  Authorization: `Bearer ${jwt}`,  // Add the JWT token to the Authorization header
+              },
+          }
+      );
+
+      // Dispatch the success action with the updated restaurant data
+      dispatch({ type: 'ADD_TO_FAVOURITE_SUCCESS', payload: data });
   } catch (error) {
-    dispatch({ type: ADD_TO_FAVOURITE_FAILURE, payload: error });
-    console.error("error", error);
+      // Dispatch the failure action if there's an error
+      dispatch({
+          type: 'ADD_TO_FAVOURITE_FAILURE',
+          payload: error.response?.data || error.message,
+      });
   }
 };
+
 
 export const logout=()=>async(dispatch)=>{
   try{
