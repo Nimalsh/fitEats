@@ -1,90 +1,106 @@
-import { AttachMoney, Dashboard, DeliveryDining, FoodBank, Healing, HealthAndSafety, Money, Person, ShoppingBag, TranscribeSharp } from '@mui/icons-material';  
-import LogoutIcon from '@mui/icons-material/Logout'; 
-import { Divider, Drawer, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {
+  DashboardOutlined,
+  UserOutlined,
+  ShopOutlined,
+  SafetyOutlined,
+  CarOutlined,
+  DollarOutlined,
+  ShoppingCartOutlined,
+  HistoryOutlined,
+  LogoutOutlined,
+  AppstoreAddOutlined,
+} from '@ant-design/icons';
+import { Menu, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../component/State/Authentication/Action';
 
-const menu = [
-  { title: "System", icon: <Dashboard />, path: "/" },
-  { title: "Users", icon: <Person />, path: "/Users" }, 
-  { title: "Resturants", icon: <FoodBank />, path: "/Resturants" },
-  { title: "Nutritionist", icon: <HealthAndSafety />, path: "/Nutritionist" }, 
-  { title: "Delivery Driver", icon: <DeliveryDining />, path: "/DeliveryDriver" },
-  { title: "Transactions", icon: <AttachMoney />, path: "/Transactions" }, 
-  { title: "Complains", icon: <ShoppingBag />, path: "/complains" },
-  { title: "User Approvals", icon: <ShoppingBag />, path: "/UserApprovals" }, 
-  { title: "Order History", icon: <ShoppingBag />, path: "/OrderHistory" }, 
-  { title: "Nutritionist Channeling", icon: <ShoppingBag />, path: "/NutritionistChanneling" }, 
-  { title: "Logout", icon: <LogoutIcon />, path: "/" },
+const { Sider } = Layout;
+
+const menuItems = [
+  { key: '/', label: 'System', icon: <DashboardOutlined /> },
+  { key: '/Users', label: 'Users', icon: <UserOutlined /> },
+  { key: '/Resturants', label: 'Restaurants', icon: <ShopOutlined /> },
+  { key: '/Nutritionist', label: 'Nutritionist', icon: <SafetyOutlined /> },
+  { key: '/DeliveryDriver', label: 'Delivery Driver', icon: <CarOutlined /> },
+  { key: '/Transactions', label: 'Transactions', icon: <DollarOutlined /> },
+  { key: '/complains', label: 'Complains', icon: <ShoppingCartOutlined /> },
+  { key: '/UserApprovals', label: 'User Approvals', icon: <AppstoreAddOutlined /> },
+  { key: '/OrderHistory', label: 'Order History', icon: <HistoryOutlined /> },
+  { key: '/NutritionistChanneling', label: 'Nutritionist Channeling', icon: <ShoppingCartOutlined /> },
+  { key: 'logout', label: 'Logout', icon: <LogoutOutlined /> },
 ];
 
 export const AdminSideBar = ({ handleClose }) => {
-  const isSmallScreen = useMediaQuery("(max-width:1080px)");
+  const [activeKey, setActiveKey] = useState('/');
   const navigate = useNavigate();
-  const [hoverIndex, setHoverIndex] = useState(null);
   const dispatch = useDispatch();
 
-  const handleNavigate = (item) => {
-    navigate(`/admin/admin${item.path}`);
-    if(item.title === "Logout") {
-      navigate("/")
-      dispatch(logout())
-      handleClose()
+  const handleMenuClick = ({ key }) => {
+    if (key === 'logout') {
+      dispatch(logout());
+      navigate('/');
+      handleClose && handleClose();
+    } else {
+      setActiveKey(key);
+      navigate(`/admin/admin${key}`);
+      handleClose && handleClose();
     }
   };
 
   return (
-    <div>
-      <Drawer
-        variant={isSmallScreen ? "temporary" : "permanent"}
-        onClose={handleClose}
-        open={true}
-        anchor='left'
-        sx={{ zIndex: 1 }}
-      >
-        <div style={{
-          width: isSmallScreen ? '70vw' : '20vw',
-          height: '100vh',
+    <Sider
+      width={350} // Increased width for a bigger sidebar
+      collapsible
+      breakpoint="lg"
+      collapsedWidth={120} // Increased collapsed width for larger icon area
+      style={{
+        height: '100vh',
+        backgroundColor: 'black',
+        color: 'white',
+        boxShadow: '2px 4px 10px rgba(0, 0, 0, 0.3)',
+      }}
+    >
+      <div
+        style={{
+          height: '80px', // Bigger area for the logo/branding section
+          margin: '16px',
+          background: 'rgba(255, 255, 255, 0.2)',
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '1.25rem',
-          backgroundColor: 'black', // Background color changed to black
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
-        }}>
- 
-          {menu.map((item, i) => (
-            <React.Fragment key={i}>
-              <div
-                onClick={() => handleNavigate(item)}
-                onMouseEnter={() => setHoverIndex(i)}
-                onMouseLeave={() => setHoverIndex(null)}
-                style={{
-                  padding: '15px 20px',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  cursor: 'pointer',
-                  gap: '20px',
-                  color: 'white',
-                  borderRadius: '10px',
-                  margin: '5px',
-                  backgroundColor: hoverIndex === i ? '#696969' : 'black', // Hover color changed to dark grey
-                  transition: 'background-color 0.3s',
-                }}
-                className={`sidebar-item ${i === menu.length - 1 ? 'active' : ''}`}
-              >
-                {item.icon}
-                <span>{item.title}</span>
-              </div>
-              {i !== menu.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
-        </div>
-      </Drawer>
-    </div>
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: 'white',
+        }}
+      >
+        Admin Panel
+      </div>
+      <Menu
+        theme="dark"
+        mode="inline"
+        selectedKeys={[activeKey]}
+        onClick={handleMenuClick}
+        style={{
+          backgroundColor: 'black',
+          color: 'white',
+          fontSize: '20px', // Larger font size for menu items
+        }}
+        items={menuItems.map((item) => ({
+          key: item.key,
+          icon: React.cloneElement(item.icon, { style: { fontSize: '28px' } }), // Bigger icons
+          label: item.label,
+          style: {
+            backgroundColor: activeKey === item.key ? '#696969' : 'black',
+            color: 'white',
+            padding: '20px 30px', // Increased padding for larger clickable areas
+            margin: '10px 0', // Added margin between items
+            borderRadius: '10px', // Rounded corners
+            transition: 'background-color 0.3s',
+          },
+        }))}
+      />
+    </Sider>
   );
 };
-
-
