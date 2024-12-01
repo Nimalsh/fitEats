@@ -82,7 +82,7 @@ export const IncomeReport = () => {
   return (
     <Box sx={{ padding: 3 }}>
       <Card sx={{ maxWidth: 800, margin: "auto", padding: 2 }} ref={reportRef}>
-        {/* Ref wraps the entire content */} 
+        {/* Ref wraps the entire content */}
         <CardHeader title="Income Report" />
         <CardContent>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -146,23 +146,23 @@ export const IncomeReport = () => {
       </Card>
       {reportData && (
         <Button
-variant="contained"
-sx={{
-  justifyContent: "center", 
-  marginLeft: "45%",
-  marginTop: "2%",
-  padding: "10px 20px",
-  fontSize: "16px",
-  fontWeight: "bold",
-  background: "#95CD41",
-  "&:hover": {
-    background: "#7baf30",
-  },
-}}
-onClick={handleDownload}
->
-<FaDownload /> Download
-</Button>
+          variant="contained"
+          sx={{
+            justifyContent: "center",
+            marginLeft: "45%",
+            marginTop: "2%",
+            padding: "10px 20px",
+            fontSize: "16px",
+            fontWeight: "bold",
+            background: "#95CD41",
+            "&:hover": {
+              background: "#7baf30",
+            },
+          }}
+          onClick={handleDownload}
+        >
+          <FaDownload /> Download
+        </Button>
       )}
     </Box>
   );
