@@ -6,99 +6,94 @@ import {Segmented,  } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import { color } from '@mui/system';
 import { Table } from 'antd';
+import ReusableTable from '../Admin/Components/ReusableTable';
 
 const { Title } = Typography;
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    filters: [
-      {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Category 1',
-        value: 'Category 1',
-        children: [
-          {
-            text: 'Yellow',
-            value: 'Yellow',
-          },
-          {
-            text: 'Pink',
-            value: 'Pink',
-          },
-        ],
-      },
-      {
-        text: 'Category 2',
-        value: 'Category 2',
-        children: [
-          {
-            text: 'Green',
-            value: 'Green',
-          },
-          {
-            text: 'Black',
-            value: 'Black',
-          },
-        ],
-      },
-    ],
-    filterMode: 'tree',
-    filterSearch: true,
-    onFilter: (value, record) => record.name.includes(value),
-    width: '30%',
+    title: 'Order ID',
+    dataIndex: 'orderId',
+    key: 'orderId',
+    sorter: (a, b) => a.orderId.localeCompare(b.orderId),
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    sorter: (a, b) => a.age - b.age,
+    title: 'User ID',
+    dataIndex: 'userId',
+    key: 'userId',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.startsWith(value),
-    filterSearch: true,
-    width: '40%',
+    title: 'Restaurant ID',
+    dataIndex: 'restaurantId',
+    key: 'restaurantId',
+  },
+  {
+    title: 'Delivery Driver ID',
+    dataIndex: 'deliveryDriverId',
+    key: 'deliveryDriverId',
+  },
+  {
+    title: 'Order Date',
+    dataIndex: 'orderDate',
+    key: 'orderDate',
+    sorter: (a, b) => new Date(a.orderDate) - new Date(b.orderDate),
+  },
+  {
+    title: 'Transaction ID',
+    dataIndex: 'transactionId',
+    key: 'transactionId',
+  },
+  {
+    title: 'Transaction Amount',
+    dataIndex: 'transactionAmount',
+    key: 'transactionAmount',
+    render: (amount) => <span style={{ color: '#52c41a', fontWeight: 'bold' }}>{amount}</span>,
   },
 ];
-const data = [
+
+const pendingOrders = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    orderId: 'ORD001',
+    userId: 'USR001',
+    restaurantId: 'REST001',
+    deliveryDriverId: 'DRV001',
+    orderDate: '2023-11-01',
+    transactionId: 'TXN001',
+    transactionAmount: 'LKR 1200',
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
+    orderId: 'ORD002',
+    userId: 'USR002',
+    restaurantId: 'REST002',
+    deliveryDriverId: 'DRV002',
+    orderDate: '2023-11-02',
+    transactionId: 'TXN002',
+    transactionAmount: 'LKR 1500',
+  },
+];
+
+const completeOrders = [
+  {
+    key: '1',
+    orderId: 'ORD003',
+    userId: 'USR003',
+    restaurantId: 'REST003',
+    deliveryDriverId: 'DRV003',
+    orderDate: '2023-10-30',
+    transactionId: 'TXN003',
+    transactionAmount: 'LKR 2000',
   },
   {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
+    key: '2',
+    orderId: 'ORD004',
+    userId: 'USR004',
+    restaurantId: 'REST004',
+    deliveryDriverId: 'DRV004',
+    orderDate: '2023-10-29',
+    transactionId: 'TXN004',
+    transactionAmount: 'LKR 2500',
   },
 ];
 const onChange = (pagination, filters, sorter, extra) => {
@@ -108,20 +103,23 @@ const onChange = (pagination, filters, sorter, extra) => {
 export const OrderHistory = () => {
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Total Income for the Day"} value={"Rs.1,200"} change={"-31"} icon="WalletTwoTone"></StatCard>
-      <StatCard title={"Total Orders for the Day"} value={"Rs.12"} change={"-31"} icon="ShoppingCartOutlined"></StatCard>
-      <StatCard title={"Total Users"} value={"1200"} change={"-31"} icon="UserOutlined"></StatCard>
-      <StatCard title={"Total Resturants"} value={"Rs.12"} change={"-31"} icon="ShopOutlined"></StatCard>
       <Col
         xs={20}
-        md={12}
-        xl={16}
+        md={24}
+        xl={32}
       >
 
       <Card style={{ height: '100%' }}>
 
-      <Table columns={columns} dataSource={data} onChange={onChange} />
+      <div>
+        <h2>Pending Orders</h2>
+        <ReusableTable columns={columns} data={pendingOrders} />
+      </div>
 
+      <div>
+        <h2>Complete Orders</h2>
+        <ReusableTable columns={columns} data={completeOrders} />
+      </div>
         </Card>
         </Col>
 

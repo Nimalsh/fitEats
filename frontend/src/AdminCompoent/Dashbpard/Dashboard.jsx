@@ -5,6 +5,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import {Segmented,  } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import { color } from '@mui/system';
+import CustomLineChart from '../Admin/chart/chart';
 
 const { Title } = Typography;
 
@@ -20,10 +21,10 @@ const dishes = [
 export const Dashboard = () => {
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Total Income for the Day"} value={"Rs.1,200"} change={"-31"} icon="WalletTwoTone"></StatCard>
-      <StatCard title={"Total Orders for the Day"} value={"Rs.12"} change={"-31"} icon="ShoppingCartOutlined"></StatCard>
-      <StatCard title={"Total Users"} value={"1200"} change={"-31"} icon="UserOutlined"></StatCard>
-      <StatCard title={"Total Resturants"} value={"Rs.12"} change={"-31"} icon="ShopOutlined"></StatCard>
+      <StatCard title={"Total Income for the Day"} value={"Rs.1,200"} change={"10"} icon="WalletTwoTone"></StatCard>
+      <StatCard title={"Total Orders for the Day"} value={"Rs.12"} change={"22"} icon="ShoppingCartOutlined"></StatCard>
+      <StatCard title={"Total Users"} value={"1200"} change={"2"} icon="UserOutlined"></StatCard>
+      <StatCard title={"Total Resturants"} value={"Rs.12"} change={"-5"} icon="ShopOutlined"></StatCard>
 
       <Col
         xs={20}
@@ -48,17 +49,7 @@ export const Dashboard = () => {
             block={true}
             style={{ marginBottom: '20px' }}
           />
-          <LineChart
-            xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }]}
-            series={[
-              {
-                data: [2, 3, 5.5, 8.5, 1.5, 5, 1, 4, 3, 8],
-                showMark: ({ index }) => index % 2 === 0,
-              },
-            ]}
-            width={500}
-            height={300}
-          />
+          <CustomLineChart />
          
         </Card>
       </Col>
