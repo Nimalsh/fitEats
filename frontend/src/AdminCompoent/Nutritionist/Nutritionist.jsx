@@ -1,106 +1,80 @@
 import React from 'react'
 import { Card, Col, Row } from 'antd';
-import { Typography, List } from 'antd';
-import { LineChart } from '@mui/x-charts/LineChart';
-import {Segmented,  } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
-import { color } from '@mui/system';
 import { Table } from 'antd';
+import AdminTable from '../Admin/Table/Table';
 
-const { Title } = Typography;
+const nutritionistData = [
+  {
+    id: "N001",
+    name: "Dr. Ayesha Perera",
+    slmcRegistration: "SLMC12345",
+    email: "ayesha.perera@nutrition.lk",
+    contact: "0712345678",
+    signupDate: "2023-03-15",
+  },
+  {
+    id: "N002",
+    name: "Dr. Malith Silva",
+    slmcRegistration: "SLMC54321",
+    email: "malith.silva@nutrition.lk",
+    contact: "0723456789",
+    signupDate: "2023-06-12",
+  },
+  {
+    id: "N003",
+    name: "Dr. Nirosha Fernando",
+    slmcRegistration: "SLMC98765",
+    email: "nirosha.fernando@nutrition.lk",
+    contact: "0761234567",
+    signupDate: "2023-08-22",
+  },
+  {
+    id: "N004",
+    name: "Dr. Kusal Jayawardene",
+    slmcRegistration: "SLMC11223",
+    email: "kusal.jayawardene@nutrition.lk",
+    contact: "0776543210",
+    signupDate: "2023-09-05",
+  },
+  {
+    id: "N005",
+    name: "Dr. Shanika Rajapakse",
+    slmcRegistration: "SLMC33211",
+    email: "shanika.rajapakse@nutrition.lk",
+    contact: "0789876543",
+    signupDate: "2023-11-01",
+  },
+];
 
 const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    filters: [
-      {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Category 1',
-        value: 'Category 1',
-        children: [
-          {
-            text: 'Yellow',
-            value: 'Yellow',
-          },
-          {
-            text: 'Pink',
-            value: 'Pink',
-          },
-        ],
-      },
-      {
-        text: 'Category 2',
-        value: 'Category 2',
-        children: [
-          {
-            text: 'Green',
-            value: 'Green',
-          },
-          {
-            text: 'Black',
-            value: 'Black',
-          },
-        ],
-      },
-    ],
-    filterMode: 'tree',
-    filterSearch: true,
-    onFilter: (value, record) => record.name.includes(value),
-    width: '30%',
+    key: 'name',
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    sorter: (a, b) => a.age - b.age,
+    title: 'SLMC Registration',
+    dataIndex: 'slmcRegistration',
+    key: 'slmcRegistration',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.startsWith(value),
-    filterSearch: true,
-    width: '40%',
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
+  },
+  {
+    title: 'Contact',
+    dataIndex: 'contact',
+    key: 'contact',
+  },
+  {
+    title: 'Signup Date',
+    dataIndex: 'signupDate',
+    key: 'signupDate',
   },
 ];
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
+
 const onChange = (pagination, filters, sorter, extra) => {
   console.log('params', pagination, filters, sorter, extra);
 };
@@ -108,24 +82,19 @@ const onChange = (pagination, filters, sorter, extra) => {
 export const Nutritionist = () => {
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Total Income for the Day"} value={"Rs.1,200"} change={"-31"} icon="WalletTwoTone"></StatCard>
-      <StatCard title={"Total Orders for the Day"} value={"Rs.12"} change={"-31"} icon="ShoppingCartOutlined"></StatCard>
-      <StatCard title={"Total Users"} value={"1200"} change={"-31"} icon="UserOutlined"></StatCard>
-      <StatCard title={"Total Resturants"} value={"Rs.12"} change={"-31"} icon="ShopOutlined"></StatCard>
+      <StatCard title={"Nutritionist Count"} value={"5"} change={"-1"} icon="UserOutlined"></StatCard>
+      <StatCard title={"Chanelling Income for the Day"} value={"Rs.2500"} change={"-10"} icon="DollarOutlined"></StatCard>
+      <StatCard title={"Number of Chanelling Appointments"} value={"15"} change={"-2"} icon="CalendarOutlined"></StatCard>
+      <StatCard title={"Complain Count"} value={"3"} change={"-1"} icon="WarningOutlined"></StatCard>
       <Col
         xs={20}
-        md={12}
-        xl={16}
+        md={24}
+        xl={32}
       >
-
-      <Card style={{ height: '100%' }}>
-
-      <Table columns={columns} dataSource={data} onChange={onChange} />
-
+        <Card style={{ height: '100%' }}>
+          <AdminTable title={"Nutritionist"} columns={columns} data={nutritionistData} />
         </Card>
-        </Col>
-
-      
-      </Row>
+      </Col>
+    </Row>
   )
 }
