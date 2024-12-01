@@ -89,8 +89,8 @@ const Profile = () => {
           <Route path="/autoplan/view/:planId/:duration" element={<Automealplan/>} />
           <Route path="/BMI/plan/:duration/:planId" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
-          <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
-          <Route path="/lose-weight/weightloss" element={<Freeweightlossform/>} />
+          <Route path="/lose-weight/:type" element={<Freeweightlossform/>} />
+         
           <Route path="/completed" element={<Completedplans/>} />
 
         </Routes>

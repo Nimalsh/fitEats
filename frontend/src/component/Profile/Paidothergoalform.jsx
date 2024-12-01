@@ -5,6 +5,8 @@ import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useDispatch } from 'react-redux';
+import { createotherRequest } from '../State/Requests/Action';
 
 
 // Register Chart.js components
@@ -12,6 +14,7 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
 const Paidothergoalform = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -60,6 +63,32 @@ const [isGoalDisabled, setIsGoalDisabled] = useState(false);
         break;
     }
   };
+  const handleProceed = () => {
+    const token = localStorage.getItem('jwt'); // Or wherever your token is stored
+    const sanitizedGoal = goal.replace(/<\/?p>/g, '').trim(); 
+    // Create a requestData object with all the form data
+    const requestData = {
+      title: "other goal", // Example static title, replace if needed
+      status: "Pending",
+      currentWeight: parseFloat(currentWeight) || 0,
+      
+      description:sanitizedGoal,
+      age: parseInt(age) || 0,
+      height: parseFloat(height) || 0,
+      gender: gender,
+      dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
+      dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
+      activityLevel: activityLevel,
+      mealsPerDay: parseInt(mealsPerDay) || 0,
+      nutritionistId:0
+
+    };
+  
+    localStorage.setItem('requestData', JSON.stringify(requestData));
+    navigate('/my-profile/personalized-plan/weightloss/nutritionist');
+    
+  };
+  
 
   // Function to handle checkbox changes
   const handleCheckboxChange = (event, type) => {
@@ -487,7 +516,7 @@ const [isGoalDisabled, setIsGoalDisabled] = useState(false);
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                  onClick={() => navigate('/my-profile/personalized-plan/weightloss/nutritionist')}  >
+                  onClick={handleProceed} >
                   Proceed
                 </Button>
               </Grid>

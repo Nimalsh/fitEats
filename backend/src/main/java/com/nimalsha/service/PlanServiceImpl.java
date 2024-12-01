@@ -158,7 +158,7 @@ public void completeRequestByPlanId(Long planId) throws Exception {
 
     // Update the status to "Completed"
     request.setStatus("Completed");
-    request.setCompletedDate(LocalDate.now());
+    request.setRepliedDate(LocalDate.now());
 
     // Save the updated request
     requestRepository.save(request);
@@ -311,6 +311,20 @@ public void putcomments(Long requestId, String comments) throws Exception {
     
     requestRepository.save(request);
 }
+@Override
+public void finishRequestByPlanId(Long planId) throws Exception {
+    // Find the request by planId
+    Request request = requestRepository.findByPlanId(planId)
+            .orElseThrow(() -> new Exception("Request not found for planId: " + planId));
+
+    // Update the status to "Completed"
+    request.setStatus("Finished");
+    request.setCompletedDate(LocalDate.now());
+
+    // Save the updated request
+    requestRepository.save(request);
+}
+
 
 
 

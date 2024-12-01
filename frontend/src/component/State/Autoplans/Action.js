@@ -37,6 +37,7 @@ export const createRequest = (requestData, token) => {
     dispatch({ type: CREATE_PLAN_REQUEST });
     try {
       console.log("Request ", requestData);
+      console.log(token);
       const { data } = await api.post('/api/Mealplan/create', requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
