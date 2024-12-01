@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsersOrders } from '../State/Order/Action';
 
 // Register Chart.js components
-ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
+ ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
 
 const Dashboard = () => {
   
