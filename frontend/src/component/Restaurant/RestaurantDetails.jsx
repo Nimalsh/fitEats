@@ -86,7 +86,7 @@ const RestaurantDetails = () => {
             <Grid item xs={12}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src={restaurant.restaurant?.image[0]} 
+                src={restaurant.restaurant?.images[0]} 
                 alt=""
               />
             </Grid>
@@ -94,7 +94,7 @@ const RestaurantDetails = () => {
             <Grid item xs={12} lg={6}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src={restaurant.restaurant?.image[1]}
+                src={restaurant.restaurant?.images[1]}
                 alt=""
               />
             </Grid>
@@ -102,7 +102,7 @@ const RestaurantDetails = () => {
             <Grid item xs={12} lg={6}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src={restaurant.restaurant?.image[2]}
+                src={restaurant.restaurant?.images[2]} 
                 alt=""
               />
             </Grid>

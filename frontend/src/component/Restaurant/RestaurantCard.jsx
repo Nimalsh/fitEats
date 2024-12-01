@@ -16,9 +16,10 @@ const RestaurantCard = ({ item }) => {
     navigate(`/restaurant/${item.address.city}/${item.name}/${item.id}`); // Adjust the path to your restaurant details page
   };
 
+  console.log("res id:",item.id );
   const jwt=localStorage.getItem("jwt")
   const handleAddToFavorite = () => {
-    dispatch(addToFavorites({ restaurantId: item.id, jwt }));
+    dispatch(addToFavorites(item.id));
   };
   
 
@@ -45,9 +46,7 @@ const RestaurantCard = ({ item }) => {
         </div>
 
         <div>
-          <IconButton onClick={handleAddToFavorite}>
-            {isPresentInFavorites(auth.favorites,item) ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-          </IconButton>
+       
         </div>
       </div>
     </Card>
