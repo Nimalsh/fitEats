@@ -1,26 +1,14 @@
 import { Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell, FormLabel, TableContainer, TableHead, TableRow, ButtonBase, Avatar, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField, Tabs, Tab } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { InputBase,InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
-
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import CommentIcon from '@mui/icons-material/Comment';
-import ShareIcon from '@mui/icons-material/Share';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
-const orders = [
-  { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Not Replied', description: 'A program for losing weight', answer: 'Answer for weight loss', userImage: 'https://media.istockphoto.com/id/180866257/photo/design-is-his-passion.jpg?s=2048x2048&w=is&k=20&c=4Jmxxt1oo1bQdOooPl5anov8ZCcyLK1bDoz-FJaLxZ4=' },
-  { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Replied', description: 'Nutrition plan for gaining muscle mass', answer: 'Answer for weight gain', userImage: 'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg' },
-  { id: 3, user: 'User3', requestDate: '2024-07-13', title: 'Other', status: 'Replied', description: 'Customized dietary requirements', answer: 'Answer for other requirements', userImage: 'https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg' },
-  { id: 4, user: 'User4', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Not Replied', description: 'Weight gain strategy', answer: 'Answer for weight gain strategy', userImage: 'https://sources.roboflow.com/dzuGOec8v6bRLhxo590fQ69a22N2/cNc6Q78185vhZDZhqEdS/original.jpg' },
-  { id: 5, user: 'User5', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Replied', description: 'Building muscle mass plan', answer: 'Answer for muscle gain', userImage: 'https://t4.ftcdn.net/jpg/03/03/11/75/360_F_303117590_NNmo6BS2fOBEmDp8uKs2maYmt03t8fSL.jpg' },
-  { id: 6, user: 'User6', requestDate: '2024-07-10', title: 'Others', status: 'Not Replied', description: 'General nutrition advice', answer: 'Answer for general advice', userImage: 'https://via.placeholder.com/150/6' },
-];
+import {getUserQueries,createQuery } from '../State/Queries/Action';
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -34,16 +22,47 @@ const getStatusColor = (status) => {
 };
 
 function NutriQueries() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [clickedUser, setClickedUser] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [openNewDialog, setOpenNewDialog] = useState(false);
   const [tabValue, setTabValue] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const token = localStorage.getItem('jwt');
+  const [description, setDescription] = useState("");
+  const [openQueryDialog, setOpenQueryDialog] = useState(false);
 
+ 
+
+  const { queries, loading, error } = useSelector((state) => state.queries);
+
+  
+  useEffect(() => {
+    dispatch(getUserQueries(token)); // Replace with actual JWT token
+  }, [dispatch]);
+  
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
+
+  const filteredOrders = queries
+    ? queries.filter((query) => {
+        const matchesSearch =
+          query.query.toLowerCase().includes(searchQuery.toLowerCase());
+
+        const matchesTab =
+          tabValue === 0 ||
+          (tabValue === 1 && query.status === "Replied") ||
+          (tabValue === 2 && query.status === "Pending");
+
+        return matchesSearch && matchesTab;
+      })
+    : [];
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   
 
   const handleUserClick = (user) => {
@@ -65,11 +84,24 @@ function NutriQueries() {
     setTabValue(newValue);
   };
 
-  const filteredOrders = orders.filter((order) => {
-    if (tabValue === 1) return order.status === 'Replied';
-    if (tabValue === 2) return order.status === 'Not Replied';
-    return true;
-  }).filter((order) => order.description.toLowerCase().includes(searchQuery.toLowerCase()));
+  const handleSubmit = async () => {
+    if (description.trim()) {
+      try {
+        // Dispatch the createQuery action
+        await dispatch(createQuery(token, description));
+        // Fetch updated user queries
+        dispatch(getUserQueries(token));
+        setDescription("");
+        setOpenQueryDialog(false);
+      } catch (error) {
+        console.error("Error creating query:", error);
+      }
+    } else {
+      alert("Description cannot be empty!");
+    }
+  };
+
+  
   
 
   const RepliedDialog = ({ order }) => (
@@ -79,8 +111,8 @@ function NutriQueries() {
         <Box display="flex" alignItems="center" mb={2}>
           <Avatar src={order.userImage} alt={order.user} sx={{ width: 36, height: 36, mr: 1 }} />
           <Box>
-            <Typography variant="subtitle2">{order.user}</Typography>
-            <FormLabel component="legend">Question</FormLabel>
+            <Typography variant="subtitle2">{order.username}</Typography>
+            <FormLabel component="legend">Query</FormLabel>
           </Box>
         </Box>
         <TextField
@@ -89,16 +121,16 @@ function NutriQueries() {
           variant="outlined"
           multiline
           rows={4}
-          value={order.description}
+          value={order.query}
           disabled
         />
         <Box display="flex" justifyContent="flex-end" mt={1}>
-          <Typography variant="body2" color="textSecondary">{order.requestDate}</Typography>
+          <Typography variant="body2" color="textSecondary">{order.postDate}</Typography>
         </Box>
         <Box display="flex" alignItems="center" mt={2} mb={2}>
           <Avatar src={order.userImage} alt={order.user} sx={{ width: 36, height: 36, mr: 1 }} />
           <Box>
-            <Typography variant="subtitle2">{order.user}</Typography>
+            <Typography variant="subtitle2">{order.nutritionistName}</Typography>
             <FormLabel component="legend">Answer</FormLabel>
           </Box>
         </Box>
@@ -108,11 +140,11 @@ function NutriQueries() {
           variant="outlined"
           multiline
           rows={4}
-          value={order.answer}
+          value={order.reply}
           disabled
         />
         <Box display="flex" justifyContent="flex-end" mt={1}>
-          <Typography variant="body2" color="textSecondary">{order.requestDate}</Typography>
+          <Typography variant="body2" color="textSecondary">{order.repliedDate}</Typography>
         </Box>
       </DialogContent>
       <DialogActions>
@@ -124,7 +156,7 @@ function NutriQueries() {
   );
 
   const NotRepliedDialog = ({ order }) => {
-    const [answer, setAnswer] = useState(order.answer || '');
+    const [answer, setAnswer] = useState(order.query || '');
   
     const handleAnswerChange = (value) => {
       setAnswer(value);
@@ -135,7 +167,7 @@ function NutriQueries() {
         <DialogTitle>{order.title}</DialogTitle>
         <DialogContent sx={{ height: '300px' }}>
           <Box display="flex" alignItems="center" mb={2}>
-            <Avatar src={order.userImage} alt={order.user} sx={{ width: 36, height: 36, mr: 1 }} />
+            <Avatar src={order.userImage} alt={order.username} sx={{ width: 36, height: 36, mr: 1 }} />
             <Box>
               <Typography variant="subtitle2">You</Typography>
             </Box>
@@ -159,7 +191,7 @@ function NutriQueries() {
           />
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between', px: 3 }}>
-          <Typography variant="body2" color="textSecondary">{order.requestDate}</Typography>
+          <Typography variant="body2" color="textSecondary">{order.postDate}</Typography>
           <Button onClick={handleCloseDialog} color="primary">
             Save
           </Button>
@@ -168,36 +200,7 @@ function NutriQueries() {
     );
   };
 
-  const NewQueryDialog = () => (
-    <Dialog open={openNewDialog} onClose={() => setOpenNewDialog(false)} maxWidth="sm" fullWidth>
-      <DialogTitle>New Query</DialogTitle>
-      <DialogContent>
-        <TextField
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          label="Title"
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          label="Description"
-          multiline
-          rows={4}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setOpenNewDialog(false)} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={() => setOpenNewDialog(false)} color="primary">
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-  
+   
   return (
     <Box position="relative" minHeight="400px" pb={8}>
   <Card className='mt-1'>
@@ -241,24 +244,27 @@ function NutriQueries() {
             </TableHead>
             <TableBody>
               {filteredOrders.map((row, index) => (
-                <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  
+                <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell align="left" sx={{ maxWidth: 100 }}>
                     <Typography noWrap title={row.description}>
-                      {row.description.length > 10 ? `${row.description.substring(0, 30)}...` : row.description}
+                      {row.query.length > 30
+                        ? `${row.query.substring(0, 30)}...`
+                        : row.query}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">{row.requestDate}</TableCell>
+                  <TableCell align="center" sx={{ maxWidth: 100 }}>
+                    <Typography >
+                        {row.postDate}
+                    </Typography>
+                  </TableCell>
+                 
                   <TableCell align="center">
-                    {row.status === 'Replied' && (
+                    {row.status === "Replied" && (
                       <ButtonBase onClick={() => handleUserClick(row.user)}>
                         <Box display="flex" alignItems="center" justifyContent="center">
                           <Avatar src={row.userImage} alt={row.user} sx={{ width: 32, height: 32 }} />
-                          <Typography
-                            variant="body2"
-                            sx={{ marginLeft: 1, textDecoration: clickedUser === row.user ? 'underline' : 'none' }}
-                          >
-                            {row.user}
+                          <Typography variant="body2" sx={{ marginLeft: 1 }}>
+                            {row.nutritionistName}
                           </Typography>
                         </Box>
                       </ButtonBase>
@@ -268,16 +274,16 @@ function NutriQueries() {
                     <Box
                       sx={{
                         backgroundColor: getStatusColor(row.status),
-                        color: '#fff',
-                        borderRadius: '4px',
-                        padding: '0.25em 0.5em',
-                        display: 'inline-block',
+                        color: "#fff",
+                        borderRadius: "4px",
+                        padding: "0.25em 0.5em",
+                        display: "inline-block",
                       }}
                     >
                       {row.status}
                     </Box>
                   </TableCell>
-                  <TableCell align="center" sx={{ marginRight: 10 }}>
+                  <TableCell align="center">
                     <Button variant="contained" color="primary" onClick={() => handleViewClick(row)}>
                       View
                     </Button>
@@ -295,10 +301,39 @@ function NutriQueries() {
           <NotRepliedDialog order={selectedOrder} />
         )
       )}
-      {openNewDialog && <NewQueryDialog />}
-      <Fab color="primary" aria-label="add" sx={{ position: 'absolute', bottom: -10, right: 16 }} onClick={() => setOpenNewDialog(true)}>
+      
+      <Fab color="primary" aria-label="add" sx={{ position: 'absolute', bottom: -10, right: 16 }} onClick={() => setOpenQueryDialog(true)}>
         <AddIcon />
       </Fab>
+      <Dialog 
+  open={openQueryDialog} 
+  onClose={() => setOpenQueryDialog(false)} 
+  maxWidth="sm" 
+  fullWidth
+>
+  <DialogTitle>New Query</DialogTitle>
+  <DialogContent>
+    <TextField
+      fullWidth
+      margin="normal"
+      variant="outlined"
+      label="Description"
+      multiline
+      rows={6}
+      value={description}
+      onChange={(e) => setDescription(e.target.value)} 
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setOpenQueryDialog(false)} color="primary">
+      Cancel
+    </Button>
+    <Button onClick={handleSubmit} color="primary">
+      Submit
+    </Button>
+  </DialogActions>
+</Dialog>
+
     </Box>
   );
 }

@@ -1,21 +1,24 @@
-import { api } from "../../../config/api";
-
+ import { api } from '../../config/api';
+  
 import {
+  CREATE_MENU_ITEM_FAILURE,
   CREATE_MENU_ITEM_REQUEST,
   CREATE_MENU_ITEM_SUCCESS,
-  CREATE_MENU_ITEM_FAILURE,
-  GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST,
-  GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS,
-  GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE,
+  DELETE_MENU_ITEM_FAILURE,
   DELETE_MENU_ITEM_REQUEST,
   DELETE_MENU_ITEM_SUCCESS,
-  DELETE_MENU_ITEM_FAILURE,
+  GET_FOOD_DETAILS_FAILURE,
+  GET_FOOD_DETAILS_REQUEST,
+  GET_FOOD_DETAILS_SUCCESS,
+  GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE,
+  GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST,
+  GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS,
+  SEARCH_MENU_ITEM_FAILURE,
   SEARCH_MENU_ITEM_REQUEST,
   SEARCH_MENU_ITEM_SUCCESS,
-  SEARCH_MENU_ITEM_FAILURE,
+  UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE,
   UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST,
   UPDATE_MENU_ITEMS_AVAILABILITY_SUCCESS,
-  UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE,
 } from "./ActionType";
 
 export const createMenuItem = ({ menu, jwt }) => {
@@ -28,7 +31,7 @@ export const createMenuItem = ({ menu, jwt }) => {
         },
       });
       dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: data });
-      console.log("create menu item", data);
+      console.log("created menu item", data);
     } catch (error) {
       console.log("error", error);
       dispatch({ type: CREATE_MENU_ITEM_FAILURE, payload: error });
@@ -156,3 +159,28 @@ export const updateMenuItemsAvailability = ({foodId, jwt}) => {
 //     }
 //   };
 // };
+
+export const getFoodDetails = (foodId, jwt) => {
+  return async (dispatch) => {
+    dispatch({ type: GET_FOOD_DETAILS_REQUEST });
+    try {
+      const response = await api.get(`/api/admin/food/${foodId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      dispatch({
+        type: GET_FOOD_DETAILS_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_FOOD_DETAILS_FAILURE,
+        payload: error.response ? error.response.data : error.message,
+      });
+    }
+  };
+};
+
+
+

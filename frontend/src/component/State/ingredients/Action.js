@@ -1,5 +1,6 @@
-import { api } from "../../../config/api";
+import { api } from "../../config/api";
 import {
+  GET_INGREDIENTS,
   CREATE_INGREDIENT_REQUEST,
   CREATE_INGREDIENT_SUCCESS,
   CREATE_INGREDIENT_FAILURE,

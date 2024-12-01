@@ -12,7 +12,7 @@ const Queryanswer = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState('Vegan');
   const [dietaryRestrictions, setDietaryRestrictions] = useState('Nut free');
   const [mealsPerDay, setMealsPerDay] = useState('3');
-  const [query, setQuery] = useState('rfghhjjjsjsj ffhhrhhhssh'); // Renamed state to setQuery for consistency
+  const [query, setQuery] = useState('What are the best sources of protein for individuals with dietary restrictions (e.g., vegetarian, vegan, gluten-free)?'); // Renamed state to setQuery for consistency
   const [replyVisible, setReplyVisible] = useState(false); // State to manage reply input visibility
   const [replyText, setReplyText] = useState(''); // State to manage reply text
   const [weight, setWeight] = useState('55');

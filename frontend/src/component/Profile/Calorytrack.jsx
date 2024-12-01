@@ -1,664 +1,609 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Box, Typography, Button, IconButton, Grid, Card, CardContent, Dialog, DialogTitle, DialogContent, TextField,
-    List, ListItem, ListItemText, LinearProgress,Checkbox,DialogActions
-  } from '@mui/material';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import CloseIcon from '@mui/icons-material/Close';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import PoolIcon from '@mui/icons-material/Pool';
-import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import RowingIcon from '@mui/icons-material/Rowing';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
-import JumpRopeIcon from '@mui/icons-material/Sports';
-import SportsMmaIcon from '@mui/icons-material/SportsMma';
-import Avatar from '@mui/material/Avatar';
-import SaveIcon from '@mui/icons-material/Save';
-
-const foodItems = [
-    { name: 'Rice', normalConsumption: '100g', nutrition: { calories: 130, protein: 2.7, fat: 0.3, carbohydrate: 28, fiber: 0.4, sugars: 0.1, sodium: 1 } },
-    { name: 'Roti', normalConsumption: '1 piece', nutrition: { calories: 90, protein: 3, fat: 1, carbohydrate: 15, fiber: 1, sugars: 1, sodium: 90 } },
-    { name: 'Radish', normalConsumption: '100g', nutrition: { calories: 16, protein: 0.7, fat: 0.1, carbohydrate: 3.4, fiber: 1.6, sugars: 1.9, sodium: 39 } },
-    { name: 'Raspberry', normalConsumption: '100g', nutrition: { calories: 52, protein: 1.2, fat: 0.7, carbohydrate: 12, fiber: 6.5, sugars: 4.4, sodium: 1 } },
-    { name: 'Raisins', normalConsumption: '50g', nutrition: { calories: 149, protein: 1.5, fat: 0.2, carbohydrate: 39, fiber: 1.6, sugars: 29, sodium: 11 } },
-    { name: 'Romaine Lettuce', normalConsumption: '1 cup', nutrition: { calories: 8, protein: 0.6, fat: 0.1, carbohydrate: 1.5, fiber: 1, sugars: 0.6, sodium: 4 } }
-  ];
-  const activities = {
-    calories: ['Running', 'Cycling', 'Swimming'],
-    fat: ['Brisk Walking', 'Aerobics', 'Rowing'],
-    carbohydrate: ['Jogging', 'Dance', 'Cycling'],
-    sugars: ['HIIT', 'Jump Rope', 'Kickboxing'],
-  };
-  const activityIcons = {
-    Running: <DirectionsRunIcon />,
-    Cycling: <DirectionsBikeIcon />,
-    Swimming: <PoolIcon />,
-    'Brisk Walking': <DirectionsWalkIcon />,
-    Aerobics: <FitnessCenterIcon />,
-    Rowing: <RowingIcon />,
-    Jogging: <DirectionsRunIcon />,
-    Dance: <MusicNoteIcon />,
-    HIIT: <FitnessCenterIcon />,
-    'Jump Rope': <JumpRopeIcon />,
-    Kickboxing: <SportsMmaIcon />
-  };
-  
-  
-  const caloriesPerMinute = {
-    Running: 10, // Approximate
-    Cycling: 8,  // Approximate
-    Swimming: 12, // Approximate
-    'Brisk Walking': 5, // Approximate
-    Aerobics: 6, // Approximate
-    Rowing: 10, // Approximate
-    Jogging: 8, // Approximate
-    Dance: 10, // Approximate
-    HIIT: 13, // Approximate
-    'Jump Rope': 12, // Approximate
-    Kickboxing: 10 // Approximate
-  };
-  
+import { Box, Typography, Button, Grid, Card, CardContent, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControlLabel, Checkbox, LinearProgress,FormControl,FormLabel,Radio,RadioGroup } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { updateWeightAndHeight, fetchMealsForDay, addMealToDay, fetchNutritionData, updateNutritionValues, getNutritionValues, fetchBmiplanByPlanId } from '../State/Bmi/Action';
 
 const Calorytrack = () => {
- 
-  const [open, setOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredFoods, setFilteredFoods] = useState([]);
-  const [selectedFoods, setSelectedFoods] = useState([]);
+  const { duration, planId } = useParams();
+  const [selectedDay, setSelectedDay] = useState(1);
+  const [openDialog, setOpenDialog] = useState(false);
   const [mealType, setMealType] = useState('');
-  const [editableStates, setEditableStates] = useState([]);
-  const [tabIndex, setTabIndex] = useState(0);
-
-
-  const handleClickOpen = meal => {
-    setMealType(meal);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSearchTerm('');
-    setFilteredFoods([]);
-  };
-
-  const handleDone = () => {
-    setOpen(false);
-    setSearchTerm('');
-    setFilteredFoods([]);
-  };
-
-  const handleSearchChange = event => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    if (value) {
-      const filtered = foodItems.filter(food =>
-        food.name.toLowerCase().startsWith(value.toLowerCase())
-      );
-      setFilteredFoods(filtered);
-    } else {
-      setFilteredFoods([]);
-    }
-  };
-
-  const handleFoodClick = food => {
-    setSelectedFoods(prevSelectedFoods => [
-      ...prevSelectedFoods,
-      { ...food, quantity: '', mealType }
-    ]);
-    setEditableStates(prevStates => [...prevStates, false]);
-    setSearchTerm('');
-    setFilteredFoods([]);
-  };
-
-  const handleQuantityChange = (index, value) => {
-    const updatedFoods = [...selectedFoods];
-    updatedFoods[index].quantity = value;
-    setSelectedFoods(updatedFoods);
-  };
-
-  const handleEditToggle = index => {
-    setEditableStates(prevStates =>
-      prevStates.map((state, idx) => (idx === index ? !state : state))
-    );
-  };
-
-  const handleRemoveFood = index => {
-    const updatedFoods = selectedFoods.filter((_, idx) => idx !== index);
-    const updatedEditableStates = editableStates.filter(
-      (_, idx) => idx !== index
-    );
-    setSelectedFoods(updatedFoods);
-    setEditableStates(updatedEditableStates);
-  };
-
-  const handleTabChange = (event, newIndex) => {
-    setTabIndex(newIndex);
-  };
-  const getProgressColor = (consumed, recommended) => {
-    return consumed > recommended ? 'error' : 'primary';
-  };
-  const getActivityDuration = (key, excessAmount) => {
-    const caloriesPerGram = {
-      calories: 1,
-      fat: 9,
-      carbohydrate: 4,
-      sugars: 4,
-    };
-    const caloriesNeeded = excessAmount * caloriesPerGram[key];
-  
-    if (!activities[key]) {
-      console.log(`No activities found for key: ${key}`);
-      return [];
-    }
-  
-    return activities[key].map(activity => {
-      const caloriesPerMin = caloriesPerMinute[activity];
-      if (!caloriesPerMin) {
-        console.log(`No calorie per minute data for activity: ${activity}`);
-        return { activity, duration: 'N/A' };
-      }
-  
-      const durationMinutes = Math.ceil(caloriesNeeded / caloriesPerMin);
-      const hours = Math.floor(durationMinutes / 60);
-      const minutes = durationMinutes % 60;
-      return {
-        activity,
-        duration: hours > 0 
-          ? `${hours}h ${minutes}m` 
-          : `${minutes}m`
-      };
-    });
-  };
-  
-  
-  
-
-  const [dailySummary, setDailySummary] = useState({
-    calories: 0,
-    protein: 0,
-    fat: 0,
-    carbohydrate: 0,
-    fiber: 0,
-    sugars: 0,
-    sodium: 0,
+  const [foodName, setFoodName] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [measurement, setMeasurement] = useState('');
+  const [mealsData, setMealsData] = useState({
+    breakfasts: [],
+    lunchs: [],
+    dinners: [],
+    snacks: []
   });
-  const recommendedIntake = {
-    calories: 2000,
-    protein: 50,
-    fat: 78,
-    carbohydrate: 275,
-    fiber: 28,
-    sugars: 50,
-    sodium: 2400,
+  const [calories, setCalories] = useState(0);
+  const [carbohydrates, setCarbohydrates] = useState(0);
+  const [fat, setFat] = useState(0);
+  const [sodium, setSodium] = useState(0);
+  const [fiber, setFiber] = useState(0);
+  const [sugar, setSugar] = useState(0);
+  const [protein, setProtein] = useState(0);
+
+  const [consumeCalories, setConsumeCalories] = useState(0);
+  const [consumeProteins, setConsumeProteins] = useState(0);
+  const [consumeFat, setConsumeFat] = useState(0);
+  const [consumeSugars, setConsumeSugars] = useState(0);
+  const [consumeFiber, setConsumeFiber] = useState(0);
+  const [consumeSodium, setConsumeSodium] = useState(0);
+  const [consumeCarbohydrates, setConsumeCarbohydrates] = useState(0);
+  const [buttonColors, setButtonColors] = useState({});
+  const [openFinishDialog, setOpenFinishDialog] = useState(false);
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [bmi, setBmi] = useState('');
+  const [bmiCondition, setBmiCondition] = useState('');
+  const [foodPreparationStatus, setFoodPreparationStatus] = useState('');
+
+
+  const handleCalculateBMI = () => {
+    const heightInMeters = height / 100; // Convert height from cm to meters
+    const bmiValue = weight / (heightInMeters * heightInMeters); // BMI formula
+    setBmi(bmiValue.toFixed(1)); // Set BMI state to formatted value
+
+    // Determine BMI condition and provide specific messages
+    let condition = '';
+    if (bmiValue < 18.5) {
+      condition = 'Underweight  Let\'s try again, you need a balanced diet!';
+    } else if (bmiValue >= 18.5 && bmiValue < 24.9) {
+      condition = 'Healthy weight Good to go! No restriction for high calories any more.';
+    } else if (bmiValue >= 25 && bmiValue < 29.9) {
+      condition = 'Overweight Let\'s try again, focus on healthy eating and exercise.';
+    } else {
+      condition = 'Obese  Let\'s try again, consider a healthier lifestyle!';
+    }
+
+    setBmiCondition(condition); // Set BMI condition state
+  };
+
+  const handleSet = () => {
+    dispatch(updateWeightAndHeight(jwt, weight, height, planId));
+    setOpenFinishDialog(false); // Close the dialog after dispatching
+  };
+
+  const calculatePercentage = (consumed, total) => {
+    return total > 0 ? (consumed / total) * 100 : 0;
+  };
+
+  const getBarColor = (consumed, total) => {
+    return consumed > total ? 'error' : 'primary';
+  };
+
+  const dispatch = useDispatch();
+  const durationValue = parseInt(duration, 10);
+  const jwt = localStorage.getItem('jwt');
+
+  const handleDayClick = (day) => {
+    setSelectedDay(day);
+    console.log("Selected day:", day);
+
+    if (jwt) {
+      // Fetch meals for the selected day
+      dispatch(fetchMealsForDay(planId, day, jwt))
+        .then((response) => {
+          console.log("planId:", planId);
+          if (response) {
+            console.log("Meals", response);
+            setMealsData(response); // Update state with fetched meals
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to fetch meals:', error);
+        });
+
+      // Fetch nutrition values for the selected day
+      dispatch(getNutritionValues(planId, day, jwt))
+        .then((updatedResponse) => {
+          console.log("Updated Nutrition values:", updatedResponse);
+
+          // Update consumed nutrition values
+          setConsumeCalories(updatedResponse.calories);
+          setConsumeCarbohydrates(updatedResponse.carbohydrates);
+          setConsumeFat(updatedResponse.fat);
+          setConsumeFiber(updatedResponse.fiber);
+          setConsumeProteins(updatedResponse.protein);
+          setConsumeSodium(updatedResponse.sodium);
+          setConsumeSugars(updatedResponse.sugars);
+
+          // Determine button color based on consumed calories
+          setButtonColors(prevColors => ({
+            ...prevColors,
+            [day]: updatedResponse.calories === 0 ? 'transparent' :
+              updatedResponse.calories < calories ? 'success' : 'error'
+          }));
+        })
+        .catch((error) => {
+          console.error('Failed to fetch updated nutrition values:', error);
+        });
+
+
+    }
   };
 
   useEffect(() => {
-    const summary = selectedFoods.reduce((acc, food) => {
-      const quantity = parseFloat(food.quantity) || 0;
-      const multiplier = quantity / parseFloat(food.normalConsumption.replace(/\D/g, ''));
-      return {
-        calories: acc.calories + food.nutrition.calories * multiplier,
-        protein: acc.protein + food.nutrition.protein * multiplier,
-        fat: acc.fat + food.nutrition.fat * multiplier,
-        carbohydrate: acc.carbohydrate + food.nutrition.carbohydrate * multiplier,
-        fiber: acc.fiber + food.nutrition.fiber * multiplier,
-        sugars: acc.sugars + food.nutrition.sugars * multiplier,
-        sodium: acc.sodium + food.nutrition.sodium * multiplier,
+    if (jwt) {
+      dispatch(fetchBmiplanByPlanId(planId, jwt))
+        .then((data) => {
+          console.log("Fetching:", data); // Log the response data
+
+          if (data) {
+            const { calories, carbohydrates, fat, sodium, fiber, sugar, protein } = data; // Adjust if data structure differs
+
+            setCalories(calories);
+            setCarbohydrates(carbohydrates);
+            setFat(fat);
+            setSodium(sodium);
+            setFiber(fiber);
+            setSugar(sugar);
+            setProtein(protein);
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to fetch BMI plan:', error);
+        });
+
+      // Fetch nutrition values for each day and set button colors
+      const fetchAllNutritionValues = async () => {
+        const colors = {};
+        for (let day = 1; day <= durationValue; day++) {
+          try {
+            const response = await dispatch(getNutritionValues(planId, day, jwt));
+            if (response.calories === 0) {
+              colors[day] = 'transparent';
+            } else {
+              colors[day] = response.calories < calories ? 'success' : 'error';
+            }
+          } catch (error) {
+            console.error(`Failed to fetch nutrition values for day ${day}:`, error);
+            colors[day] = 'default'; // Set default color if error occurs
+          }
+        }
+        setButtonColors(colors);
       };
-    }, {
-      calories: 0,
-      protein: 0,
-      fat: 0,
-      carbohydrate: 0,
-      fiber: 0,
-      sugars: 0,
-      sodium: 0,
-    });
 
-    setDailySummary(summary);
-  }, [selectedFoods]);
+      fetchAllNutritionValues();
 
-  const getProgress = (consumed, recommended) => (consumed / recommended) * 100;
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [savedMeals, setSavedMeals] = useState({});
-  
-  const [dateColors, setDateColors] = useState({});
-  const [selectedActivities, setSelectedActivities] = useState({});
+      dispatch(fetchMealsForDay(planId, 1, jwt))
+        .then((response) => {
+          if (response) {
+            console.log("Meals for day 1:", response);
+            setMealsData(response); // Update state with fetched meals
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to fetch meals:', error);
+        });
 
-  const handleActivityChange = (dateKey, nutrient, activity) => {
-    setSelectedActivities(prev => {
-      const newActivities = { ...prev };
-      if (!newActivities[dateKey]) {
-        newActivities[dateKey] = {};
-      }
-      if (!newActivities[dateKey][nutrient]) {
-        newActivities[dateKey][nutrient] = {};
-      }
-      newActivities[dateKey][nutrient][activity] = !newActivities[dateKey][nutrient][activity];
+      dispatch(getNutritionValues(planId, 1, jwt))
+        .then((updatedResponse) => {
 
-      // Adjust consumed amount if activity is selected
-      if (newActivities[dateKey][nutrient][activity]) {
-        dailySummary[nutrient] = recommendedIntake[nutrient];
-      } else {
-        // Recalculate consumed amount if activity is deselected
-        dailySummary[nutrient] = selectedFoods.reduce((acc, food) => {
-          const quantity = parseFloat(food.quantity) || 0;
-          const multiplier = quantity / parseFloat(food.normalConsumption.replace(/\D/g, ''));
-          return acc + food.nutrition[nutrient] * multiplier;
-        }, 0);
-      }
+          // Update consumed nutrition values
+          setConsumeCalories(updatedResponse.calories);
+          setConsumeCarbohydrates(updatedResponse.carbohydrates);
+          setConsumeFat(updatedResponse.fat);
+          setConsumeFiber(updatedResponse.fiber);
+          setConsumeProteins(updatedResponse.protein);
+          setConsumeSodium(updatedResponse.sodium);
+          setConsumeSugars(updatedResponse.sugars);
 
-      return newActivities;
-    });
-  };
+        })
+        .catch((error) => {
+          console.error('Failed to fetch updated nutrition values:', error);
+        });
 
-  const handleDateChange = date => {
-    const dateKey = date.toISOString().split('T')[0];
-    setSelectedDate(date);
-    setSelectedFoods(savedMeals[dateKey] || []);
-    setSelectedActivities(prev => prev[dateKey] || {});
-  };
-
-  const getActivityChecked = (dateKey, nutrient, activity) => {
-    return selectedActivities[dateKey]?.[nutrient]?.[activity] || false;
-  };
-
-  
-  const [achievementDialogOpen, setAchievementDialogOpen] = useState(false);
-  const saveMealsAndActivities = () => {
-    const dateKey = selectedDate.toISOString().split('T')[0];
-    setSavedMeals(prev => ({
-      ...prev,
-      [dateKey]: selectedFoods
-    }));
-  
-    // Define the threshold for calorie deficiency
-    const calorieDeficiencyThreshold = 0.5; // 50% of the recommended value
-  
-    // Determine the color based on calorie intake
-    let newColor = 'green'; // Default color for balanced intake
-  
-    const consumedCalories = dailySummary.calories;
-    const recommendedCalories = recommendedIntake.calories;
-  
-    if (consumedCalories < recommendedCalories * calorieDeficiencyThreshold) {
-      newColor = 'yellow'; // Less than 50% of recommended calories
-    } else if (consumedCalories > recommendedCalories) {
-      newColor = 'red'; // More than the recommended amount
     }
+  }, [dispatch, jwt, planId, durationValue, calories]);
+
+  const handleAddFoodClick = (type) => {
+    setMealType(type);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setFoodName('');
+    setQuantity('');
+    setMeasurement('');
+  };
+
+  const handleDoneClick = () => {
+    // Format quantity and measurement
+    const formattedQuantity = `${quantity} ${measurement}`;
   
-    setDateColors(prev => ({
-      ...prev,
-      [dateKey]: newColor
-    }));
+    const mealData = {
+      item: foodName,
+      measurement: measurement,
+      quantity: quantity,
+    };
   
-    // Check if all date circles are green
-    const allGreen = Object.values(dateColors).length === 7 &&
-                      Object.values(dateColors).every(color => color === 'green');
+    if (jwt) {
+      dispatch(addMealToDay(planId, selectedDay, mealType.toLowerCase(), mealData, jwt))
+        .then(() => {
+          console.log("Meal added successfully");
   
-    if (allGreen) {
-      setAchievementDialogOpen(true);
+          // Fetch nutritional data for the added meal
+          dispatch(fetchNutritionData(foodName, formattedQuantity, jwt, foodPreparationStatus))
+            .then((response) => {
+              // Extract nutritional values from the response
+              const nutritionValues = response.nutrition[0];
+              console.log("Nutrition values fetched:", nutritionValues);
+
+              // Update nutrition values in the database
+              dispatch(updateNutritionValues(planId, selectedDay, nutritionValues, jwt))
+                .then(() => {
+                  console.log("Nutrition values updated successfully");
+
+                  // Fetch the updated nutrition values
+                  dispatch(getNutritionValues(planId, selectedDay, jwt))
+                    .then((updatedResponse) => {
+                      console.log("Updated Nutrition values:", updatedResponse);
+                      setConsumeCalories(updatedResponse.calories);
+                      setConsumeCarbohydrates(updatedResponse.carbohydrates);
+                      setConsumeFat(updatedResponse.fat);
+                      setConsumeFiber(updatedResponse.fiber);
+                      setConsumeProteins(updatedResponse.protein);
+                      setConsumeSodium(updatedResponse.sodium);
+                      setConsumeSugars(updatedResponse.sugars);
+
+                      setButtonColors(prevColors => ({
+                        ...prevColors,
+                        [selectedDay]: updatedResponse.calories < calories ? 'success' : 'error'
+                      }));
+
+                      // Optionally handle the updated nutrition values here
+                    })
+                    .catch((error) => {
+                      console.error('Failed to fetch updated nutrition values:', error);
+                    });
+
+                })
+                .catch((error) => {
+                  console.error('Failed to update nutrition values:', error);
+                });
+            })
+            .catch((error) => {
+              console.error('Failed to fetch nutrition data:', error);
+            });
+
+          // Refetch meals for the selected day to update the display
+          dispatch(fetchMealsForDay(planId, selectedDay, jwt))
+            .then((response) => {
+              if (response) {
+                console.log("Updated Meals", response);
+                setMealsData(response); // Update state with fetched meals
+              }
+            })
+            .catch((error) => {
+              console.error('Failed to fetch updated meals:', error);
+            });
+
+          handleDialogClose(); // Close the dialog after adding the meal
+        })
+        .catch((error) => {
+          console.error('Failed to add meal:', error);
+        });
     }
   };
-  
-   useEffect(() => {
-    const initialDateColors = {};
-    for (let i = 1; i <= 7; i++) {
-      const dateKey = `2024-07-${i < 10 ? `0${i}` : i}`;
-      initialDateColors[dateKey] = 'transparent'; // Default color
-    }
-    setDateColors(initialDateColors);
-  }, []);
-  
-  
-
 
   return (
     <Box sx={{ padding: '20px' }}>
       {/* Upper Part */}
-      <Box sx={{ padding: '20px' }}>
-  {/* Upper Part */}
-  <Box sx={{ padding: '20px' }}>
-  {/* Upper Part */}
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginBottom: '20px'
-    }}
-  >
-    <Typography variant="h4">Calorie Track For Healthy BMI</Typography>
-    <Typography variant="body1">Plan or log what you eat.</Typography>
-
-    <Box
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-    gap: '30px',
-    marginTop: '30px',
-    justifyContent: 'center',
-    overflowX: 'auto',
-    whiteSpace: 'nowrap',
-    padding: '10px 0',
-    height: '80px',
-    border: '1px solid #88891D',
-    borderRadius: '8px'
-  }}
->
-  {[1, 2, 3, 4, 5, 6, 7].map((number) => {
-    const dateKey = `2024-07-${number < 10 ? `0${number}` : number}`;
-    return (
-      <Button
-        key={number}
-        variant="contained"
-        sx={{
-          minWidth: '50px',
-          minHeight: '50px',
-          borderRadius: '50%',
-          padding: '10px',
-          textAlign: 'center',
-          backgroundColor: dateColors[dateKey] || 'transparent',
-          color: dateColors[dateKey] ? 'white' : 'white',
-          border: dateColors[dateKey] ? '2px solid #88891D' : '2px solid #88891D'
-        }}
-        onClick={() => handleDateChange(new Date(dateKey))}
-      >
-        {number}
-      </Button>
-    );
-  })}
-</Box>
-
-  </Box>
-</Box>
-</Box>
-      {/* Lower Part */}
-      <Grid container spacing={1}>
-  {/* Left Hand Side Tile */}
-  <Grid item xs={12} md={6}>
-  <Card sx={{ width: '100%' }}>
-    <CardContent>
-      <Typography variant="h6">{selectedDate.toDateString()}</Typography> {/* Display selected date */}
-      {['Breakfast', 'Lunch', 'Dinner', 'Snacks'].map(meal => (
-        <Card key={meal} sx={{ marginTop: '20px', backgroundColor: '#545453', width: '100%' }}>
-          <CardContent>
-            <Typography variant="h6">{meal}</Typography>
-            <Button variant="contained" sx={{ marginTop: '10px' }} onClick={() => handleClickOpen(meal)}>Add Food</Button>
-            <Grid container spacing={2} sx={{ marginTop: '10px' }}>
-              <Grid item xs={12}>
-                <List>
-                  {selectedFoods
-                    .filter(food => food.mealType === meal)
-                    .map((food, index) => (
-                      <ListItem key={index} disableGutters>
-                        <Card sx={{ width: '100%' }}>
-                          <CardContent>
-                            <Box display="flex" alignItems="center" justifyContent="space-between">
-                              <Typography variant="body1" sx={{ marginLeft: '20px' }}>{food.name}</Typography>
-                              <Box display="flex" alignItems="center" sx={{ marginLeft: 'auto', marginRight: '10px' }}>
-                                <Typography variant="body1" sx={{ marginRight: '10px' }}>{food.normalConsumption}</Typography>
-                                <TextField
-                                  type="number"
-                                  variant="outlined"
-                                  size="small"
-                                  value={food.quantity}
-                                  sx={{ width: '60px' }}
-                                  onChange={e => handleQuantityChange(index, e.target.value)}
-                                />
-                                <Button
-                                  variant="contained"
-                                  sx={{ marginLeft: '10px' }}
-                                  onClick={() => handleEditToggle(index)}
-                                >
-                                  {editableStates[index] ? 'Save' : 'Update'}
-                                </Button>
-                                <IconButton
-                                  aria-label="close"
-                                  sx={{
-                                    marginLeft: '10px',
-                                    color: theme => theme.palette.grey[500]
-                                  }}
-                                  onClick={() => handleRemoveFood(index)}
-                                >
-                                  <CloseIcon />
-                                </IconButton>
-                              </Box>
-                            </Box>
-                          </CardContent>
-                        </Card>
-                      </ListItem>
-                    ))}
-                </List>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      ))}
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
-      <Button
-  variant="contained"
-  color="primary"
-  sx={{ marginLeft: '500px', marginTop: '8px' }}
-  onClick={() => {
-    saveMealsAndActivities();
-  }}
->
-  save
-</Button>
-
-
-    
-      </Box>
-    </CardContent>
-  </Card>
-</Grid>
-
-  {/* Right Hand Side Tile */}
-  <Grid item xs={12} md={5}>
-          <Box sx={{ width: '100%', padding: '20px', borderRadius: '8px', height: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <Typography variant="h6">Nutritional Summary</Typography>
-            {Object.keys(dailySummary).map(key => {
-              const excessAmount = Math.max(dailySummary[key] - recommendedIntake[key], 0);
-              const activityDurations = getActivityDuration(key, excessAmount);
-              const dateKey = selectedDate.toISOString().split('T')[0];
-
-              return (
-                <Box key={key} sx={{ marginBottom: '10px' }}>
-                  <Typography variant="body2">{`${key.charAt(0).toUpperCase() + key.slice(1)}:`}</Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px' }}>
-                    <Typography variant="body2">{Math.round(dailySummary[key])} {key === 'calories' ? 'kcal' : 'g'}</Typography>
-                    <Typography variant="body2">{recommendedIntake[key]} {key === 'calories' ? 'kcal' : 'g'}</Typography>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={getProgress(dailySummary[key], recommendedIntake[key])}
-                    color={getProgressColor(dailySummary[key], recommendedIntake[key])}
-                  />
-                  {excessAmount > 0 && (
-                    <>
-                      <Typography variant="body2" color="error" marginTop={"5px"}>Warning: Exceeded recommended {key}</Typography>
-                      {activityDurations.length > 0 && (
-                        <Box sx={{ marginTop: '10px' }}>
-                          <Typography variant="body2" marginBottom={"5px"}>Suggested Activities:</Typography>
-                          {activityDurations.map((activity, index) => (
-                            <Box key={index} sx={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                              <Checkbox
-                                checked={getActivityChecked(dateKey, key, activity.activity)}
-                                onChange={() => handleActivityChange(dateKey, key, activity.activity)}
-                              />
-                              <Avatar sx={{ marginRight: '10px' }}>
-                                {activityIcons[activity.activity]}
-                              </Avatar>
-                              <Typography variant="body2">{activity.activity}: {activity.duration}</Typography>
-                            </Box>
-                          ))}
-                        </Box>
-                      )}
-                    </>
-                  )}
-                </Box>
-              );
-            })}
-          </Box>
-        </Grid>
-    
-
-
-
-</Grid>
-
-<Dialog
-  open={achievementDialogOpen}
-  onClose={() => setAchievementDialogOpen(false)}
-  maxWidth="sm"
-  fullWidth
->
-<DialogTitle
-        sx={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          borderBottom: '2px solid #969817', // Bottom border color
-          padding: '16px 24px', // Padding around the title
-         
-        }}
-      >
-        Achievement Unlocked!
-      </DialogTitle>
-      <DialogContent
+      <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
+          justifyContent: 'center',
           alignItems: 'center',
-          padding: '16px 24px', // Padding around the content
-         // Font color
+          padding: '10px',
+          borderRadius: '10px',
+          marginBottom: '20px'
         }}
       >
-        <Typography
-          variant="body1"
-          sx={{
-            fontSize: '1.2rem',
-            textAlign: 'center',
-            marginBottom: '16px' // Margin for spacing
-          }}
-        >
-          Congratulations! You have achieved a healthy BMI.
-        </Typography>
-        <img src="https://cdn.pixabay.com/photo/2017/01/28/11/43/cup-2015198_1280.png" alt="Achievement" style={{ width: '200px', marginBottom: '16px' }} /> {/* Add your image here */}
-      </DialogContent>
-      <DialogActions
-        sx={{
-          padding: '16px 24px',
-          justifyContent: 'center', 
-        }}
-      >
-        <Button
-          onClick={() => setAchievementDialogOpen(false)}
-          color="success"
-          variant="contained" // Primary button style
-          sx={{
-            padding: '10px 20px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow effect
-            backgroundColor: '#969817' // Button background color
-          }}
-        >
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
-
-
-      {/* Dialog for Adding Food */}
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <Typography variant="h6">Add Food</Typography>
-            <IconButton
-              aria-label="close"
-              onClick={handleClose}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: theme => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-  
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Search foods you want to add"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              sx={{ marginTop: '10px' }}
-            />
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ marginTop: '20px' }}>
-            <List>
-              {filteredFoods.map((food, index) => (
-                <ListItem button key={index} onClick={() => handleFoodClick(food)}>
-                  <ListItemText primary={food.name} />
-                </ListItem>
-              ))}
-            </List>
-            <Button variant="contained" onClick={handleDone} sx={{ marginBottom: '10px' }}>
-              Done
+        <Grid container spacing={2} justifyContent="center">
+          {Array.from({ length: durationValue }, (_, index) => index + 1).map(day => (
+            <Grid item key={day}>
+              <Button
+                variant="contained"
+                onClick={() => handleDayClick(day)}
+                sx={{
+                  borderRadius: '50%',
+                  backgroundColor: buttonColors[day] === 'transparent' ? 'transparent' :
+                    buttonColors[day] === 'success' ? 'green' :
+                      buttonColors[day] === 'error' ? 'red' : '#444',
+                  color: buttonColors[day] === 'white' ? 'white' :
+                    selectedDay === day ? '#fff' : '#ccc',
+                  border: buttonColors[day] === 'transparent' ? '1px solid #ccc' : 'none',
+                  width: '40px',
+                  height: '40px',
+                  marginBottom: '10px',
+                  '&:hover': {
+                    backgroundColor: selectedDay === day ? '#A09E0E' : '#555',
+                  },
+                }}
+              >
+                {day}
+              </Button>
+            </Grid>
+          ))}
+          <Box sx={{ marginLeft: '20px', marginTop: '17px' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setOpenFinishDialog(true)}>
+              Finish
             </Button>
-            <Typography variant="h6" sx={{ marginTop: '20px' }}>Selected Foods</Typography>
-            {selectedFoods.map((food, index) => (
-              <SelectedFoodCard
-                key={index}
-                food={food}
-                index={index}
-                handleQuantityChange={handleQuantityChange}
-                handleRemoveFood={handleRemoveFood}
-              />
-            ))}
-            <Typography variant="body2" sx={{ marginTop: '10px' }}>
-              Can't find a food? <Button variant="text" onClick={() => { }}>Enter a custom food</Button> into the database.
-            </Typography>
           </Box>
+        </Grid>
+      </Box>
+
+      {/* Lower Part */}
+      <Grid container spacing={1}>
+        {/* Left Hand Side Tile */}
+        <Grid item xs={12} md={6}>
+          <Card sx={{ width: '100%' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ marginBottom: '10px' }}>
+                {selectedDay ? `Date: ${selectedDay}` : 'Select a date'}
+              </Typography>
+              <Grid container spacing={2}>
+                {['Breakfast', 'Lunch', 'Dinner', 'Snack'].map(meal => (
+                  <Grid item xs={12} key={meal}>
+                    <Card sx={{ marginBottom: '10px' }}>
+                      <CardContent>
+                        <Typography variant="h6">{meal}</Typography>
+                        {/* Displaying meals data */}
+                        {mealsData[meal.toLowerCase() + 's'].map((food, index) => (
+                          <Typography key={index} variant="body2">
+                            {`${food.item} - ${food.quantity} ${food.measurement}`}
+                          </Typography>
+                        ))}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleAddFoodClick(meal)}
+                          sx={{ marginTop: '10px' }}
+                        >
+                          Add Food
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Right Hand Side Tile */}
+        <Grid item xs={12} md={5}>
+          <Box sx={{ width: '100%', padding: '20px', borderRadius: '8px', height: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <Box sx={{ marginBottom: '10px' }}>
+              <Typography variant="body1">Calories:</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeCalories.toFixed(2)} Kcal</Typography>
+                <Typography variant="body1">{calories.toFixed(2)} Kcal</Typography>
+              </Box>
+
+
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeCalories, calories)}
+                color={getBarColor(consumeCalories, calories)}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: '10px' }}>
+
+              <Typography variant="body1">Proteins:</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeProteins.toFixed(2)}g</Typography>
+                <Typography variant="body1">{protein.toFixed(2)}g</Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeProteins, protein)}
+                color={getBarColor(consumeProteins, protein)}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: '10px' }}>
+              <Typography variant="body1">Carbohydrates:</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeCarbohydrates.toFixed(2)}g</Typography>
+                <Typography variant="body1">{carbohydrates.toFixed(2)}g</Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeCarbohydrates, carbohydrates)}
+                color={getBarColor(consumeCarbohydrates, carbohydrates)}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: '10px' }}>
+              <Typography variant="body1">Fat:</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeFat.toFixed(2)}g</Typography>
+                <Typography variant="body1">{fat.toFixed(2)}g</Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeFat, fat)}
+                color={getBarColor(consumeFat, fat)}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: '10px' }}>
+              <Typography variant="body1">Sugars:</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeSugars.toFixed(2)}g</Typography>
+                <Typography variant="body1">{sugar.toFixed(2)}g</Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeSugars, sugar)}
+                color={getBarColor(consumeSugars, sugar)}
+              />
+            </Box>
+
+            <Box sx={{ marginBottom: '10px' }}>
+              <Typography variant="body1">Fiber:</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeFiber.toFixed(2)}g</Typography>
+                <Typography variant="body1">{fiber.toFixed(2)}g</Typography>
+              </Box>
+
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeFiber, fiber)}
+                color={getBarColor(consumeFiber, fiber)}
+              />
+
+            </Box>
+
+            <Box sx={{ marginBottom: '10px' }}>
+              <Typography variant="body1">Sodium :</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                <Typography variant="body1">{consumeSodium.toFixed(2)}g</Typography>
+                <Typography variant="body1">{sodium.toFixed(2)}g</Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={calculatePercentage(consumeSodium, sodium)}
+                color={getBarColor(consumeSodium, sodium)}
+              />
+            </Box>
+
+          </Box>
+        </Grid>
+      </Grid>
+
+      {/* Dialog Box */}
+      {/* Dialog Box */}
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+  <DialogTitle>Add Food Item</DialogTitle>
+  <DialogContent>
+    <TextField
+      autoFocus
+      margin="dense"
+      label="Food Name"
+      type="text"
+      fullWidth
+      variant="outlined"
+      value={foodName}
+      onChange={(e) => setFoodName(e.target.value)}
+    />
+    <TextField
+      margin="dense"
+      label="Quantity"
+      type="text"
+      fullWidth
+      variant="outlined"
+      value={quantity}
+      onChange={(e) => setQuantity(e.target.value)}
+    />
+    <Box sx={{ marginTop: '10px' }}>
+      <Typography variant="subtitle1">Measurement</Typography>
+      {['cup', 'tablespoon', 'medium', 'grams'].map(unit => (
+        <FormControlLabel
+          key={unit}
+          control={
+            <Checkbox
+              checked={measurement === unit}
+              onChange={() => setMeasurement(unit)}
+              name="measurement"
+              color="primary"
+            />
+          }
+          label={unit}
+        />
+      ))}
+    </Box>
+    <Box sx={{ marginTop: '20px' }}>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Food Preparation Status</FormLabel>
+        <RadioGroup
+          row
+          aria-label="foodPreparationStatus"
+          name="foodPreparationStatus"
+          value={foodPreparationStatus}
+          onChange={(e) => setFoodPreparationStatus(e.target.value)}
+        >
+          <FormControlLabel
+            value="cooked"
+            control={<Radio color="primary" />}
+            label="Cooked"
+          />
+          <FormControlLabel
+            value="uncooked"
+            control={<Radio color="primary" />}
+            label="Uncooked"
+          />
+        </RadioGroup>
+      </FormControl>
+    </Box>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleDialogClose} color="primary">
+      Cancel
+    </Button>
+    <Button onClick={handleDoneClick} color="primary">
+      Done
+    </Button>
+  </DialogActions>
+</Dialog>
+
+      <Dialog open={openFinishDialog} onClose={() => setOpenFinishDialog(false)}>
+        <DialogTitle>Finish and Calculate BMI</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Height (cm)"
+            type="number"
+            fullWidth
+            variant="outlined"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Weight (kg)"
+            type="number"
+            fullWidth
+            variant="outlined"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="BMI"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={bmi}
+            InputProps={{ readOnly: true }}
+          />
+          <Typography variant="subtitle1" sx={{ marginTop: '10px' }}>
+            {bmiCondition}
+          </Typography>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCalculateBMI} color="primary">
+            Calculate
+          </Button>
+          <Button onClick={handleSet} color="primary">
+            Set
+          </Button>
+        </DialogActions>
       </Dialog>
+
     </Box>
   );
-  
 };
-
-const SelectedFoodCard = ({ food, index, handleQuantityChange, handleRemoveFood }) => (
-  <Card sx={{ marginTop: '10px' }}>
-    <CardContent>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="body1">{food.name}</Typography>
-        <Box display="flex" alignItems="center" sx={{ marginLeft: 'auto', marginRight: '10px' }}>
-          <Typography variant="body1">{food.normalConsumption}</Typography>
-          <TextField
-            type="number"
-            variant="outlined"
-            size="small"
-            value={food.quantity}
-            sx={{ width: '60px', marginLeft: '10px' }}
-            onChange={e => handleQuantityChange(index, e.target.value)}
-          />
-          <IconButton
-            aria-label="edit"
-            onClick={() => handleRemoveFood(index)}
-            sx={{ marginLeft: '10px', color: theme => theme.palette.grey[500] }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      </Box>
-    </CardContent>
-  </Card>
-);
 
 export default Calorytrack;

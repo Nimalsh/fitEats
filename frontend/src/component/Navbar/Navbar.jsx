@@ -11,7 +11,7 @@ import logo from '../../assets/images/logo_remove_blackground.png';
 
 
 export const Navbar = () => {
-  const { auth } = useSelector(store => store);
+  const { auth,cart } = useSelector(store => store);
   const navigate = useNavigate();
 
   const handleAvatarClick=()=>{
@@ -50,7 +50,7 @@ export const Navbar = () => {
         </div>
         <div>
           <IconButton onClick={() => navigate("/cart")}>
-            <Badge color="primary" badgeContent={2}>
+            <Badge color="primary" badgeContent={cart.cartItems?.length}>
               <ShoppingCartTwoToneIcon sx={{ fontSize: '1.5rem' }} />
             </Badge>
           </IconButton>

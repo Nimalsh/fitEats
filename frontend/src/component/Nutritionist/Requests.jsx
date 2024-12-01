@@ -1,52 +1,68 @@
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box, Button, Card, CardHeader, Paper, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase
+  TableContainer, TableHead, TableRow, IconButton, Typography, ButtonBase, Tabs, Tab
 } from '@mui/material';
-import React, { useState } from 'react';
 import { Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
-const orders = [
-  { id: 1, user: 'User1', requestDate: '2024-07-15', title: 'Weight Loss', status: 'Pending' },
-  { id: 2, user: 'User2', requestDate: '2024-07-14', title: 'Weight Gain', status: 'Finished' },
-  { id: 3, user: 'User3', requestDate: '2024-07-13', title: 'Other', status: 'Finished' },
-  { id: 4, user: 'User4', requestDate: '2024-07-12', title: 'Weight Gain', status: 'Pending' },
-  { id: 5, user: 'User5', requestDate: '2024-07-11', title: 'Muscle gain', status: 'Finished' },
-  { id: 6, user: 'User6', requestDate: '2024-07-10', title: 'Others', status: 'Pending' },
-];
-
-const getStatusColor = (status) => {
-  switch (status) {
-    case 'Pending':
-      return '#f44336'; // Red
-    case 'Finished':
-      return '#4caf50'; // Green
-    default:
-      return '#9e9e9e'; // Grey
-  }
-};
+import { getRequestsByNutritionistId } from '../State/Requests/Action'; // Adjust the import path accordingly
 
 function Requests() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [clickedUser, setClickedUser] = useState(null);
+  const [clickedUser, setClickedUser] = React.useState(null);
+  const [selectedTab, setSelectedTab] = React.useState('All');
 
-  const handleViewClick = (title, status) => {
-    if (status === 'Finished') {
-      navigate('view/completed');
+  const { requests, loading, error } = useSelector(state => state.request); // Adjust according to your state structure
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt"); // Adjust based on how you store the token
+    console.log("Token:", token);
+    if (token) {
+      dispatch(getRequestsByNutritionistId(token));
+    }
+  }, [dispatch]);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Pending':
+        return '#f44336'; // Red
+      case 'Finished':
+        return '#4caf50'; // Green
+      default:
+        return '#9e9e9e'; // Grey
+    }
+  };
+
+  const handleViewClick = (title, status, requestId, planId, duration) => {
+    // Convert title to lowercase
+    const lowerCaseTitle = title.toLowerCase();
+    
+    if (status === 'Finished' || status === 'Completed') {
+      if (lowerCaseTitle === 'other' || lowerCaseTitle === 'others') {
+        if (planId) {
+          navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}`);
+        } else {
+          navigate(`/nutri/other/view/${requestId}`);
+        }
+      } else {
+        navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}`);
+      }
     } else {
-      switch (title) {
-        case 'Weight Loss':
-          navigate('/nutri/weightloss/view');
+      switch (lowerCaseTitle) {
+        case 'weight loss':
+          navigate(`/nutri/weightloss/view/${requestId}`);
           break;
-        case 'Weight Gain':
-          navigate('/nutri/weightgain/view');
+        case 'weight gain':
+          navigate(`/nutri/weightgain/view/${requestId}`);
           break;
-        case 'Other':
-        case 'Others':
-          navigate('/nutri/other/view');
+        case 'other':
+        case 'others':
+          navigate(`/nutri/other/view/${requestId}`);
           break;
         default:
-          navigate('/nutri/queries/reply'); // Fallback route
+          navigate(`/nutri/queries/reply/${requestId}`); // Fallback route
           break;
       }
     }
@@ -57,6 +73,14 @@ function Requests() {
     console.log(`Clicked on user: ${user}`);
   };
 
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+
+  const filteredOrders = requests.filter(order =>
+    selectedTab === 'All' || order.status === selectedTab
+  );
+
   return (
     <Box>
       <Card className='mt-1'>
@@ -64,19 +88,26 @@ function Requests() {
           title={"Requests"}
           sx={{ pt: 2, alignItems: "center" }}
         />
+        <Tabs value={selectedTab} onChange={handleTabChange} aria-label="status tabs">
+          <Tab label="All" value="All" />
+          <Tab label="Pending" value="Pending" />
+          <Tab label="Finished" value="Finished" />
+        </Tabs>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="left">User</TableCell>
-                <TableCell align="center">Request Date</TableCell>
+                <TableCell align="center">
+                  {selectedTab === 'Finished' ? 'Completed Date' : 'Request Date'}
+                </TableCell>
                 <TableCell align="center">Title</TableCell>
                 <TableCell align="center">Status</TableCell>
                 <TableCell align="center"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((row, index) => (
+              {filteredOrders.map((row, index) => (
                 <TableRow
                   key={index} // Use index as a key since row has no unique property
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -91,13 +122,13 @@ function Requests() {
                           variant="body2"
                           sx={{ marginLeft: 1, textDecoration: clickedUser === row.user ? 'underline' : 'none' }}
                         >
-                          {row.user}
+                          {row.name}
                         </Typography>
                       </Box>
                     </ButtonBase>
                   </TableCell>
                   <TableCell align="center">
-                    {row.requestDate}
+                    {selectedTab === 'Finished' ? row.completedDate : row.requestDate}
                   </TableCell>
                   <TableCell align="center">
                     {row.title}
@@ -119,7 +150,7 @@ function Requests() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => handleViewClick(row.title, row.status)}
+                      onClick={() => handleViewClick(row.title, row.status, row.requestId, row.planId, row.duration, row.status)}
                     >
                       View
                     </Button>

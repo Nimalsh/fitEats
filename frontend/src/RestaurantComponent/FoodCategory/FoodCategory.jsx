@@ -1,10 +1,10 @@
-import React from 'react'
-import { FoodCategoryTable } from './FoodCategoryTable' 
+import React from 'react' 
+import { CategoryTable } from './CategoryTable'
 
 export const FoodCategory = () => {
   return (
-    <div>
-      <FoodCategoryTable/> 
+    <div> 
+      <CategoryTable/>
       
     </div>
   )

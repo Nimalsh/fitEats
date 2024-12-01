@@ -28,15 +28,15 @@ export const createOrder = (reqData) => {
     }
   };
 };
-
 // Get User's Orders
 export const getUsersOrders = (jwt) => {
   return async (dispatch) => {
     dispatch({ type: GET_USERS_ORDERS_REQUEST });
     try {
-      const { data } = await api.get(`/api/order/user`, {
+      const { data } = await api.get("/api/order/user", {
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${jwt}`
+, // Corrected syntax
         },
       });
       dispatch({ type: GET_USERS_ORDERS_SUCCESS, payload: data });
@@ -46,7 +46,6 @@ export const getUsersOrders = (jwt) => {
     }
   };
 };
-
 // Get User's Notifications
 export const getUsersNotifications = (token) => {
   return async (dispatch) => {

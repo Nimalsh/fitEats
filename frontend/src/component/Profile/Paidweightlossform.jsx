@@ -1,14 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createRequest } from '../State/Requests/Action';
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 
 const Paidweightlossform = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleProceed = () => {
+    const token = localStorage.getItem('jwt'); // Or wherever your token is stored
+    
+    // Create a requestData object with all the form data
+    const requestData = {
+      title, // Example static title, replace if needed
+      status: "Pending",
+      currentWeight: parseFloat(currentWeight) || 0,
+      weightGoal: parseFloat(targetWeightLoss) || 0,
+      duration: parseInt(duration) || 0,
+      age: parseInt(age) || 0,
+      height: parseFloat(height) || 0,
+      gender: gender,
+      dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
+      dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
+      activityLevel: activityLevel,
+      mealsPerDay: parseInt(mealsPerDay) || 0
+    };
+  
+    // Dispatch the createRequest action with requestData and token
+    dispatch(createRequest(requestData, token))
+    .then(() => {
+      // Navigate to another page upon successful request creation
+      navigate('/my-profile/personalized-plan'); // Adjust the path as needed
+    })
+    .catch((error) => {
+      console.error("Error creating request", error);
+      // Handle errors if needed
+    });
+  };
+  
+
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -19,6 +55,23 @@ const Paidweightlossform = () => {
   const [dietaryPreferences, setDietaryPreferences] = useState([]);
   const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
   const [mealsPerDay, setMealsPerDay] = useState('');
+  const [title, setTitle] = useState('');
+  const [chartLabel, setChartLabel] = useState('');
+  const [chartYAxisTitle, setChartYAxisTitle] = useState('');
+  const { type } = useParams();
+
+  useEffect(() => {
+    if (type === 'weightloss') {
+      setTitle('Weight Loss');
+      setChartLabel('Weight Loss (kg)');
+      setChartYAxisTitle('Weight (kg)');
+    } else if (type === 'weightgain') {
+      setTitle('Weight Gain');
+      setChartLabel('Weight Gain (kg)');
+      setChartYAxisTitle('Weight (kg)');
+    }
+  }, [type]);
+  console.log(title);
 
   // Function to handle input changes
   const handleInputChange = (event) => {
@@ -72,11 +125,16 @@ const Paidweightlossform = () => {
   const generateChartData = () => {
     const currentWeightNum = parseFloat(currentWeight) || 0;
     const targetWeightLossNum = parseFloat(targetWeightLoss) || 0;
-    const durationNum = parseFloat(duration) || 0;
+    const durationNum = Math.ceil((parseFloat(duration) || 0) / 7);
 
     const labels = Array.from({ length: durationNum }, (_, i) => `Week ${i + 1}`);
     const weightLossPerWeek = targetWeightLossNum / durationNum;
-    const weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - (weightLossPerWeek * (i + 1)));
+    let weightLossData;
+    if (type === 'weightLoss') {
+      weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - weightLossPerWeek * (i + 1));
+    } else {
+      weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum + weightLossPerWeek * (i + 1));
+    }
 
     return {
       labels,
@@ -123,9 +181,10 @@ const Paidweightlossform = () => {
         <Grid item xs={12} sm={6}>
           <Box mt={5} ml={-1}>
             <Paper style={{ padding: 20 }}>
-              <Typography variant="h6" gutterBottom>
-                Weight Loss Plan
-              </Typography>
+            <Typography variant="h6" gutterBottom>
+  {`${title}  Form`}
+</Typography>
+
               <form noValidate autoComplete="off">
                 <TextField
                   label="Current Weight (kg)"
@@ -137,7 +196,8 @@ const Paidweightlossform = () => {
                   onChange={handleInputChange}
                 />
                 <TextField
-                  label="Weight Loss (kg)"
+                label={chartLabel}
+
                   fullWidth
                   margin="normal"
                   type="number"
@@ -146,7 +206,7 @@ const Paidweightlossform = () => {
                   onChange={handleInputChange}
                 />
                 <TextField
-                  label="Duration (weeks)"
+                  label="Duration (days)"
                   fullWidth
                   margin="normal"
                   type="number"
@@ -157,9 +217,9 @@ const Paidweightlossform = () => {
               </form>
               {/* Chart Component */}
               <Box mt={3}>
-                <Typography variant="h6" gutterBottom>
-                  Weight Loss and Duration Chart
-                </Typography>
+              <Typography variant="h6" gutterBottom>
+  {`${title} Duration Chart`}
+</Typography>
                 <Line data={data} options={options} />
               </Box>
             </Paper>
@@ -169,9 +229,8 @@ const Paidweightlossform = () => {
         <Grid item xs={12} sm={4}>
           <Box mt={5} width={'550px'} marginLeft={'3px'}>
             <Paper style={{ padding: 20, width: '100%' }}>
-              <Typography variant="h6" gutterBottom>
-               
-              </Typography>
+
+
               <Grid >
                 {/* Age, Gender, Height */}
                 <Grid item xs={12} sm={4}>
@@ -486,16 +545,17 @@ const Paidweightlossform = () => {
         />
       </Grid>
       <Grid item xs={6} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={dietaryRestrictions.includes('halal')}
-              onChange={(e) => handleCheckboxChange(e, 'restrictions')}
-              name="halal"
-            />
-          }
-          label="Halal"
-        />
+      <FormControlLabel
+  control={
+    <Checkbox
+      checked={dietaryRestrictions.includes('halal')}
+      onChange={(e) => handleCheckboxChange(e, 'restrictions')}
+      name="halal"
+    />
+  }
+  label="Halal"
+/>
+
       </Grid>
       <Grid item xs={6} sm={4}>
         <FormControlLabel
@@ -534,7 +594,7 @@ const Paidweightlossform = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                  onClick={() => navigate('/my-profile/personalized-plan/weightloss/nutritionist')}  >
+                  onClick={handleProceed}  >
                   Proceed
                 </Button>
               </Grid>

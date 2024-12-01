@@ -1,151 +1,205 @@
-import { Box, CardHeader, Dialog, DialogActions, DialogTitle, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import BackgroundImage from '../../assets/images/Background_image.png';
-
-const menuItems = [
-  { id: 1, name: "Scrumbled Egg", amount: 3, description: "Medically reviewed by Melizza Rifkin." },
-  { id: 2, name: "Grilled Chicken wedges", amount: 2, description: "Medically reviewed by Melizza Rifkin." },
-];
-
-const MenuItemTile = ({ item }) => {
-  const [open, setOpen] = useState(false);
-  const [accepted, setAccepted] = useState(false); // Track acceptance state
-
-  const handleDelete = () => {
-    console.log(`Deleting item ${item.id}`);
-    setOpen(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleAccept = () => {
-    // Handle the acceptance logic here
-    setAccepted(true); // Update state to show pending button
-    setOpen(false);
-  };
-
-  const handleSubmit = () => {
-    // Handle the submission logic here
-    setOpen(false);
-  };
-
-  return (
-    <Box
-      sx={{
-        width: 300,
-        height: 350,
-        margin: 2,
-        borderRadius: 10,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        backgroundColor: 'rgba(64, 64, 64, 0.8)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: 2,
-      }}
-    >
-<div
-  style={{
-    width: 200,
-    height: 80,
-    borderRadius: '50px',
-    boxShadow: '0 12px 24px rgba(255, 255, 255, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent', // Keep the background transparent
-  }}
->
-  <Typography variant="h6" sx={{ margin: 0, color: 'white' }}>
-    {item.name}
-  </Typography>
-</div>
-
-
-      <Typography variant="h6" sx={{ marginTop: 1 }}>
-        Amount of items: {item.amount}
-      </Typography>
-      <Typography variant="body2" sx={{ marginTop: 1, color: '#ddd' }}>
-        {item.description}
-      </Typography>
-
-      <div className="button-container mt-5">
-        {!accepted && (
-          <button type="button" className="button add-button" onClick={handleClickOpen}>
-            Accept
-          </button>
-        )}
-        <button type="button" className="button delete-button" onClick={handleDelete}>
-          Reject
-        </button>
-
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Are you sure you want to delete {item.name}?</DialogTitle>
-          <DialogActions>
-            <button type="button" className="button add-button mb-5 mr-5" onClick={handleDelete} autoFocus>
-              Yes
-            </button>
-            <button type="button" className="button add-button mb-5 mr-5" onClick={handleClose}>
-              No
-            </button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog open={open} onClose={handleSubmit}>
-          <DialogTitle>Accept</DialogTitle>
-          <DialogActions>
-            <TextField label="Enter Price" fullWidth />
-            <button type='button' className='button add-button' onClick={handleAccept}>Submit</button>
-          </DialogActions>
-        </Dialog>
-      </div>
-
-      {accepted && (
-        <button type="button" className="button details-button" style={{ width: '70%' }}>
-          Pending
-        </button>
-      )}
-    </Box>
-  );
-};
+import { Delete } from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  IconButton,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  deleteFoodAction,
+  getMenuItemsByRestaurantId,
+} from "../../component/State/Menu/Action";
+import { getRestaurantsCategory } from "../../component/State/Restaurant/Action";
 
 export const MenuTable = () => {
-  return (
-    <Box
-      sx={{
-        backgroundImage: `url(${BackgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        padding: 2,
-      }}
-    >
-      <CardHeader
-        title="Menu"
-        sx={{ pt: 2, alignItems: "center" }}
-      />
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const { restaurant, menu, ingredients } = useSelector((store) => store);
+  const navigate = useNavigate();
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          padding: 2,
-        }}
-      >
-        {menuItems.map((item) => (
-          <MenuItemTile key={item.id} item={item} />
-        ))}
-      </Box>
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  useEffect(() => {
+    if (restaurant.usersRestaurant) {
+      dispatch(
+        getMenuItemsByRestaurantId({
+          restaurantId: restaurant.usersRestaurant.id,
+          jwt,
+          vegetarian: false,
+          seasonal: false,
+          nonveg: false,
+          foodCategory: selectedCategory,
+        })
+      );
+      dispatch(
+        getRestaurantsCategory({
+          jwt,
+          restaurantId: restaurant.usersRestaurant.id,
+        })
+      );
+    }
+  }, [dispatch, jwt, restaurant.usersRestaurant, selectedCategory]);
+
+  const handleDeleteFood = (foodId) => {
+    dispatch(deleteFoodAction({ foodId, jwt }));
+  };
+
+  const handleViewDetails = (foodId) => {
+    navigate(`/admin/restaurant/menu/food-details/${foodId}`);
+  };
+
+  const filteredMenuItems = menu.menuItems.filter((item) => {
+    const matchesCategory =
+      selectedCategory === "" || item.foodCategory.name === selectedCategory;
+    const matchesSearchQuery = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearchQuery;
+  });
+
+  return (
+    <Box>
+      <Card className="mt-2">
+        <CardHeader
+          action={
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+              }}
+            >
+              <button
+                className="button add-button"
+                onClick={() => navigate("/admin/restaurant/add-menu")}
+                sx={{
+                  backgroundColor: "#95CD41",
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#7baf30",
+                  },
+                  borderRadius: "20px",
+                  padding: "10px 20px",
+                  width: "150px",
+                }}
+              >
+                <AddIcon /> Add Food
+              </button>
+
+              <TextField
+                variant="outlined"
+                placeholder="Search Food Item"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: <SearchIcon />,
+                }}
+                sx={{
+                  width: "250px",
+                  backgroundColor: "#555555",
+                  borderRadius: "4px",
+                  height: "55px",
+                }}
+              />
+
+              <Select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                displayEmpty
+                sx={{
+                  width: "200px",
+                  backgroundColor: "#555555",
+                  borderRadius: "4px",
+                }}
+              >
+                <MenuItem value="">
+                  <em>All Categories</em>
+                </MenuItem>
+                {restaurant.categories.map((category) => (
+                  <MenuItem key={category.id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+          }
+          title="All Food Items"
+          sx={{ pt: 2, textAlign: "left" }}
+        />
+      </Card>
+
+      <Grid container spacing={2} sx={{ marginTop: 2 }}>
+        {filteredMenuItems && filteredMenuItems.length > 0 ? (
+          filteredMenuItems.map((item) => (
+            <Grid item xs={12} sm={6} md={4} key={item.id}>
+              <Card style={{ background: "#555555" }}>
+                <CardContent>
+                  <Box display="flex" justifyContent="center">
+                    <img
+                      src={item.images[0]}
+                      alt={item.name}
+                      style={{
+                        width: 180,
+                        height: 150,
+                        borderRadius: "10%",
+                        marginBottom: "10px",
+                      }}
+                    />
+                  </Box>
+                  <Typography variant="h5" align="center" gutterBottom>
+                    {item.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    align="center"
+                  >
+                    Rs.{item.price}/=
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ justifyContent: "center" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ fontWeight: "bold" }}
+                    onClick={() => handleViewDetails(item.id)}
+                  >
+                    View Details
+                  </Button>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteFood(item.id)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="h6" align="center" sx={{ marginTop: 2 }}>
+              No Menu Items Found
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
     </Box>
   );
 };
-

@@ -33,9 +33,16 @@ import Dashboard from './Dashboard';
 import Complain from './ComplaintForm';
 import ComplaintForm from './ComplaintForm';
 
+
 import Completedplans from './Completedplans';
 
 import CustormizeOrder from './CustormizeOrder';
+import Automealplan from './Automealplan';
+
+
+
+import ComplaintPage from './ComplaintPage';
+import ComplaintHistory from './ComplaintHistory';
 
 
 
@@ -64,7 +71,8 @@ const Profile = () => {
           <Route path="/meal-log" element={<Meallog />} />
           <Route path="/personalized-plan" element={<Goalselect/>} />
           <Route path="/nutri-queries" element={<NutriQueries/>} />
-          <Route path="/complain" element={<ComplaintForm/>} />
+          <Route path="/complain" element={<ComplaintPage/>} />
+          <Route path="/complain-history" element={<ComplaintHistory />} />
 
           <Route path="/meal-plan" element={<MealPlansPage />} />
           <Route path="/menu-suggest" element={<MenuSuggest/>} />
@@ -74,10 +82,12 @@ const Profile = () => {
           
 
           <Route path="/personalized-plan/weightloss/nutritionist" element={<Nutritionistselection/>} />
-          <Route path="/personalized-plan/weightloss" element={<Paidweightlossform/>} />
-          <Route path="/personalized-plan/view" element={<Mealprogress/>} />
-          <Route path="/personalized-plan/weightgain" element={<Paidweightgainform/>} />
-          <Route path="/BMI/plan" element={<Calorytrack/>} />
+          <Route path="/personalized-plan/:type" element={<Paidweightlossform />} />
+
+          <Route path="/personalized-plan/view/:planId/:duration" element={<Mealprogress/>} />
+          
+          <Route path="/autoplan/view/:planId/:duration" element={<Automealplan/>} />
+          <Route path="/BMI/plan/:duration/:planId" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
           <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
           <Route path="/lose-weight/weightloss" element={<Freeweightlossform/>} />
