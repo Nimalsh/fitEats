@@ -1,15 +1,17 @@
 import React from 'react';
 import { Card, Col, Row, Table, Typography, Input, Button } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
+import { Admin } from '../Admin/Admin';
+import AdminTable from '../Admin/Table/Table';
 
 const { Title } = Typography;
 
 // Top metrics for drivers and deliveries
 const statData = [
-  { title: "Drivers Count", value: "150", change: "2", icon: "UserOutlined" },
-  { title: "Delivery Income for the Day", value: "Rs.45,000", change: "2", icon: "WalletTwoTone" },
-  { title: "Number of Deliveries", value: "320", change: "2", icon: "ShoppingCartOutlined" },
-  { title: "Complain Count", value: "10", change: "2", icon: "ExclamationCircleOutlined" },
+  { title: "Drivers Count", value: "6", change: "0", icon: "UserOutlined" },
+  { title: "Delivery Income for the Day", value: "Rs.150", change: "-50", icon: "WalletTwoTone" },
+  { title: "Number of Deliveries", value: "1", change: "-100", icon: "ShoppingCartOutlined" },
+  { title: "Complain Count", value: "0", change: "0", icon: "ExclamationCircleOutlined" },
 ];
 
 // Table columns and data for active drivers
@@ -44,15 +46,6 @@ const activeDriversColumns = [
     dataIndex: 'signUpDate',
     key: 'signUpDate',
   },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Button type="primary" danger onClick={() => handleBlockDriver(record.driverId)}>
-        Block
-      </Button>
-    ),
-  },
 ];
 
 // Table columns and data for blocked drivers
@@ -86,15 +79,6 @@ const blockedDriversColumns = [
     title: 'Blocked Date',
     dataIndex: 'blockedDate',
     key: 'blockedDate',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Button type="primary" onClick={() => handleUnblockDriver(record.driverId)}>
-        Unblock
-      </Button>
-    ),
   },
 ];
 
@@ -156,16 +140,9 @@ export const DeliveryDriver = () => {
 
       {/* Active Drivers Section */}
       <Col span={24}>
-        <Card title="Active Drivers" extra={<Input.Search placeholder="Search Drivers" style={{ width: 300 }} />}>
-          <Table columns={activeDriversColumns} dataSource={activeDriversData} />
-        </Card>
-      </Col>
-
-      {/* Blocked Drivers Section */}
-      <Col span={24}>
-        <Card title="Blocked Drivers" extra={<Input.Search placeholder="Search Blocked Drivers" style={{ width: 300 }} />}>
-          <Table columns={blockedDriversColumns} dataSource={blockedDriversData} />
-        </Card>
+      <Card style={{ height: '100%' }}>
+        <AdminTable title={"Active Drivers"} columns={activeDriversColumns} data={activeDriversData} keyField='driverId' />
+      </Card>
       </Col>
     </Row>
   );

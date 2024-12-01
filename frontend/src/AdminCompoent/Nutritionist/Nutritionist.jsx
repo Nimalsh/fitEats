@@ -82,10 +82,10 @@ const onChange = (pagination, filters, sorter, extra) => {
 export const Nutritionist = () => {
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Nutritionist Count"} value={"5"} change={"-1"} icon="UserOutlined"></StatCard>
-      <StatCard title={"Chanelling Income for the Day"} value={"Rs.2500"} change={"-10"} icon="DollarOutlined"></StatCard>
-      <StatCard title={"Number of Chanelling Appointments"} value={"15"} change={"-2"} icon="CalendarOutlined"></StatCard>
-      <StatCard title={"Complain Count"} value={"3"} change={"-1"} icon="WarningOutlined"></StatCard>
+      <StatCard title={"Nutritionist Count"} value={"5"} change={"0"} icon="UserOutlined"></StatCard>
+      <StatCard title={"Chanelling Income for the Day"} value={"Rs.1000"} change={"-10"} icon="DollarOutlined"></StatCard>
+      <StatCard title={"Number of Chanelling Appointments"} value={"2"} change={"-66"} icon="CalendarOutlined"></StatCard>
+      <StatCard title={"Complain Count"} value={"0"} change={"0"} icon="WarningOutlined"></StatCard>
       <Col
         xs={20}
         md={24}

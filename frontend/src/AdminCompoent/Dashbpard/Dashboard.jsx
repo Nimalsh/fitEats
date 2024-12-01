@@ -22,7 +22,7 @@ const data = [
   { day: 'Dec 1', income: 1100 },
   { day: 'Dec 2', income: 1400 },
   { day: 'Dec 3', income: 2000 },
-  { day: 'Dec 4', income: 300 },
+  { day: 'Dec 4', income: 1000 },
 ];
 
 export const Dashboard = () => {
@@ -64,7 +64,7 @@ export const Dashboard = () => {
 
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Total Income for the Day"} value={"Rs.300"} change={"-85"} icon="WalletTwoTone"></StatCard>
+      <StatCard title={"Total Income for the Day"} value={"Rs.1000"} change={"-85"} icon="WalletTwoTone"></StatCard>
       <StatCard title={"Total Orders for the Day"} value={"12"} change={"-22"} icon="ShoppingCartOutlined"></StatCard>
       <StatCard title={"Total Users"} value={"50"} change={"0"} icon="UserOutlined"></StatCard>
       <StatCard title={"Total Resturants"} value={"15"} change={"0"} icon="ShopOutlined"></StatCard>

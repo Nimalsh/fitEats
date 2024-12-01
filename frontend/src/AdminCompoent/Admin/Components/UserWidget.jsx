@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select, DatePicker, Typography, Row, Col, Button, message } from 'antd';
+import { Select, DatePicker, Typography, Row, Col, Button, message, Table } from 'antd';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import moment from 'moment';
@@ -8,60 +8,124 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { Title } = Typography;
 
+const columns = [
+  {
+    title: 'Transaction ID',
+    dataIndex: 'transactionId',
+    width: '15%',
+  },
+  {
+    title: 'Date',
+    dataIndex: 'date',
+    width: '15%',
+  },
+  {
+    title: 'Time',
+    dataIndex: 'time',
+    width: '10%',
+  },
+  {
+    title: 'Payment Done By',
+    dataIndex: 'paymentDoneBy',
+    width: '15%',
+  },
+  {
+    title: 'Order/Appointment ID',
+    dataIndex: 'orderAppointmentId',
+    width: '15%',
+  },
+  {
+    title: 'Payment Done To',
+    dataIndex: 'paymentDoneTo',
+    width: '15%',
+  },
+  {
+    title: 'Total Payment',
+    dataIndex: 'totalPayment',
+    width: '15%',
+  },
+];
+
+const initialData = [
+  {
+    key: '1',
+    transactionId: 'TXN001',
+    date: '2023-10-01',
+    time: '10:00 AM',
+    paymentDoneBy: 'Nimal Perera',
+    orderAppointmentId: 'ORD001',
+    paymentDoneTo: 'Kumara Silva',
+    totalPayment: 'LKR 1000',
+  },
+  {
+    key: '2',
+    transactionId: 'TXN002',
+    date: '2023-10-02',
+    time: '11:00 AM',
+    paymentDoneBy: 'Amali Wijesinghe',
+    orderAppointmentId: 'ORD002',
+    paymentDoneTo: 'Sunil Fernando',
+    totalPayment: 'LKR 1500',
+  },
+  {
+    key: '3',
+    transactionId: 'TXN003',
+    date: '2023-10-03',
+    time: '12:00 PM',
+    paymentDoneBy: 'Sajith Jayawardena',
+    orderAppointmentId: 'ORD003',
+    paymentDoneTo: 'Chathura Gamage',
+    totalPayment: 'LKR 2000',
+  },
+  {
+    key: '4',
+    transactionId: 'TXN004',
+    date: '2023-10-04',
+    time: '01:00 PM',
+    paymentDoneBy: 'Chamali Bandara',
+    orderAppointmentId: 'ORD004',
+    paymentDoneTo: 'Hirantha Abeysekera',
+    totalPayment: 'LKR 2500',
+  },
+  {
+    key: '5',
+    transactionId: 'TXN005',
+    date: '2023-10-05',
+    time: '02:00 PM',
+    paymentDoneBy: 'Tharindu Rathnayake',
+    orderAppointmentId: 'ORD005',
+    paymentDoneTo: 'Kumara Silva',
+    totalPayment: 'LKR 3000',
+  },
+  {
+    key: '6',
+    transactionId: 'TXN006',
+    date: '2023-10-06',
+    time: '03:00 PM',
+    paymentDoneBy: 'Dilini Senanayake',
+    orderAppointmentId: 'ORD006',
+    paymentDoneTo: 'Kumara Silva',
+    totalPayment: 'LKR 3500',
+  },
+];
+
 const ReportWidget = () => {
   const [userType, setUserType] = useState(null);
   const [user, setUser] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
-  const [payments, setPayments] = useState([
-    {
-      date: '2024-10-01',
-      time: '10:30 AM',
-      to: 'Jane Doe',
-      type: 'Admin',
-      amount: 200,
-    },
-    {
-      date: '2024-10-15',
-      time: '2:00 PM',
-      to: 'John Smith',
-      type: 'User',
-      amount: 150,
-    },
-    {
-      date: '2024-10-05',
-      time: '9:00 AM',
-      to: 'Alice Johnson',
-      type: 'Admin',
-      amount: 300,
-    },
-    // add more data
-    {
-      date: '2024-10-10',
-      time: '11:00 AM',
-      to: 'Jane Doe',
-      type: 'Admin',
-      amount: 250,
-    },
-    {
-      date: '2024-10-20',
-      time: '3:30 PM',
-      to: 'John Smith',
-      type: 'User',
-    }
-  ]); // Mocked payment data
 
   // Filter payments based on user type, user, and date range
-  const filteredPayments = payments.filter((payment) => {
+  const filteredPayments = initialData.filter((payment) => {
     const paymentDate = moment(payment.date);
     const isWithinDateRange = dateRange[0] && dateRange[1] ? paymentDate.isBetween(dateRange[0], dateRange[1], 'days', '[]') : true;
-    const isUserTypeMatch = userType ? payment.type === userType : true;
-    const isUserMatch = user ? payment.to === user : true;
+    const isUserTypeMatch = userType ? payment.paymentDoneTo === userType : true;
+    const isUserMatch = user ? payment.paymentDoneBy === user : true;
 
     return isWithinDateRange && isUserTypeMatch && isUserMatch;
   });
 
   // Calculate total payment for filtered data
-  const totalPayment = filteredPayments.reduce((sum, payment) => sum + payment.amount, 0);
+  const totalPayment = filteredPayments.reduce((sum, payment) => sum + parseFloat(payment.totalPayment.replace('LKR ', '')), 0);
 
   // Handle Date Range Selection
   const handleDateChange = (dates) => {
@@ -84,26 +148,29 @@ const ReportWidget = () => {
 
     // Add table using autoTable
     doc.autoTable({
-      head: [['Date', 'Time', 'Payment To', 'Amount']],
+      head: [['Transaction ID', 'Date', 'Time', 'Payment Done By', 'Order/Appointment ID', 'Payment Done To', 'Total Payment']],
       body: filteredPayments.map(payment => [
+        payment.transactionId,
         payment.date,
         payment.time,
-        payment.to,
-        `$${payment.amount}`
+        payment.paymentDoneBy,
+        payment.orderAppointmentId,
+        payment.paymentDoneTo,
+        payment.totalPayment
       ]),
       startY: 40,
     });
 
     // Add total payment
     doc.setFontSize(14);
-    doc.text(`Total Payment: $${totalPayment}`, 14, doc.lastAutoTable.finalY + 10);
+    doc.text(`Total Payment: LKR ${totalPayment}`, 14, doc.lastAutoTable.finalY + 10);
 
     // Save the PDF
     doc.save(`payment_report_${moment().format('YYYYMMDD')}.pdf`);
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: 'auto', padding: '20px',  backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+    <div style={{ maxWidth: 800, margin: 'auto', padding: '20px',  backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
       <Title level={3} style={{ textAlign: 'center' }}>Payment Report Generator</Title>
 
       <Row gutter={16} style={{ marginBottom: '16px' }}>
@@ -113,8 +180,10 @@ const ReportWidget = () => {
             style={{ width: '100%' }}
             onChange={(value) => setUserType(value)}
           >
-            <Option value="Admin">Admin</Option>
-            <Option value="User">User</Option>
+            <Option value="Kumara Silva">Kumara Silva</Option>
+            <Option value="Sunil Fernando">Sunil Fernando</Option>
+            <Option value="Chathura Gamage">Chathura Gamage</Option>
+            <Option value="Hirantha Abeysekera">Hirantha Abeysekera</Option>
           </Select>
         </Col>
         <Col span={12}>
@@ -124,9 +193,12 @@ const ReportWidget = () => {
             onChange={(value) => setUser(value)}
             disabled={!userType} // Only enable user selection after userType is selected
           >
-            <Option value="Jane Doe">Jane Doe</Option>
-            <Option value="John Smith">John Smith</Option>
-            <Option value="Alice Johnson">Alice Johnson</Option>
+            <Option value="Nimal Perera">Nimal Perera</Option>
+            <Option value="Amali Wijesinghe">Amali Wijesinghe</Option>
+            <Option value="Sajith Jayawardena">Sajith Jayawardena</Option>
+            <Option value="Chamali Bandara">Chamali Bandara</Option>
+            <Option value="Tharindu Rathnayake">Tharindu Rathnayake</Option>
+            <Option value="Dilini Senanayake">Dilini Senanayake</Option>
           </Select>
         </Col>
       </Row>
@@ -138,6 +210,12 @@ const ReportWidget = () => {
             onChange={handleDateChange}
             disabled={!user} // Only enable date picker after user is selected
           />
+        </Col>
+      </Row>
+
+      <Row gutter={16} style={{ marginBottom: '16px' }}>
+        <Col span={24}>
+          <Table columns={columns} dataSource={filteredPayments} pagination={false} />
         </Col>
       </Row>
 

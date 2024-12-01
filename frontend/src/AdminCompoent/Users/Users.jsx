@@ -95,13 +95,13 @@ export const Users = () => {
 
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={'User Count'} value={'100'} change={'10'} icon="UserOutlined" />
-      <StatCard title={'Regular Users'} value={'20'} change={'2'} icon="UserOutlined" />
-      <StatCard title={'New SignUps'} value={'20'} change={'5'} icon="UserOutlined" />
-      <StatCard title={'Average Signup '} value={'10'} change={'0'} icon="UserOutlined" />
+      <StatCard title={'User Count'} value={'50'} change={'10'} icon="UserOutlined" />
+      <StatCard title={'Regular Users'} value={'10'} change={'2'} icon="UserOutlined" />
+      <StatCard title={'New SignUps'} value={'5'} change={'5'} icon="UserOutlined" />
+      <StatCard title={'Average Signup '} value={'10%'} change={'1'} icon="UserOutlined" />
       <Col xs={20} md={24} xl={32}>
       <Card style={{ height: '100%' }}>
-        <AdminTable title={"Users"} columns={columns} data={initialData} />
+        <AdminTable title={"Users"} columns={columns} data={initialData} keyField='userID' />
         </Card>
       </Col>
     </Row>

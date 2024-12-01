@@ -37,10 +37,10 @@ const initialData = [
 export const Restaurant = () => {
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Restaurant Count"} value={"40"} change={"0"} icon="ShopOutlined"></StatCard>
-      <StatCard title={"Restaurants Income for the Day"} value={"Rs.12,000"} change={"-9"} icon="DollarOutlined"></StatCard>
-      <StatCard title={"Order Count for the Day"} value={"150"} change={"5"} icon="ShoppingCartOutlined"></StatCard>
-      <StatCard title={"Complain Count"} value={"3"} change={"0"} icon="WarningOutlined"></StatCard>
+      <StatCard title={"Restaurant Count"} value={"15"} change={"0"} icon="ShopOutlined"></StatCard>
+      <StatCard title={"Restaurants Income for the Day"} value={"Rs.800"} change={"-9"} icon="DollarOutlined"></StatCard>
+      <StatCard title={"Order Count for the Day"} value={"2"} change={"-20"} icon="ShoppingCartOutlined"></StatCard>
+      <StatCard title={"Complain Count"} value={"1"} change={"100"} icon="WarningOutlined"></StatCard>
       <Col
         xs={20}
         md={24}
