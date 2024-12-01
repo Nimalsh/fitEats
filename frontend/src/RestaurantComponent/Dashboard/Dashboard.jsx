@@ -2,25 +2,25 @@ import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mui/m
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-// import authHeader from '../../../services/auth-header';
+ 
 
 export const Dashboard = () => {
   const [orderData, setOrderData] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
   const [popularFoodData, setPopularFoodData] = useState([]);
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const handleNavigate = () => {
     navigate('ingredient-report');
   };
 
+  const handleNavigateToIncomeReport = () => {
+    navigate('income-report');
+  };
 
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658'];
 
-  const callData = async () => {
-    // const response = await axios.get('http://localhost:8072/FoodiFy/Restaurant/callOrder', { headers: authHeader() });
-    // const data = response.data;
-    // Mock data for the example:
+  const callData = async () => { 
     const data = [
       { date: '2024-07-01', orders: 5, revenue: 200 },
       { date: '2024-07-02', orders: 8, revenue: 350 },
@@ -148,27 +148,46 @@ export const Dashboard = () => {
               <Typography variant="h6" gutterBottom>Customer Feedback</Typography>
               <Typography variant="body1">You have 3 new reviews.</Typography>
             </CardContent>
-            <CardContent >
-              <Typography variant="h6" gutterBottom>Analytics</Typography> 
-              <button
-              className="button add-button"
-              onClick={handleNavigate}
-              sx={{
-                backgroundColor: "#95CD41",
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#7baf30",
-                },
-                borderRadius: "20px",
-                padding: "10px 20px",
-                width: "150px",
-              }}
-            >
-             Ingredient Report
-            </button>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>Analytics</Typography>
+              <Box sx={{ display: "flex", gap: "10px" }}> {/* Added flexbox container */}
+                <button
+                  className="button add-button"
+                  onClick={handleNavigate}
+                  sx={{
+                    backgroundColor: "#95CD41",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#7baf30",
+                    },
+                    borderRadius: "20px",
+                    padding: "10px 20px",
+                    width: "150px",
+                  }}
+                >
+                  Ingredient Report
+                </button>
+                <button
+                  className="button add-button"
+                  onClick={handleNavigateToIncomeReport}
+                  sx={{
+                    backgroundColor: "#95CD41",
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#7baf30",
+                    },
+                    borderRadius: "20px",
+                    padding: "10px 20px",
+                    width: "150px",
+                  }}
+                >
+                  Income Report
+                </button>
+              </Box>
             </CardContent>
+
           </Card>
-          
+
         </Grid>
         {/* <Grid item xs={12}>
           <Card sx={{ backgroundColor: '#333333', color: '#ffffff', padding: 2, height: '100%' }}>

@@ -16,7 +16,8 @@ const Orders = () => {
   if (error) return <Typography><div>{error?.message || "Unknown error occurred"}</div></Typography>;
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{ marginTop: '3rem' }}>
+
       <Table>
         <TableHead>
           <TableRow>
@@ -38,7 +39,7 @@ const Orders = () => {
                 <ul>
                   {order.items.map((item) => (
                     <li key={item.foodName}>
-                      {item.foodName} (x{item.quantity}) - ${((item.totalPrice / 100).toFixed(2))}
+                      {item.foodName} (x{item.quantity}) - RS.{((item.totalPrice / 100).toFixed(2))}
                     </li>
                   ))}
                 </ul>
