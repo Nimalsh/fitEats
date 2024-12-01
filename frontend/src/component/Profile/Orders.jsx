@@ -39,7 +39,7 @@ const Orders = () => {
                 <ul>
                   {order.items.map((item) => (
                     <li key={item.foodName}>
-                      {item.foodName} (x{item.quantity}) - ${((item.totalPrice / 100).toFixed(2))}
+                      {item.foodName} (x{item.quantity}) - RS.{((item.totalPrice / 100).toFixed(2))}
                     </li>
                   ))}
                 </ul>
