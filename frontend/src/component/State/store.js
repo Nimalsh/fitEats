@@ -22,6 +22,7 @@ import queriesReducer from "./Queries/Reducer";
 import articlesReducer from "./Articles/Reducer";
 
 import complaintReducer from "./complain/Reducer";
+import paymentReducer from "./Payment/Reducer";
 
 
 const rootReducer =combineReducers({
@@ -49,6 +50,7 @@ const rootReducer =combineReducers({
 
   nutrion:NutrionReducer,
   complaint:complaintReducer,
+  payment:paymentReducer
 
 
 });

@@ -43,6 +43,7 @@ import Automealplan from './Automealplan';
 
 import ComplaintPage from './ComplaintPage';
 import ComplaintHistory from './ComplaintHistory';
+import Paymentssandbox from './Paymentssandbox';
 
 
 
@@ -92,6 +93,8 @@ const Profile = () => {
           <Route path="/lose-weight/:type" element={<Freeweightlossform/>} />
          
           <Route path="/completed" element={<Completedplans/>} />
+          <Route path="/payment" element={<Paymentssandbox/>} />
+
 
         </Routes>
       </div>
