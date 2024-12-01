@@ -43,8 +43,8 @@ export const OrderDetails = () => {
     margin: "20px auto",
     bgcolor: "#36454F", // Light grey background
     boxShadow: 3,
-    borderRadius: "10px",
-    padding: "16px",
+    borderRadius: "16px",
+    padding: "16px", 
   };
 
   const buttonStyle = {
@@ -74,23 +74,37 @@ export const OrderDetails = () => {
             <CardHeader title={`Order Details for Order ID: ${order.id}`} />
           </Card>
           {/* Grey rectangle for customer details below the card */}
-          <Box sx={modalStyle}>
-            <Typography variant="h6" sx={{ p: 1 }}>
-              CUSTOMER NAME: {order.customerName}
-            </Typography>
-            <Typography variant="h6" sx={{ p: 1 }}>
-              CUSTOMER EMAIL: {order.customerEmail}
-            </Typography>
-            <Typography variant="h6" sx={{ p: 1 }}>
-               CUSTOMER ADDRESS: {order.customerAddress}
-            </Typography>
-            <Typography variant="h6" sx={{ p: 1 }}>
-              STATUS: {order.orderStatus}
-            </Typography>
-            <Typography variant="h6" sx={{ p: 1 }}>
-              TOTAL PRICE: Rs.{order.totalPrice}.00
-            </Typography>
-          </Box>
+          <Box
+  sx={{
+    ...modalStyle,
+    display: "flex",
+    justifyContent: "flex-start", // Space between the left and right columns
+    gap:12,
+  }}
+>
+  {/* Left Column */}
+  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <Typography variant="h7" sx={{ p: 1 }}>
+      CUSTOMER NAME: {order.customerName}
+    </Typography>
+    <Typography variant="h7" sx={{ p: 1 }}>
+      CUSTOMER EMAIL: {order.customerEmail}
+    </Typography>
+    <Typography variant="h7" sx={{ p: 1 }}>
+      CUSTOMER ADDRESS: {order.customerAddress}
+    </Typography>
+  </Box>
+
+  {/* Right Column */}
+  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <Typography variant="h7" sx={{ p: 1 }}>
+      STATUS: {order.orderStatus}
+    </Typography>
+    <Typography variant="h7" sx={{ p: 1 }}>
+      TOTAL PRICE: Rs.{order.totalPrice}.00
+    </Typography>
+  </Box>
+</Box>
 
           <Card sx={{ marginBottom: "20px" }}>
             <Typography variant="h6" sx={{ p: 2 }}>
