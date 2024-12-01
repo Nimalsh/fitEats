@@ -46,76 +46,13 @@ const columns = [
   },
 ];
 
-const initialData = [
-  {
-    key: '1',
-    transactionId: 'TXN001',
-    date: '2023-10-01',
-    time: '10:00 AM',
-    paymentDoneBy: 'Nimal Perera',
-    orderAppointmentId: 'ORD001',
-    paymentDoneTo: 'Kumara Silva',
-    totalPayment: 'LKR 1000',
-  },
-  {
-    key: '2',
-    transactionId: 'TXN002',
-    date: '2023-10-02',
-    time: '11:00 AM',
-    paymentDoneBy: 'Amali Wijesinghe',
-    orderAppointmentId: 'ORD002',
-    paymentDoneTo: 'Sunil Fernando',
-    totalPayment: 'LKR 1500',
-  },
-  {
-    key: '3',
-    transactionId: 'TXN003',
-    date: '2023-10-03',
-    time: '12:00 PM',
-    paymentDoneBy: 'Sajith Jayawardena',
-    orderAppointmentId: 'ORD003',
-    paymentDoneTo: 'Chathura Gamage',
-    totalPayment: 'LKR 2000',
-  },
-  {
-    key: '4',
-    transactionId: 'TXN004',
-    date: '2023-10-04',
-    time: '01:00 PM',
-    paymentDoneBy: 'Chamali Bandara',
-    orderAppointmentId: 'ORD004',
-    paymentDoneTo: 'Hirantha Abeysekera',
-    totalPayment: 'LKR 2500',
-  },
-  {
-    key: '5',
-    transactionId: 'TXN005',
-    date: '2023-10-05',
-    time: '02:00 PM',
-    paymentDoneBy: 'Tharindu Rathnayake',
-    orderAppointmentId: 'ORD005',
-    paymentDoneTo: 'Kumara Silva',
-    totalPayment: 'LKR 3000',
-  },
-  {
-    key: '6',
-    transactionId: 'TXN006',
-    date: '2023-10-06',
-    time: '03:00 PM',
-    paymentDoneBy: 'Dilini Senanayake',
-    orderAppointmentId: 'ORD006',
-    paymentDoneTo: 'Kumara Silva',
-    totalPayment: 'LKR 3500',
-  },
-];
-
-const ReportWidget = () => {
+const ReportWidget = ({ transactions }) => {
   const [userType, setUserType] = useState(null);
   const [user, setUser] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
 
   // Filter payments based on user type, user, and date range
-  const filteredPayments = initialData.filter((payment) => {
+  const filteredPayments = transactions.filter((payment) => {
     const paymentDate = moment(payment.date);
     const isWithinDateRange = dateRange[0] && dateRange[1] ? paymentDate.isBetween(dateRange[0], dateRange[1], 'days', '[]') : true;
     const isUserTypeMatch = userType ? payment.paymentDoneTo === userType : true;
@@ -141,7 +78,7 @@ const ReportWidget = () => {
 
     doc.setFontSize(18);
     doc.text('Payment Report', 14, 22);
-    
+
     // Add date range info
     doc.setFontSize(12);
     doc.text(`Date Range: ${dateRange[0] ? moment(dateRange[0]).format('YYYY-MM-DD') : ''} to ${dateRange[1] ? moment(dateRange[1]).format('YYYY-MM-DD') : ''}`, 14, 32);
@@ -170,7 +107,7 @@ const ReportWidget = () => {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: 'auto', padding: '20px',  backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+    <div style={{ maxWidth: 800, margin: 'auto', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
       <Title level={3} style={{ textAlign: 'center' }}>Payment Report Generator</Title>
 
       <Row gutter={16} style={{ marginBottom: '16px' }}>

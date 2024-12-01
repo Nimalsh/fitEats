@@ -1,26 +1,24 @@
-import React, { useState } from 'react'
-import { Card, Col, Row } from 'antd';
-import { Typography, List } from 'antd';
-import { LineChart } from '@mui/x-charts/LineChart';
-import {Segmented,  } from 'antd';
-import StatCard from '../Admin/Components/StatCard';
-import { color } from '@mui/system';
-import { Table } from 'antd';
-import UserWidget from '../Admin/Components/UserWidget';
+import React, { useState } from 'react';
+import { Card, Col, Row, DatePicker, Button, Select } from 'antd';
+import { Typography, Table } from 'antd';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 import ReportWidget from '../Admin/Components/UserWidget';
 
 const { Title } = Typography;
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 
-const columns = () => [
+const columns = (handleBlockUser) => [
   {
     title: 'Transaction ID',
     dataIndex: 'transactionId',
-    width: '15%',
+    width: '10%',
   },
   {
     title: 'Date',
     dataIndex: 'date',
-    width: '15%',
+    width: '10%',
   },
   {
     title: 'Time',
@@ -45,7 +43,12 @@ const columns = () => [
   {
     title: 'Total Payment',
     dataIndex: 'totalPayment',
-    width: '15%',
+    width: '10%',
+  },
+  {
+    title: 'User Type',
+    dataIndex: 'userType',
+    width: '10%',
   },
 ];
 
@@ -59,59 +62,64 @@ const initialData = [
     orderAppointmentId: 'ORD001',
     paymentDoneTo: 'Kumara Silva',
     totalPayment: 'LKR 1000',
+    userType: 'Customer',
   },
   {
     key: '2',
     transactionId: 'TXN002',
     date: '2023-10-02',
     time: '11:00 AM',
-    paymentDoneBy: 'Amali Wijesinghe',
+    paymentDoneBy: 'Sandaru Silva',
     orderAppointmentId: 'ORD002',
-    paymentDoneTo: 'Sunil Fernando',
-    totalPayment: 'LKR 1500',
+    paymentDoneTo: 'Nuwan Perera',
+    totalPayment: 'LKR 2000',
+    userType: 'Admin',
   },
   {
     key: '3',
     transactionId: 'TXN003',
     date: '2023-10-03',
     time: '12:00 PM',
-    paymentDoneBy: 'Sajith Jayawardena',
+    paymentDoneBy: 'Kamal Chathuranga',
     orderAppointmentId: 'ORD003',
-    paymentDoneTo: 'Chathura Gamage',
-    totalPayment: 'LKR 2000',
+    paymentDoneTo: 'Ruwan Silva',
+    totalPayment: 'LKR 1500',
+    userType: 'Customer',
   },
   {
     key: '4',
     transactionId: 'TXN004',
     date: '2023-10-04',
     time: '01:00 PM',
-    paymentDoneBy: 'Chamali Bandara',
+    paymentDoneBy: 'Saman Kumara',
     orderAppointmentId: 'ORD004',
-    paymentDoneTo: 'Hirantha Abeysekera',
+    paymentDoneTo: 'Kumara Silva',
     totalPayment: 'LKR 2500',
+    userType: 'Customer',
   },
   {
     key: '5',
     transactionId: 'TXN005',
     date: '2023-10-05',
     time: '02:00 PM',
-    paymentDoneBy: 'Tharindu Rathnayake',
+    paymentDoneBy: 'Nuwan Perera',
     orderAppointmentId: 'ORD005',
-    paymentDoneTo: 'Kumara Silva',
+    paymentDoneTo: 'Sandaru Silva',
     totalPayment: 'LKR 3000',
+    userType: 'Customer',
   },
   {
     key: '6',
     transactionId: 'TXN006',
     date: '2023-10-06',
     time: '03:00 PM',
-    paymentDoneBy: 'Dilini Senanayake',
+    paymentDoneBy: 'Ruwan Silva',
     orderAppointmentId: 'ORD006',
-    paymentDoneTo: 'Kumara Silva',
+    paymentDoneTo: 'Kamal Chathuranga',
     totalPayment: 'LKR 3500',
+    userType: 'Admin',
   },
 ];
-
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log('params', pagination, filters, sorter, extra);
@@ -119,8 +127,10 @@ const onChange = (pagination, filters, sorter, extra) => {
 
 export const Transactions = () => {
   const [usersData, setUsersData] = useState(initialData);
+  const [selectedUserType, setSelectedUserType] = useState(null);
+  const [selectedUserName, setSelectedUserName] = useState(null);
+  const [dateRange, setDateRange] = useState(null);
 
-  // Function to handle blocking/unblocking users
   const handleBlockUser = (key) => {
     const updatedUsers = usersData.map((user) =>
       user.key === key ? { ...user, blocked: !user.blocked } : user
@@ -128,8 +138,33 @@ export const Transactions = () => {
     setUsersData(updatedUsers);
   };
 
-  const blockedUsers = usersData.filter((user) => user.blocked);
-  const activeUsers = usersData.filter((user) => !user.blocked);
+  const handleDownloadPDF = () => {
+    const filteredData = usersData.filter((user) => {
+      const userDate = new Date(user.date);
+      const [startDate, endDate] = dateRange || [];
+      return (
+        (!selectedUserType || user.userType === selectedUserType) &&
+        (!selectedUserName || user.paymentDoneBy === selectedUserName) &&
+        (!dateRange || (userDate >= startDate && userDate <= endDate))
+      );
+    });
+
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [['Transaction ID', 'Date', 'Time', 'Payment Done By', 'Order/Appointment ID', 'Payment Done To', 'Total Payment', 'User Type']],
+      body: filteredData.map((user) => [
+        user.transactionId,
+        user.date,
+        user.time,
+        user.paymentDoneBy,
+        user.orderAppointmentId,
+        user.paymentDoneTo,
+        user.totalPayment,
+        user.userType,
+      ]),
+    });
+    doc.save('transactions.pdf');
+  };
 
   const renderTable = (users, title) => {
     return (
@@ -142,15 +177,39 @@ export const Transactions = () => {
   return (
     <Row gutter={[16, 16]}>
       <Col xs={20} md={24} xl={32}>
-        {renderTable(activeUsers, 'Transaction History')}
+        <Select
+          placeholder="Select User Type"
+          style={{ width: 200, marginRight: 16 }}
+          onChange={(value) => setSelectedUserType(value)}
+        >
+          <Option value="Customer">Customer</Option>
+          <Option value="Driver">Driver</Option>
+          <Option value="Admin">Admin</Option>
+          <Option value="Nutritionist">Nutritionist</Option>
+          {/* Add more user types as needed */}
+        </Select>
+        <Select
+          placeholder="Select User Name"
+          style={{ width: 200, marginRight: 16 }}
+          onChange={(value) => setSelectedUserName(value)}
+        >
+          {usersData.map((user) => (
+            <Option key={user.key} value={user.paymentDoneBy}>
+              {user.paymentDoneBy}
+            </Option>
+          ))}
+        </Select>
+        <RangePicker onChange={(dates) => setDateRange(dates)} style={{ marginRight: 16 }} />
+        <Button type="primary" onClick={handleDownloadPDF}>
+          Download PDF
+        </Button>
       </Col>
-
       <Col xs={20} md={24} xl={32}>
-      <ReportWidget/>
+        {renderTable(usersData, 'Transaction History')}
       </Col>
-     
+      <Col xs={20} md={24} xl={32}>
+        {/* <ReportWidget /> */}
+      </Col>
     </Row>
   );
 };
-
-
