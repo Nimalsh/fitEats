@@ -97,7 +97,7 @@ selectedIngredients.filter((item)=>item!==itemName)
                     <FormControlLabel
                       key={ingredient.id}
                       control={<Checkbox onChange={() => handleCheckBoxChange(ingredient.name)} />}
-                      label={`${ingredient.name} (+${ingredient.celeryValue || 0})`}
+                      label={`${ingredient.name}`}
                     />
                   ))}
                 </FormGroup>
@@ -113,17 +113,17 @@ selectedIngredients.filter((item)=>item!==itemName)
             >
               Add to Cart
             </Button>
-            <Button 
-              variant='contained'
-              type="button"
-              onClick={handleNutritionContentClick} 
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-md uppercase font-semibold text-sm"
-            >
-              NUTRITION CONTENT
-            </Button>
-            <div className='bg-red-900 text-white px-4 py-2 rounded-md shadow-md'>
-              <h3 className='font-semibold'>Total Celery Value: {totalCeleryValue}</h3>
-            </div>
+            <Button
+          variant="contained"
+          type="button"
+          onClick={handleNutritionContentClick}
+          style={{ backgroundColor: '#3e6606', color: '#fff' }}
+        >
+          NUTRITION CONTENT
+        </Button>
+
+
+            
           </div>
         </form>
       </AccordionDetails>

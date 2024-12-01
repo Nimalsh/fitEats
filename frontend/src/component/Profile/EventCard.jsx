@@ -17,9 +17,6 @@ export const EventCard = ({ event }) => {
           </div>
         </CardContent>
         <CardActions>
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
         </CardActions>
       </Card>
     </div>
