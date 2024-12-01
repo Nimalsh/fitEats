@@ -16,7 +16,8 @@ const Orders = () => {
   if (error) return <Typography><div>{error?.message || "Unknown error occurred"}</div></Typography>;
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{ marginTop: '3rem' }}>
+
       <Table>
         <TableHead>
           <TableRow>

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsersOrders } from '../State/Order/Action';
 
 // Register Chart.js components
- ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement);
 
 const Dashboard = () => {
   
@@ -191,19 +191,19 @@ const Dashboard = () => {
             {/* Statistics Cards */}
             <Grid item xs={12} md={4}>
               <Link to="/my-profile/orders" style={{ textDecoration: 'none' }}>
-                <Paper style={{ padding: '10px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', cursor: 'pointer' }}>
+              <Paper style={{ padding: '15px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', width: '270px', cursor: 'pointer' }}>
                   <OrderIcon style={{ color: '#fff' }} />
                   <Typography variant="h6" style={{ color: '#979533' }}>All Orders</Typography>
-                  <Typography variant="h4" style={{ color: '#fff' }}>120</Typography>
+                  <Typography variant="h4" style={{ color: '#fff' }}> </Typography>
                 </Paper>
               </Link>
             </Grid>
             <Grid item xs={12} md={4}>
               <Link to="/my-profile/meal-plan" style={{ textDecoration: 'none' }}>
-                <Paper style={{ padding: '10px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', cursor: 'pointer' }}>
+              <Paper style={{ padding: '15px', backgroundColor: '#181816', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', width: '270px', cursor: 'pointer' }}>
                   <ArticleIcon style={{ color: '#fff' }} />
                   <Typography variant="h6" style={{ color: '#979533' }}>Meal Articles</Typography>
-                  <Typography variant="h4" style={{ color: '#fff' }}>85</Typography>
+                  <Typography variant="h4" style={{ color: '#fff' }}> </Typography>
                 </Paper>
               </Link>
             </Grid>
@@ -259,7 +259,7 @@ const Dashboard = () => {
                 <ul>
                   {order.items.map((item) => (
                     <li key={item.foodName}>
-                      {item.foodName} (x{item.quantity}) - ${((item.totalPrice / 100).toFixed(2))}
+                      {item.foodName} ({item.quantity} item ) - ${((item.totalPrice / 100).toFixed(2))}
                     </li>
                   ))}
                 </ul>
