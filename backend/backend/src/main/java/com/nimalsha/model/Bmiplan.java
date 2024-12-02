@@ -18,6 +18,17 @@ public class Bmiplan {
     private double height;
     private double bmi;
     private double target;
+    private String gender;
+    private double calories;
+    private double protein ; 
+    private double fat ; 
+    private double carbohydrates; 
+    private double fiber; 
+    private double sodium; 
+    private double sugar;
+    private int age;
+    private String activitylevel;
 
    
 }
+

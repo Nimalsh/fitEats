@@ -11,4 +11,7 @@ public class CreatebmiplanRequest {
     private double height; // Height of the user
     private double bmi; // Body Mass Index value
     private double target; // Target weight or goal for the plan
+    private String gender; // Default gender
+    private int age; // Default age
+    private String activitylevel; 
 }
