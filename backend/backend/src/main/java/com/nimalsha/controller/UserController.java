@@ -23,19 +23,19 @@ public class UserController {
     private UserService userService;
 
 
-    @GetMapping("/active-user-count")
-    public ResponseEntity<Integer> getActiveUserCount() {
-        List<User> users = userService.getAllUsers();
+    // @GetMapping("/active-user-count")
+    // public ResponseEntity<Integer> getActiveUserCount() {
+    //     List<User> users = userService.getAllUsers();
 
-        int count = 0;
-        for (User user : users) {
-            if (!user.getBlocked() && user.getRole() == USER_ROLE.ROLE_CUSTOMER) {
-                count++;
-            }
-        }
+    //     int count = 0;
+    //     for (User user : users) {
+    //         if (!user.getBlocked() && user.getRole() == USER_ROLE.ROLE_CUSTOMER) {
+    //             count++;
+    //         }
+    //     }
 
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>(count, HttpStatus.OK);
+    // }
 
     @GetMapping("/total-user-count")
     public ResponseEntity<Integer> getTotalUserCount() {

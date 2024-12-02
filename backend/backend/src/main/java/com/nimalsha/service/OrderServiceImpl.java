@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nimalsha.dto.OrderDTO;
+import com.nimalsha.dto.OrderItemDTO;
 import com.nimalsha.model.Address;
 import com.nimalsha.model.Cart;
 import com.nimalsha.model.CartItem;
@@ -137,6 +139,57 @@ public class OrderServiceImpl implements OrderService{
          }
 
         return optionalOrder.get();
+    }
+
+    @Override
+    public List<Order> getRestaurantOrdersWithCustomer(Long restaurantId) throws Exception {
+        System.out.println("Fetching orders with customer details for restaurant ID: " + restaurantId);
+        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+
+        // Lazy-loaded customer details are accessible here due to @ManyToOne relationship
+        orders.forEach(order -> {
+            User customer = order.getCustomer();
+            System.out.println("Customer Name: " + customer.getFullName());
+            System.out.println("Customer Email: " + customer.getEmail());
+        });
+
+        return orders;
+    }
+
+        @Override
+    public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
+        System.out.println("Fetching order details for restaurant ID: " + restaurantId);
+        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+
+        // Map orders to OrderDTO
+        return orders.stream().map(order -> {
+            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> {
+                // Log the ingredients of each order item
+                System.out.println("OrderItem Ingredients: " + item.getIngredients());
+
+                // Use the ingredients directly from the OrderItem model
+                List<String> ingredients = item.getIngredients();
+
+                return new OrderItemDTO(
+                    item.getFood().getName(), 
+                    item.getQuantity(), 
+                    item.getTotalPrice(),
+                    ingredients // Pass ingredients directly to DTO
+                );
+            }).collect(Collectors.toList());
+
+            System.out.println("Mapped order ID " + order.getId() + " with " + itemDTOs.size() + " items.");
+            
+            return new OrderDTO(
+                order.getId(),
+                order.getCreatedAt(),
+                order.getOrderStatus(),
+                order.getTotalPrice(),
+                itemDTOs,
+                order.getCustomer() != null ? order.getCustomer().getFullName() : "Unknown Customer", // Set customer name
+                order.getCustomer() != null ? order.getCustomer().getEmail() : "Unknown Email" // Set customer email
+            );
+        }).collect(Collectors.toList());
     }
     
 }

@@ -27,7 +27,7 @@ public class DeliveryDriver {
     private String email;
     private String contactNumber;
     private Date signUpDate;
-    private Boolean blocked;
+    // private Boolean blocked;
 
     // @PrePersist
     // public void generatePrefixOfId() {

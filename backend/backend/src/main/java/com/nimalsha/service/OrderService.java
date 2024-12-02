@@ -2,6 +2,7 @@ package com.nimalsha.service;
 
 import java.util.List;
 
+import com.nimalsha.dto.OrderDTO;
 import com.nimalsha.model.Order;
 import com.nimalsha.model.User;
 import com.nimalsha.request.OrderRequest;
@@ -20,6 +21,9 @@ public interface OrderService {
 
     public Order findOrderById(Long orderId) throws Exception;
 
+    public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception;
 
-    
+    // Added a new method to fetch orders with customer details
+    public List<Order> getRestaurantOrdersWithCustomer(Long restaurantId) throws Exception; // Added this method
+  
 }
