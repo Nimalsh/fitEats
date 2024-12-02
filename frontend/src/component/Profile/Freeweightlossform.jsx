@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { Button, Container, Grid, TextField, Paper, Typography, Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from 'chart.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createRequest } from '../State/Autoplans/Action';
 
@@ -18,22 +18,24 @@ const Freeweightlossform = () => {
     
     // Create a requestData object with all the form data
     const requestData = {
-      title: "Weight loss", // Example static title, replace if needed
+      title, // Example static title, replace if needed
       status: "Pending",
       weight: parseFloat(currentWeight) || 0,
-     
-      duration: parseInt(duration) || 0,
+      duration: (parseInt(duration) || 0) * 7, 
       age: parseInt(age) || 0,
       height: parseFloat(height) || 0,
       gender: gender,
       dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
       dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
       activitylevel: activityLevel,
-     
-      target: parseFloat(currentWeight) - parseFloat(targetWeightLoss) || 0,
-      bmi: height > 0 ? parseFloat(currentWeight) / Math.pow(parseFloat(height) / 100, 2) : 0
-
-    };
+      target: type === 'weightLoss' 
+          ? (parseFloat(currentWeight) - parseFloat(targetWeightLoss) || 0) 
+          : (parseFloat(currentWeight) + parseFloat(targetWeightLoss) || 0),
+      bmi: height > 0 
+          ? parseFloat(currentWeight) / Math.pow(parseFloat(height) / 100, 2) 
+          : 0
+  };
+  
   
     // Dispatch the createRequest action with requestData and token
     dispatch(createRequest(requestData, token))
@@ -60,6 +62,22 @@ const Freeweightlossform = () => {
   const [activityLevel, setActivityLevel] = useState('');
   const [dietaryPreferences, setDietaryPreferences] = useState([]);
   const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+  const { type } = useParams();
+  const [title, setTitle] = useState('');
+  const [chartLabel, setChartLabel] = useState('');
+  const [chartYAxisTitle, setChartYAxisTitle] = useState('');
+
+  useEffect(() => {
+    if (type === 'weightloss') {
+      setTitle('Weight Loss');
+      setChartLabel('Weight Loss (kg)');
+      setChartYAxisTitle('Weight (kg)');
+    } else if (type === 'weightgain') {
+      setTitle('Weight Gain');
+      setChartLabel('Weight Gain (kg)');
+      setChartYAxisTitle('Weight (kg)');
+    }
+  }, [type]);
   
   useEffect(() => {
     if (currentWeight && targetWeightLoss) {
@@ -120,11 +138,16 @@ const Freeweightlossform = () => {
   const generateChartData = () => {
     const currentWeightNum = parseFloat(currentWeight) || 0;
     const targetWeightLossNum = parseFloat(targetWeightLoss) || 0;
-    const durationNum = parseFloat(duration) || 0;
+    const durationNum = (parseFloat(duration) || 0);
 
     const labels = Array.from({ length: durationNum }, (_, i) => `Week ${i + 1}`);
-    const weightLossPerWeek = targetWeightLossNum / durationNum;
-    const weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - (weightLossPerWeek * (i + 1)));
+    const weightLossPerWeek = 0.5;
+    let weightLossData;
+    if (type === 'weightLoss') {
+      weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum - weightLossPerWeek * (i + 1));
+    } else {
+      weightLossData = Array.from({ length: durationNum }, (_, i) => currentWeightNum + weightLossPerWeek * (i + 1));
+    }
 
     return {
       labels,
@@ -164,6 +187,8 @@ const Freeweightlossform = () => {
     },
   };
 
+  
+
   return (
     <Container>
       <Grid container spacing={3}>
@@ -171,9 +196,10 @@ const Freeweightlossform = () => {
         <Grid item xs={12} sm={6}>
           <Box mt={5} ml={-1}>
             <Paper style={{ padding: 20 }}>
-              <Typography variant="h6" gutterBottom>
-                Weight Loss Plan
-              </Typography>
+            <Typography variant="h6" gutterBottom>
+  {`${title}  Form`}
+</Typography>
+
               <form noValidate autoComplete="off">
                 <TextField
                   label="Current Weight (kg)"
@@ -206,9 +232,10 @@ const Freeweightlossform = () => {
               </form>
               {/* Chart Component */}
               <Box mt={3}>
-                <Typography variant="h6" gutterBottom>
-                  Weight Loss and Duration Chart
-                </Typography>
+              <Typography variant="h6" gutterBottom>
+  {`${title}  Duration chart`}
+</Typography>
+
                 <Line data={data} options={options} />
               </Box>
             </Paper>

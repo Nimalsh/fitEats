@@ -43,8 +43,11 @@ import Automealplan from './Automealplan';
 
 import ComplaintPage from './ComplaintPage';
 import ComplaintHistory from './ComplaintHistory';
+
 import EditProfile from './EditProfile';
 import Cart from '../Cart/Cart';
+
+import Paymentssandbox from './Paymentssandbox';
 
 
 
@@ -91,9 +94,11 @@ const Profile = () => {
           <Route path="/autoplan/view/:planId/:duration" element={<Automealplan/>} />
           <Route path="/BMI/plan/:duration/:planId" element={<Calorytrack/>} />
           <Route path="/personalized-plan/other" element={<Paidothergoalform/>} />
-          <Route path="/lose-weight/weightgain" element={<Freeweightgainform/>} />
-          <Route path="/lose-weight/weightloss" element={<Freeweightlossform/>} />
+          <Route path="/lose-weight/:type" element={<Freeweightlossform/>} />
+         
           <Route path="/completed" element={<Completedplans/>} />
+          <Route path="/payment" element={<Paymentssandbox/>} />
+
 
           <Route path="my-profile/edit" element={<EditProfile />} />
           <Route path="/cart" element={<Cart />} />

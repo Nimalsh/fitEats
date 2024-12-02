@@ -13,14 +13,12 @@ const Plans = () => {
    
     const getStatusColor = (status) => {
         switch (status) {
-            case 'In progress':
-                return '#FFA726';
-            case 'Finished':
+           
+            case 'Completed':
                 return '#66BB6A';
             case 'Pending':
                 return '#FFEB3B';
-            case 'Replied':
-                return '#29B6F6';
+           
             default:
                 return '#BDBDBD';
         }
@@ -108,9 +106,9 @@ const Plans = () => {
 
                     // Determine if it's a weight loss or gain
                     const weightText = weightDifference > 0
-                        ? `Gain ${Math.abs(weightDifference)}`
+                        ? `Gain ${Math.abs(weightDifference)} kg`
                         : weightDifference < 0
-                        ? `Loss ${Math.abs(weightDifference)}`
+                        ? `Loss ${Math.abs(weightDifference)} kg`
                         : 'No Change';
 
                     return (
