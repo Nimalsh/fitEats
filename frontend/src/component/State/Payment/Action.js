@@ -1,5 +1,7 @@
 import { api } from "../../config/api";
+
 import { clearCartAction } from "../Cart/Action";
+
 import {
   START_PAYMENT_REQUEST,
   START_PAYMENT_SUCCESS,
@@ -47,9 +49,11 @@ export const startPayment = (jwt, paymentData) => {
         });
   
         dispatch({ type: START_PAYMENT_SUCCESS, payload: data });
+
         setTimeout(() => {
           dispatch(clearCartAction());
         }, 10000);
+
       } catch (error) {
         dispatch({
           type: START_PAYMENT_FAILURE,
@@ -59,6 +63,7 @@ export const startPayment = (jwt, paymentData) => {
     };
   };
    
+
 // Handle Notification
 export const handleNotification = (jwt, notificationData) => {
   return async (dispatch) => {
