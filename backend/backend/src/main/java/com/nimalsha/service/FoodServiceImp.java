@@ -29,11 +29,8 @@ public class FoodServiceImp implements FoodService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public Food createFood(CreateFoodRequest req, Restaurant restaurant) {
-        // Fetch the category using the category ID
-        Category category = categoryRepository.findById(req.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        
+    public Food createFood(CreateFoodRequest req, Category category, Restaurant restaurant) {
+
         Food food = new Food();
         food.setFoodCategory(category);
         food.setRestaurant(restaurant);
@@ -64,6 +61,7 @@ public class FoodServiceImp implements FoodService {
                                          boolean isNonveg,
                                          boolean isSeasonal,
                                          String foodCategory) {
+
         List<Food> foods = foodRepository.findByRestaurantId(restaurantId);
 
         if (isVegetarian) {
@@ -72,6 +70,7 @@ public class FoodServiceImp implements FoodService {
 
         if (isNonveg) {
             foods = filterByNonVeg(foods, isNonveg);
+
         }
 
         if (isSeasonal) {
@@ -133,6 +132,7 @@ public class FoodServiceImp implements FoodService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         return foodRepository.findByFoodCategory(category);
     }
+
 
     // New method to get the category of a specific food item
     @Override

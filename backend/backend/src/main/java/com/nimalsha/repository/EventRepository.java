@@ -9,5 +9,7 @@ import com.nimalsha.model.Event;
 public interface EventRepository extends JpaRepository<Event, Long> {
     
     List<Event> findByRestaurantId(Long restaurantId);
+    List<Event> findAll();
 }
+
 
