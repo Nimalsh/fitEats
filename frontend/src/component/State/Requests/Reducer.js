@@ -28,7 +28,13 @@ import {
   UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_FAILURE,
   UPDATE_REQUEST_COMMENT_REQUEST,
   UPDATE_REQUEST_COMMENT_SUCCESS,
-  UPDATE_REQUEST_COMMENT_FAILURE
+  UPDATE_REQUEST_COMMENT_FAILURE,
+  CREATE_OTHER_REQUEST_REQUEST,
+  CREATE_OTHER_REQUEST_SUCCESS,
+  CREATE_OTHER_REQUEST_FAILURE,
+  FINISH_REQUEST_BY_PLAN_ID_REQUEST,
+  FINISH_REQUEST_BY_PLAN_ID_SUCCESS,
+  FINISH_REQUEST_BY_PLAN_ID_FAILURE,
 } from './ActionType';
 
 const initialState = {
@@ -48,9 +54,11 @@ const requestReducer = (state = initialState, action) => {
     case GET_USER_REQUESTS_REQUEST:
     case UPDATE_REQUEST_STATUS_REQUEST:
     case GET_REQUEST_BY_PLAN_ID_REQUEST:
-      case UPDATE_ACHIEVED_WEIGHT_REQUEST:
-        case UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_REQUEST:
-          case UPDATE_REQUEST_COMMENT_REQUEST:
+    case UPDATE_ACHIEVED_WEIGHT_REQUEST:
+    case UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_REQUEST:
+    case UPDATE_REQUEST_COMMENT_REQUEST:
+    case CREATE_OTHER_REQUEST_REQUEST:
+    case FINISH_REQUEST_BY_PLAN_ID_REQUEST:
       return {
         ...state,
         loading: true,
@@ -85,40 +93,51 @@ const requestReducer = (state = initialState, action) => {
         loading: false,
       };
     case UPDATE_REQUEST_STATUS_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-        };
-        case GET_REQUEST_BY_PLAN_ID_SUCCESS:
-          return {
-            ...state,
-            loading: false,
-            requestByPlanId: action.payload,
-          };
+      return {
+        ...state,
+        loading: false,
+      };
+    case GET_REQUEST_BY_PLAN_ID_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        requestByPlanId: action.payload,
+      };
 
-          case UPDATE_ACHIEVED_WEIGHT_SUCCESS:
-            return {
-              ...state,
-              loading: false,
-              // Update the specific request if needed
-              requests: state.requests.map((request) =>
-                request.planId === action.payload.planId ? action.payload : request
-              ),
-            };
-            case UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_SUCCESS:
-              return {
-                ...state,
-                loading: false,
-                // Optionally update the specific request in state here if needed
-              };
-              case UPDATE_REQUEST_COMMENT_SUCCESS:
-                return {
-                  ...state,
-                  loading: false,
-                  // Optionally update the specific request in state here if needed
-                };
-        
-      
+    case UPDATE_ACHIEVED_WEIGHT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        // Update the specific request if needed
+        requests: state.requests.map((request) =>
+          request.planId === action.payload.planId ? action.payload : request
+        ),
+      };
+    case UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        // Optionally update the specific request in state here if needed
+      };
+    case UPDATE_REQUEST_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        // Optionally update the specific request in state here if needed
+      };
+    case CREATE_OTHER_REQUEST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        requests: [...state.requests, action.payload],
+      };
+    case FINISH_REQUEST_BY_PLAN_ID_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+
+
 
     case CREATE_REQUEST_FAILURE:
     case GET_REQUESTS_BY_NUTRITIONIST_FAILURE:
@@ -128,8 +147,10 @@ const requestReducer = (state = initialState, action) => {
     case UPDATE_REQUEST_STATUS_FAILURE:
     case GET_REQUEST_BY_PLAN_ID_FAILURE:
     case UPDATE_ACHIEVED_WEIGHT_FAILURE:
-      case UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_FAILURE:
+    case UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_FAILURE:
     case UPDATE_REQUEST_COMMENT_FAILURE:
+    case CREATE_OTHER_REQUEST_FAILURE:
+    case FINISH_REQUEST_BY_PLAN_ID_FAILURE:
       return {
         ...state,
         loading: false,

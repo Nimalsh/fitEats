@@ -27,6 +27,7 @@ public interface PlanService {
      public Request updateAchievedWeightByPlanId(Long planId, double achievedWeight) throws Exception;
      public void updateRequestDescriptionAndComplete(Long requestId, String description) throws Exception;
      public void putcomments(Long requestId, String comments) throws Exception;
+     public void finishRequestByPlanId(Long planId) throws Exception;
    
 
 }

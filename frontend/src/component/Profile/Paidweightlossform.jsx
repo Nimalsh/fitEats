@@ -29,19 +29,13 @@ const Paidweightlossform = () => {
       dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
       dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
       activityLevel: activityLevel,
-      mealsPerDay: parseInt(mealsPerDay) || 0
+      mealsPerDay: parseInt(mealsPerDay) || 0,
+      nutritionistId:0
     };
   
-    // Dispatch the createRequest action with requestData and token
-    dispatch(createRequest(requestData, token))
-    .then(() => {
-      // Navigate to another page upon successful request creation
-      navigate('/my-profile/personalized-plan'); // Adjust the path as needed
-    })
-    .catch((error) => {
-      console.error("Error creating request", error);
-      // Handle errors if needed
-    });
+    localStorage.setItem('requestData', JSON.stringify(requestData));
+    navigate('/my-profile/personalized-plan/weightloss/nutritionist');
+   
   };
   
 

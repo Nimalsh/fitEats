@@ -12,6 +12,9 @@ import {
   GET_NUTRITIONIST_BY_ID_REQUEST,
   GET_NUTRITIONIST_BY_ID_SUCCESS,
   GET_NUTRITIONIST_BY_ID_FAILURE,
+  GET_ALL_NUTRITIONISTS_REQUEST,
+  GET_ALL_NUTRITIONISTS_SUCCESS,
+  GET_ALL_NUTRITIONISTS_FAILURE,
 } from "./ActionType";
 
 export const createNutritionistRequest = (requestData) => {
@@ -88,6 +91,31 @@ export const checkNutritionistRequestByEmail = (email) => {
       } catch (error) {
         dispatch({ type: GET_NUTRITIONIST_BY_ID_FAILURE, payload: error.message });
         throw new Error(error.message);
+      }
+    };
+  };
+
+  export const getAllNutritionistRequests = (token) => {
+    return async (dispatch) => {
+      dispatch({ type: GET_ALL_NUTRITIONISTS_REQUEST });
+      try {
+        const response = await api.get(`/api/nutritionists/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        dispatch({
+          type: GET_ALL_NUTRITIONISTS_SUCCESS,
+          payload: response.data,
+        });
+        console.log("Fetched all nutritionist requests successfully");
+      } catch (error) {
+        console.error("Error fetching all nutritionist requests:", error);
+        dispatch({
+          type: GET_ALL_NUTRITIONISTS_FAILURE,
+          payload: error.message,
+        });
       }
     };
   };

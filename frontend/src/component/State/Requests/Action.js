@@ -33,7 +33,13 @@ import {
   UPDATE_REQUEST_DESCRIPTION_AND_COMPLETE_FAILURE,
   UPDATE_REQUEST_COMMENT_REQUEST,
   UPDATE_REQUEST_COMMENT_SUCCESS,
-  UPDATE_REQUEST_COMMENT_FAILURE
+  UPDATE_REQUEST_COMMENT_FAILURE,
+  CREATE_OTHER_REQUEST_REQUEST,
+  CREATE_OTHER_REQUEST_SUCCESS,
+  CREATE_OTHER_REQUEST_FAILURE,
+  FINISH_REQUEST_BY_PLAN_ID_REQUEST,
+  FINISH_REQUEST_BY_PLAN_ID_SUCCESS,
+  FINISH_REQUEST_BY_PLAN_ID_FAILURE,
 } from './ActionType';
 
 // Action to create a new request
@@ -189,7 +195,7 @@ export const updateAchievedWeight = (planId, achievedWeight, token) => {
   return async (dispatch) => {
     dispatch({ type: UPDATE_ACHIEVED_WEIGHT_REQUEST });
     try {
-      const { data } = await api.put(`/api/plan/requests/${planId}/achieved-weight`, null, {
+      const { data } = await api.put(`/api/plan/${planId}/achieved-weight`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -249,6 +255,43 @@ export const putcomments = (requestId, comments, token) => {
     }
   };
 };
+export const createotherRequest = (requestData, token) => {
+  return async (dispatch) => {
+    dispatch({ type: CREATE_OTHER_REQUEST_REQUEST });
+    try {
+      const { data } = await api.post('/api/users/otherrequests', requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({ type: CREATE_OTHER_REQUEST_SUCCESS, payload: data });
+      console.log("Request created", data);
+    } catch (error) {
+      console.error("Error creating request", error);
+      dispatch({ type: CREATE_OTHER_REQUEST_FAILURE, payload: error.message });
+    }
+  };
+};
+
+export const finishRequestByPlanId = (planId, token) => {
+  return async (dispatch) => {
+    
+    dispatch({ type: FINISH_REQUEST_BY_PLAN_ID_REQUEST });
+    try {
+      await api.put(`/api/plan/requests/finish/${planId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({ type: FINISH_REQUEST_BY_PLAN_ID_SUCCESS });
+      console.log("Request status updated to finished");
+    } catch (error) {
+      console.error("Error completing request", error);
+      dispatch({ type: FINISH_REQUEST_BY_PLAN_ID_FAILURE, payload: error.message });
+    }
+  };
+};
+
 
 
 
