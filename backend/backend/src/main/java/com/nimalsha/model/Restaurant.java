@@ -38,8 +38,6 @@ public class Restaurant {
 
     private String cuisineType;
 
-    private Boolean blocked;
-
     @OneToOne
     private Address address;
 

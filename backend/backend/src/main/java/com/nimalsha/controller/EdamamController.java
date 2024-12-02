@@ -23,11 +23,12 @@ public class EdamamController {
     @GetMapping("/data")
     public ResponseEntity<Map<String, Object>> getNutritionData(
             @RequestParam String foodName,
-            @RequestParam String quantity) {
+            @RequestParam String quantity,
+            @RequestParam(required = false) String foodPreparationStatus) {
 
         try {
-            // Call the updated service method
-            List<Map<String, Object>> nutritionData = edamamService.getNutritionData(foodName, quantity);
+            // Call the updated service method with optional foodPreparationStatus
+            List<Map<String, Object>> nutritionData = edamamService.getNutritionData(foodName, quantity, foodPreparationStatus);
             return new ResponseEntity<>(Map.of("nutrition", nutritionData), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
