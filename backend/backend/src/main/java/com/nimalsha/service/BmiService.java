@@ -16,6 +16,10 @@ public interface BmiService {
     Map<String, List<?>> getMealsForDay(Long planId, int daysId);
     Nutriconsumption updateNutritionConsumption(Long planId, int daysId, Map<String, Double> nutritionValues) ;
     Map<String, Double> getNutritionValues(Long planId, int daysId);
+    Bmiplan getBmiplanByPlanId(Long planId);
+    List<Bmiplan> getActivePlansByUserId(Long userId);
+
    
 }
+
 
