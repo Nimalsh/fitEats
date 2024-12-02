@@ -5,6 +5,7 @@ import com.nimalsha.model.Userdetails;
 import com.nimalsha.model.Request;
 
 import com.nimalsha.request.CreateRequestRequest;
+import com.nimalsha.request.UserUpdateRequest;
 import com.nimalsha.request.UserdetailsRequest;
 import com.nimalsha.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,19 @@ public class UserController {
         return new ResponseEntity<>(userdetails, HttpStatus.OK);
     }
 
-    
+
+        // Endpoint to handle profile update
+        @PutMapping("/profile")
+        public ResponseEntity<User> updateProfile(
+                @RequestHeader("Authorization") String jwt,
+                @RequestBody UserUpdateRequest userUpdateRequest) throws Exception {
+
+            // Call the service method to update the user's profile
+            User updatedUser = userService.updateProfile(jwt, userUpdateRequest);
+
+            // Return the updated user data
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        }
+
 
 }

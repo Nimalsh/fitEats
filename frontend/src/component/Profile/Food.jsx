@@ -56,9 +56,9 @@ const Food = () => {
 
   return (
     <div>
-      <Header onTabChange={handleTabChange} />
+      
       <Container>
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 5 }}>
           <Typography variant="h6"></Typography>
           <Grid container spacing={2}>
             {restaurant.restaurants.map(item => (                                                  //   {filteredItems.map(item => (  

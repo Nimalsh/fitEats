@@ -29,7 +29,6 @@ export const authReducer = (state = initialState, action) => {
     case REGISTER_REQUEST:
     case LOGIN_REQUEST:
     case GET_USER_REQUEST:
-    case ADD_TO_FAVOURITE_REQUEST:
       return { ...state, isLoading: true, error: null, success: null };
 
     case REGISTER_SUCCESS:
@@ -48,17 +47,7 @@ export const authReducer = (state = initialState, action) => {
         user: action.payload,
         favorites: Array.isArray(action.payload.favorites) ? action.payload.favorites : [],
       };
-
-    case ADD_TO_FAVOURITE_SUCCESS:
-      const newFavorites = isPresentInFavorites(state.favorites, action.payload)
-        ? state.favorites.filter((item) => item.id !== action.payload.id)
-        : [action.payload, ...state.favorites];
-      return {
-        ...state,
-        isLoading: false,
-        error: null,
-        favorites: newFavorites,
-      };
+      
 
     case LOGOUT:
       return initialState;
@@ -66,13 +55,26 @@ export const authReducer = (state = initialState, action) => {
     case REGISTER_FAILURE:
     case LOGIN_FAILURE:
     case GET_USER_FAILURE:
-    case ADD_TO_FAVOURITE_FAILURE:
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload,
-        success: null,
-      };
+   
+      case "UPDATE_PROFILE_REQUEST":
+  return { ...state, isLoading: true, error: null };
+
+case "UPDATE_PROFILE_SUCCESS":
+  return { ...state, isLoading: false, user: action.payload, success: "Profile updated successfully!" };
+
+case "UPDATE_PROFILE_FAILURE":
+  return { ...state, isLoading: false, error: action.payload };
+
+
+  case 'ADD_TO_FAVOURITE_REQUEST':
+            return { ...state, loading: true };
+        case 'ADD_TO_FAVOURITE_SUCCESS':
+            return {
+                ...state,
+                loading: false,
+                favorites: [...state.favorites, action.payload],
+            };
+        case 'ADD_TO_FAVOURITE_FAILURE':
 
     default:
       return state;

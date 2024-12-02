@@ -6,121 +6,108 @@ import {Segmented,  } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import { color } from '@mui/system';
 import { Table } from 'antd';
+import ReusableTable from '../Admin/Components/ReusableTable';
 
 const { Title } = Typography;
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    filters: [
-      {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Category 1',
-        value: 'Category 1',
-        children: [
-          {
-            text: 'Yellow',
-            value: 'Yellow',
-          },
-          {
-            text: 'Pink',
-            value: 'Pink',
-          },
-        ],
-      },
-      {
-        text: 'Category 2',
-        value: 'Category 2',
-        children: [
-          {
-            text: 'Green',
-            value: 'Green',
-          },
-          {
-            text: 'Black',
-            value: 'Black',
-          },
-        ],
-      },
-    ],
-    filterMode: 'tree',
-    filterSearch: true,
-    onFilter: (value, record) => record.name.includes(value),
-    width: '30%',
+    title: 'Appointment ID',
+    dataIndex: 'appointmentId',
+    key: 'appointmentId',
+    sorter: (a, b) => a.appointmentId.localeCompare(b.appointmentId),
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    sorter: (a, b) => a.age - b.age,
+    title: 'User ID',
+    dataIndex: 'userId',
+    key: 'userId',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.startsWith(value),
-    filterSearch: true,
-    width: '40%',
+    title: 'Nutritionist ID',
+    dataIndex: 'nutritionistId',
+    key: 'nutritionistId',
+  },
+  {
+    title: 'Appointment Date',
+    dataIndex: 'appointmentDate',
+    key: 'appointmentDate',
+    sorter: (a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate),
+  },
+  {
+    title: 'Transaction ID',
+    dataIndex: 'transactionId',
+    key: 'transactionId',
+  },
+  {
+    title: 'Transaction Amount',
+    dataIndex: 'transactionAmount',
+    key: 'transactionAmount',
+    render: (amount) => <span style={{ color: '#52c41a', fontWeight: 'bold' }}>{amount}</span>,
   },
 ];
-const data = [
+
+const pendingAppointments = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+    appointmentId: 'APP001',
+    userId: 'USR001',
+    nutritionistId: 'NUT001',
+    appointmentDate: '2023-11-15',
+    transactionId: 'TXN001',
+    transactionAmount: 'LKR 2000',
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
+    appointmentId: 'APP002',
+    userId: 'USR002',
+    nutritionistId: 'NUT002',
+    appointmentDate: '2023-11-16',
+    transactionId: 'TXN002',
+    transactionAmount: 'LKR 2500',
   },
 ];
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+
+const completeAppointments = [
+  {
+    key: '1',
+    appointmentId: 'APP003',
+    userId: 'USR003',
+    nutritionistId: 'NUT003',
+    appointmentDate: '2023-11-10',
+    transactionId: 'TXN003',
+    transactionAmount: 'LKR 3000',
+  },
+  {
+    key: '2',
+    appointmentId: 'APP004',
+    userId: 'USR004',
+    nutritionistId: 'NUT004',
+    appointmentDate: '2023-11-09',
+    transactionId: 'TXN004',
+    transactionAmount: 'LKR 3500',
+  },
+];
 
 export const NutritionistChanneling = () => {
   return (
     <Row gutter={[16, 16]}>
-      <StatCard title={"Total Income for the Day"} value={"Rs.1,200"} change={"-31"} icon="WalletTwoTone"></StatCard>
-      <StatCard title={"Total Orders for the Day"} value={"Rs.12"} change={"-31"} icon="ShoppingCartOutlined"></StatCard>
-      <StatCard title={"Total Users"} value={"1200"} change={"-31"} icon="UserOutlined"></StatCard>
-      <StatCard title={"Total Resturants"} value={"Rs.12"} change={"-31"} icon="ShopOutlined"></StatCard>
       <Col
         xs={20}
-        md={12}
-        xl={16}
+        md={24}
+        xl={32}
       >
 
       <Card style={{ height: '100%' }}>
 
-      <Table columns={columns} dataSource={data} onChange={onChange} />
+      <div style={{ margin: '24px 0' }}>
+        <h2>Pending Appointments</h2>
+        <ReusableTable columns={columns} data={pendingAppointments} />
+      </div>
+
+      <div>
+        <h2>Complete Appointments</h2>
+        <ReusableTable columns={columns} data={completeAppointments} />
+      </div>
 
         </Card>
         </Col>

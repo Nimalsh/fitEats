@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import com.nimalsha.dto.OrderDTO;
 import com.nimalsha.dto.OrderItemDTO;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,10 @@ import com.nimalsha.repository.OrderRepository;
 import com.nimalsha.repository.UserRepository;
 import com.nimalsha.request.OrderRequest;
 
+import jakarta.transaction.Transactional;
+
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
@@ -48,24 +49,30 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public void cancleOder(Long orderId) throws Exception {
+        System.out.println("Cancelling order with ID: " + orderId);
         Order order = findOrderById(orderId);
         orderRepository.deleteById(orderId);
-
+        System.out.println("Order with ID " + orderId + " has been canceled.");
     }
+
     @Transactional
     @Override
     public Order createOrder(OrderRequest orderRequest, User user) throws Exception {
+        System.out.println("Creating order for user: " + user.getFullName());
         Cart cart = cartService.findCartByUserId(user.getId());
         if (cart == null || cart.getItems().isEmpty()) {
+            System.out.println("Cart is empty for user: " + user.getFullName());
             throw new Exception("Cart is empty!");
         }
 
         Restaurant restaurant = cart.getItems().get(0).getFood().getRestaurant();
+        System.out.println("Restaurant for order: " + restaurant.getName());
 
         Address savedAddress = addressRepository.save(orderRequest.getDeliveryAddress());
         if (!user.getAddresses().contains(savedAddress)) {
             user.getAddresses().add(savedAddress);
             userRepository.save(user);
+            System.out.println("Saved new address for user: " + user.getFullName());
         }
 
         Order createdOrder = new Order();
@@ -77,12 +84,16 @@ public class OrderServiceImpl implements OrderService{
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cart.getItems()) {
+            System.out.println("Adding item: " + cartItem.getFood().getName() + ", Quantity: " + cartItem.getQuantity());
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
-            orderItem.setIngredients(cartItem.getIngredients());
+            orderItem.setIngredients(cartItem.getIngredients()); // Set ingredients from CartItem
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
             orderItem.setOrder(createdOrder); // Set the relationship
+
+            // Log ingredients for this OrderItem
+            System.out.println("OrderItem Ingredients: " + orderItem.getIngredients());
 
             orderItems.add(orderItem);
         }
@@ -90,22 +101,21 @@ public class OrderServiceImpl implements OrderService{
         createdOrder.setItems(orderItemRepository.saveAll(orderItems));
         createdOrder.setTotalPrice(cartService.calculateCartTotals(cart));
         createdOrder.setTotalItem(orderItems.size());
-
+        
+        System.out.println("Order created with total price: " + createdOrder.getTotalPrice());
         return orderRepository.save(createdOrder);
     }
 
-
-
     @Override
     public List<Order> getRestaurantOrder(Long restaurantId, String orderStatus) throws Exception {
-        // Fetch orders for the restaurant.
+        System.out.println("Fetching orders for restaurant ID: " + restaurantId + " with status: " + orderStatus);
         List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
-        // Filter orders based on status if provided.
         if (orderStatus != null) {
             orders = orders.stream()
-                    .filter(order -> order.getOrderStatus().equalsIgnoreCase(orderStatus)) // Fixed case sensitivity.
+                    .filter(order -> order.getOrderStatus().equalsIgnoreCase(orderStatus))
                     .collect(Collectors.toList());
+            System.out.println("Filtered orders by status: " + orderStatus);
         }
 
         return orders;
@@ -113,100 +123,110 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
-        // Fetch orders by restaurantId
+        System.out.println("Fetching order details for restaurant ID: " + restaurantId);
         List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
         // Map orders to OrderDTO
         return orders.stream().map(order -> {
-            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
-                new OrderItemDTO(
+            List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> {
+                // Log the ingredients of each order item
+                System.out.println("OrderItem Ingredients: " + item.getIngredients());
+
+                // Use the ingredients directly from the OrderItem model
+                List<String> ingredients = item.getIngredients();
+
+                return new OrderItemDTO(
                     item.getFood().getName(), 
                     item.getQuantity(), 
-                    item.getTotalPrice()
-                )
-            ).collect(Collectors.toList());
+                    item.getTotalPrice(),
+                    ingredients // Pass ingredients directly to DTO
+                );
+            }).collect(Collectors.toList());
 
+            System.out.println("Mapped order ID " + order.getId() + " with " + itemDTOs.size() + " items.");
+            
             return new OrderDTO(
                 order.getId(),
                 order.getCreatedAt(),
                 order.getOrderStatus(),
                 order.getTotalPrice(),
-                itemDTOs
+                itemDTOs,
+                order.getCustomer() != null ? order.getCustomer().getFullName() : "Unknown Customer", // Set customer name
+                order.getCustomer() != null ? order.getCustomer().getEmail() : "Unknown Email" // Set customer email
             );
         }).collect(Collectors.toList());
     }
 
-
-    // Corrected the duplicate method
     @Override
     public List<OrderDTO> getUsersOrder(Long userId) throws Exception {
+        System.out.println("Fetching orders for user ID: " + userId);
         List<Order> orders = orderRepository.findByCustomerId(userId);
 
         // Convert the list of orders to OrderDTOs
-        List<OrderDTO> orderDTOs = orders.stream().map(order -> {
+        return orders.stream().map(order -> {
             List<OrderItemDTO> itemDTOs = order.getItems().stream()
-                    .map(item -> new OrderItemDTO(item.getFood().getName(), item.getQuantity(), item.getTotalPrice()))
+                    .map(item -> {
+                        // Log the ingredients of each order item
+                        System.out.println("OrderItem Ingredients: " + item.getIngredients());
+
+                        // Use the ingredients directly from the OrderItem model
+                        List<String> ingredients = item.getIngredients();
+                        return new OrderItemDTO(item.getFood().getName(), item.getQuantity(), item.getTotalPrice(), ingredients);
+                    })
                     .collect(Collectors.toList());
+
+            System.out.println("Mapped user order ID: " + order.getId());
 
             return new OrderDTO(
                     order.getId(),
                     order.getCreatedAt(),
                     order.getOrderStatus(),
                     order.getTotalPrice(),
-                    itemDTOs
+                    itemDTOs,
+                    order.getCustomer() != null ? order.getCustomer().getFullName() : "Unknown Customer", // Set customer name
+                    order.getCustomer() != null ? order.getCustomer().getEmail() : "Unknown Email" // Set customer email
             );
         }).collect(Collectors.toList());
-
-        return orderDTOs;
     }
-
-
 
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
-         Order order = findOrderById(orderId);
-         if(orderStatus.equals("OUT_FOR_DELIVERY") || orderStatus.equals("DELIVERED") || orderStatus.equals("COMPLETED") || orderStatus.equals("PENDING")) {
+        System.out.println("Updating order ID: " + orderId + " to status: " + orderStatus);
+        Order order = findOrderById(orderId);
+        if(orderStatus.equals("OUT_FOR_DELIVERY") || orderStatus.equals("DELIVERED") || orderStatus.equals("COMPLETED") || orderStatus.equals("PENDING")) {
             order.setOrderStatus(orderStatus);
+            System.out.println("Order ID " + orderId + " status updated to: " + orderStatus);
             return orderRepository.save(order);
-         }
-         throw new Exception("Please select a valid order status");
+        }
+        System.out.println("Invalid status attempt for order ID: " + orderId);
+        throw new Exception("Please select a valid order status");
     }
 
     @Override
     public Order findOrderById(Long orderId) throws Exception {
-         Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        System.out.println("Fetching order by ID: " + orderId);
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
-         if(optionalOrder.isEmpty()) {
-            throw new Exception("Oder not found");
-         }
+        if(optionalOrder.isEmpty()) {
+            System.out.println("Order not found with ID: " + orderId);
+            throw new Exception("Order not found");
+        }
 
         return optionalOrder.get();
     }
 
-    // @Override
-    // public List<OrderDTO> getRestaurantOrders(Long restaurantId) throws Exception {
-    //     // Fetch orders by restaurantId
-    //     List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
+    @Override
+    public List<Order> getRestaurantOrdersWithCustomer(Long restaurantId) throws Exception {
+        System.out.println("Fetching orders with customer details for restaurant ID: " + restaurantId);
+        List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
-    //     // Map orders to OrderDTO
-    //     return orders.stream().map(order -> {
-    //         List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> 
-    //             new OrderItemDTO(
-    //                 item.getFood().getName(), 
-    //                 item.getQuantity(), 
-    //                 item.getTotalPrice()
-    //             )
-    //         ).collect(Collectors.toList());
+        // Lazy-loaded customer details are accessible here due to @ManyToOne relationship
+        orders.forEach(order -> {
+            User customer = order.getCustomer();
+            System.out.println("Customer Name: " + customer.getFullName());
+            System.out.println("Customer Email: " + customer.getEmail());
+        });
 
-    //         return new OrderDTO(
-    //             order.getId(),
-    //             order.getCreatedAt(),
-    //             order.getOrderStatus(),
-    //             order.getTotalPrice(),
-    //             itemDTOs
-    //         );
-    //     }).collect(Collectors.toList());
-    // }
-
-
+        return orders;
+    }
 }

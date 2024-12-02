@@ -17,6 +17,7 @@ import {
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";  // Import useNavigate
 import BackgroundImage from "../../assets/images/item.png";
 import { uploadImageToCloudinary } from "../util/UploadToCloudinary";
 import { createMenuItem } from "../../component/State/Menu/Action";
@@ -35,20 +36,21 @@ const initialValues = {
 };
 
 export const CreateMenuForm = () => {
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();  // Initialize useNavigate
   const jwt = localStorage.getItem("jwt");
-  const { restaurant , ingredients } = useSelector((store)=>store)
+  const { restaurant, ingredients } = useSelector((store) => store);
 
   const [uploadImages, setUploadImage] = useState(false);
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {
       values.restaurantId = restaurant.usersRestaurant.id;
-      dispatch(createMenuItem({menu:values,jwt}))
+      dispatch(createMenuItem({ menu: values, jwt }));
       console.log("data ---", values);
 
-      // dispatch(createRestaurant({ data, token: jwt }))
+      // Redirect to the menu page after successful creation
+      navigate("/admin/restaurant/menu");  // This will navigate to the menu page
     },
   });
 
@@ -66,16 +68,16 @@ export const CreateMenuForm = () => {
     formik.setFieldValue("images", updatedImages);
   };
 
-  useEffect (() => {
+  useEffect(() => {
     if (restaurant.usersRestaurant) {
-      dispatch(getIngredientsOfRestaurant ({ 
-        jwt,
-        id: restaurant.usersRestaurant.id,
-      })); 
- 
+      dispatch(
+        getIngredientsOfRestaurant({
+          jwt,
+          id: restaurant.usersRestaurant.id,
+        })
+      );
     }
   }, [dispatch, jwt, restaurant.usersRestaurant]);
-
 
   return (
     <Box
@@ -86,7 +88,7 @@ export const CreateMenuForm = () => {
         minHeight: "100vh",
         padding: 2,
         display: "flex",
-        justifyContent: "space-between", // Align items to the left and right
+        justifyContent: "space-between",
         alignItems: "center",
       }}
     >
@@ -119,8 +121,7 @@ export const CreateMenuForm = () => {
               />
               <label className="relative" htmlFor="fileInput">
                 <span
-                  className="w-24 h-24 cursor-pointer flex items-center justify-center
-                  p-3 border rounded-md bordergrey-600"
+                  className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md bordergrey-600"
                 >
                   <AddPhotoAlternate className="text-white" />
                 </span>
@@ -132,10 +133,9 @@ export const CreateMenuForm = () => {
               </label>
               <div className="flex flex-wrap gap-2">
                 {formik.values.images.map((image, index) => (
-                  <div className="relative">
+                  <div className="relative" key={index}>
                     <img
                       className="w-24 h-24 object-cover"
-                      key={index}
                       src={image}
                       alt=""
                     />
@@ -207,8 +207,8 @@ export const CreateMenuForm = () => {
               />
             </Grid>
 
-            <Grid item xs={12} lg={6} >
-              <FormControl fullWidth style={{background:'black'}}>
+            <Grid item xs={12} lg={6}>
+              <FormControl fullWidth style={{ background: "black" }}>
                 <InputLabel id="demo-simple-select-label">Food Category</InputLabel>
                 <Select
                   labelId="category"
@@ -218,20 +218,18 @@ export const CreateMenuForm = () => {
                   onChange={formik.handleChange}
                   name="category"
                 >
-                  {
-                  restaurant.categories?.map((item) => 
-                     <MenuItem value={item}>{item.name}</MenuItem>)
-                  }
-                   
+                  {restaurant.categories?.map((item) => (
+                    <MenuItem key={item.id} value={item}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
 
             <Grid item xs={12}>
-              <FormControl fullWidth style={{background:'black'}}>
-                <InputLabel id="demo-multiple-chip-label">
-                  Ingredients
-                </InputLabel>
+              <FormControl fullWidth style={{ background: "black" }}>
+                <InputLabel id="demo-multiple-chip-label">Ingredients</InputLabel>
                 <Select
                   labelId="demo-multiple-chip-label"
                   id="demo-multiple-chip"
@@ -240,10 +238,7 @@ export const CreateMenuForm = () => {
                   value={formik.values.ingredients}
                   onChange={formik.handleChange}
                   input={
-                    <OutlinedInput
-                      id="select-multiple-chip"
-                      label="ingredients"
-                    />
+                    <OutlinedInput id="select-multiple-chip" label="ingredients" />
                   }
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -252,9 +247,8 @@ export const CreateMenuForm = () => {
                       ))}
                     </Box>
                   )}
-                  // MenuProps={MenuProps}
                 >
-                  {ingredients.ingredients?.map((item, index) => (
+                  {ingredients.ingredients?.map((item) => (
                     <MenuItem key={item.id} value={item}>
                       {item.name}
                     </MenuItem>
@@ -264,7 +258,7 @@ export const CreateMenuForm = () => {
             </Grid>
 
             <Grid item xs={12} lg={6}>
-              <FormControl fullWidth style={{background:'black'}}>
+              <FormControl fullWidth style={{ background: "black" }}>
                 <InputLabel id="demo-simple-select-label">Is vegetarian</InputLabel>
                 <Select
                   labelId="vegetarian"
@@ -275,13 +269,13 @@ export const CreateMenuForm = () => {
                   name="vegetarian"
                 >
                   <MenuItem value={true}>Yes</MenuItem>
-                  <MenuItem value={false}>No</MenuItem> 
+                  <MenuItem value={false}>No</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
 
             <Grid item xs={12} lg={6}>
-              <FormControl fullWidth style={{background:'black'}}>
+              <FormControl fullWidth style={{ background: "black" }}>
                 <InputLabel id="demo-simple-select-label">Is Seasonal</InputLabel>
                 <Select
                   labelId="seasonal"
@@ -292,17 +286,23 @@ export const CreateMenuForm = () => {
                   name="seasonal"
                 >
                   <MenuItem value={true}>Yes</MenuItem>
-                  <MenuItem value={false}>No</MenuItem> 
+                  <MenuItem value={false}>No</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
- 
+
+            <Grid
+              container
+              item
+              xs={12}
+              sx={{ justifyContent: "flex-center", marginTop: 3 }}
+            >
+              <button 
+                  type="submit" className="button add-button">
+                Save Item
+              </button>
+            </Grid>
           </Grid>
-          <div className="flex justify-center">
-            <button type="submit" className="button add-button">
-              Create Food Item
-            </button>
-          </div>
         </form>
       </Box>
     </Box>

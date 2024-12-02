@@ -66,4 +66,11 @@ public class EventServiceImpl implements EventService{
 
         return optionalEvent.get();
     }
+
+    @Override
+    public List<Event> getAllEvents() {
+        // Fetch all events from the database
+        return eventRepository.findAll();
+    }
+
 }
