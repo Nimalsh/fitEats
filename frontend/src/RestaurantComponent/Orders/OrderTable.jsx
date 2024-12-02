@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
-  Button,
   Card,
   CardHeader,
-  Menu,
-  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -13,29 +10,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Button,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchRestaurantsOrder, updateOrderStatus } from "../../component/State/Restaurant Order/Action";
-
-const orderStatus = [
-  { label: "All", value: "ALL" },
-  { label: "Pending", value: "PENDING" },
-  { label: "On Delivery", value: "ON DELIVERY" },
-  { label: "Completed", value: "COMPLETED" },
-  { label: "Cancelled", value: "CANCELLED" },
-];
+import { fetchRestaurantsOrder } from "../../component/State/Restaurant Order/Action";
+import { Link } from "react-router-dom";
 
 export const OrderTable = ({ filterValue }) => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const { restaurant, restaurantOrder } = useSelector((store) => store);
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const open = Boolean(anchorEl);
-
   useEffect(() => {
     if (restaurant.usersRestaurant) {
+      console.log("Fetching orders for restaurant ID:", restaurant.usersRestaurant.id); // Debug log
       dispatch(
         fetchRestaurantsOrder({
           restaurantId: restaurant.usersRestaurant.id,
@@ -47,33 +35,12 @@ export const OrderTable = ({ filterValue }) => {
   }, [dispatch, jwt, restaurant.usersRestaurant, filterValue]);
 
   useEffect(() => {
-    if (restaurantOrder.orders && restaurantOrder.orders.length > 0) {
-      console.log("Fetched orders:", restaurantOrder.orders);
-    }
+    console.log("Orders fetched:", restaurantOrder.orders); // Check if the orders contain customer data
+    restaurantOrder.orders.forEach(order => {
+      console.log("Customer Info for Order:", order.customer); // Debug log to inspect customer data
+    });
   }, [restaurantOrder.orders]);
-
-  const handleClick = (event, order) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedOrder(order);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setSelectedOrder(null);
-  };
-
-  const handleUpdateOrder = (status) => {
-    if (selectedOrder) {
-      dispatch(
-        updateOrderStatus({
-          orderId: selectedOrder.id,
-          orderStatus: status,
-          jwt,
-        })
-      );
-      handleClose();
-    }
-  };
+  
 
   return (
     <Box>
@@ -83,61 +50,49 @@ export const OrderTable = ({ filterValue }) => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell align="right">Created At</TableCell>
+                <TableCell align="right">Customer Name</TableCell>
+                <TableCell align="right">Email</TableCell>
                 <TableCell align="right">Status</TableCell>
                 <TableCell align="right">Food Items</TableCell>
                 <TableCell align="right">Total Items</TableCell>
                 <TableCell align="right">Total Price</TableCell>
-                <TableCell align="right">Customer ID</TableCell>
-                <TableCell align="right">Restaurant ID</TableCell>
-                <TableCell align="right">Update</TableCell>
+                <TableCell align="right">View Details</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {restaurantOrder.orders && restaurantOrder.orders.length > 0 ? (
-                restaurantOrder.orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell>{order.id}</TableCell>
-                    <TableCell>{order.createdAt}</TableCell>
-                    <TableCell align="right">{order.orderStatus}</TableCell>
-                    <TableCell align="right">
-                      {order.items.map((item, index) => (
-                        <div key={index}>
-                          {item.foodName} (x{item.quantity})
-                        </div>
-                      ))}
-                    </TableCell>
-                    <TableCell align="right">{order.items.length}</TableCell>
-                    <TableCell align="right">{order.totalPrice}</TableCell>
-                    <TableCell align="right">{order.customerId}</TableCell>
-                    <TableCell align="right">{order.restaurantId}</TableCell>
-                    <TableCell align="right">
-                        {order.user?.fullName || "N/A"}
-                    </TableCell>
-                    <TableCell align="right">
-                        {order.user?.email || "N/A"}
-                    </TableCell>
+                restaurantOrder.orders.map((order) => {
+                  console.log("Processing order:", order); // Debug log for each order
+                  const customerName = order.customer?.fullName || "Unknown"; // Ensure full name is used
+                  const customerEmail = order.customer?.email || "No Email"; // Default email if missing
 
-                    <TableCell align="right">
-                      <Button onClick={(e) => handleClick(e, order)}>Update</Button>
-                      <Menu
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                      >
-                        {orderStatus.map((status) => (
-                          <MenuItem
-                            key={status.value}
-                            onClick={() => handleUpdateOrder(status.value)}
-                          >
-                            {status.label}
-                          </MenuItem>
+                  return (
+                    <TableRow key={order.id}>
+                      <TableCell align="right">{order.customerName}</TableCell>
+                      <TableCell align="right">{order.customerEmail}</TableCell>
+                      <TableCell align="right">{order.orderStatus}</TableCell>
+                      <TableCell align="right">
+                        {order.items.map((item, index) => (
+                          <div key={index}>
+                            {item.foodName} (x{item.quantity})
+                          </div>
                         ))}
-                      </Menu>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      </TableCell>
+                      <TableCell align="right">{order.items.length}</TableCell>
+                      <TableCell align="right">{order.totalPrice}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          component={Link}
+                          to={`/admin/restaurant/orders/order-details/${order.id}`}
+                          variant="contained"
+                          color="primary"
+                        >
+                          View Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={9} align="center">

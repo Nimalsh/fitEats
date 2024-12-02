@@ -5,6 +5,7 @@ import com.nimalsha.model.Userdetails;
 import com.nimalsha.model.Request;
 import com.nimalsha.request.CreateRequestRequest;
 import com.nimalsha.request.CreateothergoalRequest;
+import com.nimalsha.request.UserUpdateRequest;
 import com.nimalsha.request.UserdetailsRequest;
 
 import java.util.List;
@@ -21,5 +22,6 @@ public interface UserService {
     public Userdetails getUserDetailsByToken(String jwtToken) throws Exception;
     public Userdetails updateWeightAndHeightByToken(String jwtToken, UserdetailsRequest req, Long planId) throws Exception;
     public Request createotherRequest(String jwtToken, CreateothergoalRequest req) throws Exception;
-    
+
+    User updateProfile(String jwt, UserUpdateRequest userUpdateRequest);
 }

@@ -140,7 +140,7 @@ const Cart = () => {
             Choose Delivery Address
           </div>
           <div className="flex gap-5 flex-wrap justify-center">
-            {[1, 1, 1, 1, 1].map((item, index) => (
+            {[1].map((item, index) => (
               <AddressCard
                 handleSelectAddress={() => {}}
                 key={index}

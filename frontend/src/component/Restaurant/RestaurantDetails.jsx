@@ -26,6 +26,7 @@ const RestaurantDetails = () => {
   const { id, city } = useParams();
 
   useEffect(() => {
+    console.log("Fetching restaurant details for ID:", id);
     // Load restaurant details and categories on component mount
     dispatch(getRestaurantById({ jwt, restaurantId: id }));
     dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
@@ -57,6 +58,7 @@ const RestaurantDetails = () => {
     );
   };
 
+  
   const handleFilterCategory = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
@@ -84,7 +86,7 @@ const RestaurantDetails = () => {
             <Grid item xs={12}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src={restaurant.restaurant?.images[0]}
+                src={restaurant.restaurant?.images[0]} 
                 alt=""
               />
             </Grid>
@@ -100,7 +102,7 @@ const RestaurantDetails = () => {
             <Grid item xs={12} lg={6}>
               <img
                 className="w-full h-[40vh] object-cover"
-                src={restaurant.restaurant?.images[2]}
+                src={restaurant.restaurant?.images[2]} 
                 alt=""
               />
             </Grid>

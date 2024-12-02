@@ -6,6 +6,7 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import ShoppingCartTwoToneIcon from '@mui/icons-material/ShoppingCartTwoTone';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import EventIcon from '@mui/icons-material/Event';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -19,9 +20,8 @@ const menu = [
   { title: "Dashboard", icon: <DashboardIcon /> },
   { title: "Restaurant", icon: <RestaurantIcon /> },
   { title: "Orders", icon: <ShoppingBagIcon /> },
-  { title: "Favorites", icon: <FavoriteIcon /> },
+  { title: "Cart", icon: <ShoppingCartTwoToneIcon/> },
   { title: "Nutrigoals", icon: <AddReactionIcon /> },
-  { title: "Payments", icon: <AccountBalanceWalletIcon /> },
   { title: "Offers", icon: <EventIcon /> },
   { title: "Complain", icon: <ComplaintIcon /> },
   { title: "Logout", icon: <LogoutIcon /> }
@@ -58,7 +58,7 @@ export const ProfileNavigation = ({ open, handleClose }) => {
         justifyContent: 'flex-start', 
         fontSize: '1.25rem', 
         gap: '0.9rem',
-        marginTop: '5rem'
+        marginTop: '7rem'
       }}>
         {menu.map((item, i) => (
           <React.Fragment key={i}>

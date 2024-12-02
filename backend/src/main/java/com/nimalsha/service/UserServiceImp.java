@@ -9,6 +9,7 @@ import com.nimalsha.repository.RequestRepository;
 import com.nimalsha.repository.UserdetailsRepository;
 import com.nimalsha.repository.BmiplanRepository;
 import com.nimalsha.repository.UserRepository;
+import com.nimalsha.request.UserUpdateRequest;
 import com.nimalsha.request.UserdetailsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -191,4 +192,33 @@ public Userdetails updateWeightAndHeightByToken(String jwtToken, UserdetailsRequ
         }
         return userdetails;
     }
+
+
+
+        @Override
+        public User updateProfile(String jwtToken, UserUpdateRequest userUpdateRequest) {
+            // Get the email from JWT token
+            String email = jwtProvider.getEmailFromJwtToken(jwtToken);
+
+            // Find the user by email
+            User user = userRepository.findByEmail(email);
+
+
+            // Update the user's profile information
+            if (userUpdateRequest.getFullName() != null) {
+                user.setFullName(userUpdateRequest.getFullName());
+            }
+            if (userUpdateRequest.getEmail() != null) {
+                user.setEmail(userUpdateRequest.getEmail());
+            }
+            if (userUpdateRequest.getNewPassword() != null && !userUpdateRequest.getNewPassword().isEmpty()) {
+                // Handle password update logic, ensure it meets security standards (e.g., hash the password)
+                user.setPassword(userUpdateRequest.getNewPassword());
+            }
+
+            // Save the updated user
+            return userRepository.save(user);
+        }
+
+
 }

@@ -43,6 +43,10 @@ import Automealplan from './Automealplan';
 
 import ComplaintPage from './ComplaintPage';
 import ComplaintHistory from './ComplaintHistory';
+
+import EditProfile from './EditProfile';
+import Cart from '../Cart/Cart';
+
 import Paymentssandbox from './Paymentssandbox';
 
 
@@ -94,6 +98,10 @@ const Profile = () => {
          
           <Route path="/completed" element={<Completedplans/>} />
           <Route path="/payment" element={<Paymentssandbox/>} />
+
+
+          <Route path="my-profile/edit" element={<EditProfile />} />
+          <Route path="/cart" element={<Cart />} />
 
 
         </Routes>

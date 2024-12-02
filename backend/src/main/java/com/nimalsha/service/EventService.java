@@ -15,4 +15,8 @@ public interface EventService {
     public List<Event> getRestaurantsEvents(Long restaurantId);
 
     public Event findEventById(Long eventId) throws Exception;
+
+    List<Event> getAllEvents();
+
+
 }   
