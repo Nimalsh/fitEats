@@ -9,7 +9,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { getPlanData, getMealStatus,updateMealStatus, countCompletedMeals  } from '../State/Plan/Action';
 import { getRequestByPlanId } from '../State/Requests/Action'; // Import the action
 import { ContactMailOutlined } from '@mui/icons-material';
-import { completeRequestByPlanId ,updateAchievedWeight} from '../State/Requests/Action';
+import { completeRequestByPlanId ,updateAchievedWeight,finishRequestByPlanId} from '../State/Requests/Action';
 
 const Mealprogress = () => {
   const navigate = useNavigate();
@@ -109,7 +109,7 @@ const Mealprogress = () => {
     dispatch(updateAchievedWeight(planId, currentWeight, token))
       .then(() => {
         // After successfully updating the weight, complete the request
-        return dispatch(completeRequestByPlanId(planId, token));
+        return dispatch(finishRequestByPlanId(planId, token));
       })
       .then(() => {
         // Fetch the updated request data

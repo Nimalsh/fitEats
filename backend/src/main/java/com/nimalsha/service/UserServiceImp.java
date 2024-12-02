@@ -60,7 +60,7 @@ public class UserServiceImp implements  UserService{
         request.setTitle(req.getTitle());
         request.setUserId(user.getId()); // Use the ID of the user obtained from JWT
        
-        request.setNutritionistId(102L);
+        request.setNutritionistId(req.getNutritionistId());
         request.setName(user.getFullName());
         request.setStatus(req.getStatus());
         request.setCurrentWeight(req.getCurrentWeight());
@@ -87,7 +87,7 @@ public class UserServiceImp implements  UserService{
         request.setTitle(req.getTitle());
         request.setUserId(user.getId()); // Use the ID of the user obtained from JWT
         request.setDescription(req.getDescription());
-        request.setNutritionistId(102L);
+        request.setNutritionistId(req.getNutritionistId());
         request.setName(user.getFullName());
         request.setStatus(req.getStatus());
         request.setCurrentWeight(req.getCurrentWeight());

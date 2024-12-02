@@ -109,6 +109,7 @@ public ResponseEntity<String> completeRequestByPlanId(@PathVariable Long planId)
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
+
 @PutMapping("/requests/{requestId}/status/{status}")
 public ResponseEntity<String> updateRequestStatus(
     @PathVariable Long requestId,
@@ -196,6 +197,16 @@ public ResponseEntity<String> putcomments(
         return ResponseEntity.ok("Request updated with comments");
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found for requestId: " + requestId);
+    }
+}
+
+@PutMapping("/requests/finish/{planId}")
+public ResponseEntity<String> finishRequestByPlanId(@PathVariable Long planId) {
+    try {
+        planService.finishRequestByPlanId(planId);
+        return ResponseEntity.ok("Request status updated to Finished");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
 

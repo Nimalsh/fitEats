@@ -10,12 +10,16 @@ import com.nimalsha.service.NutritionistService;
 import com.nimalsha.request.CreateNutritionistRequest;
 import com.nimalsha.model.Nutritionistrequests;
 import com.nimalsha.repository.NutritionistrequestsRepository;
-
+import com.nimalsha.repository.NutritionistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.nimalsha.model.Nutritionist;
+import com.nimalsha.dto.NutritionistDto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class NutritionistServiceImpl implements NutritionistService {
@@ -25,6 +29,9 @@ public class NutritionistServiceImpl implements NutritionistService {
 
       @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private NutritionistRepository nutritionistRepository;
 
     @Override
     public Nutritionistrequests createNutritionistRequest(CreateNutritionistRequest request) throws IOException {
@@ -113,5 +120,20 @@ public boolean doesNutritionistRequestExistByEmail(String email) {
 public boolean doesNutritionistRequestExistByEmailAndStatusConfirmed(String email) {
     return nutritionistRequestRepository.findByEmailAndStatus(email, "confirmed").isPresent();
 }
+@Override
+public List<NutritionistDto> getAllNutritionist() {
+        List<Nutritionist> nutritionists = nutritionistRepository.findAll();
+
+        // Convert to DTOs
+        return nutritionists.stream().map(nutritionist -> new NutritionistDto(
+            nutritionist.getId(),
+            nutritionist.getFullName(),
+            nutritionist.getEmail(),
+            nutritionist.getSpecializations(),
+            nutritionist.getExperience(),
+            nutritionist.getQualifications()
+        )).collect(Collectors.toList());
+    }
+
  
 }
