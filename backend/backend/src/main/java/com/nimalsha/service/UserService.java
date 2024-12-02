@@ -15,7 +15,7 @@ public interface UserService {
     List<User> getTodayUsers();
     User updateUser(User user);
 
-       public User findUserByJwtToken(String jwt) throws Exception;
+    public User findUserByJwtToken(String jwt) throws Exception;
 
     public User findUserByEmail(String email) throws Exception;
     Request createNewRequest(String jwtToken, CreateRequestRequest req) throws Exception;

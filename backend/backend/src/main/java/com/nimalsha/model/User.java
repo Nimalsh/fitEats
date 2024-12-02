@@ -28,7 +28,7 @@ public class User {
     private String email;
     private String contactNumber;
     private LocalDate signUpDate;
-    private Boolean blocked;
+    // private Boolean blocked;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

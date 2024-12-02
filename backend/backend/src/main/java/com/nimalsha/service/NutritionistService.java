@@ -1,11 +1,15 @@
 package com.nimalsha.service;
 
-import com.nimalsha.model.Nutritionist;
+import com.nimalsha.request.CreateNutritionistRequest;
+import com.nimalsha.model.Nutritionistrequests;
 
-import java.util.List;
 
 public interface NutritionistService {
-    public List<Nutritionist> getAll();
-    public Nutritionist updateNutritionist(String id, Nutritionist nutritionist);
-    public Nutritionist createNutritionist(Nutritionist nutritionist);
+    Nutritionistrequests createNutritionistRequest(CreateNutritionistRequest request) throws Exception;
+    Nutritionistrequests updateRequestStatus(Long requestId, String newStatus) throws Exception;
+   boolean doesNutritionistRequestExistByEmail(String email) throws Exception;
+    boolean doesNutritionistRequestExistByEmailAndStatusConfirmed(String email) throws Exception; 
+  
 }
+
+
