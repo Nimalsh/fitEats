@@ -5,6 +5,7 @@ import com.nimalsha.request.CreateNutritionistRequest;
 import java.util.List;
 
 import com.nimalsha.dto.NutritionistDto;
+import com.nimalsha.dto.NutritionistrequestDto;
 import com.nimalsha.model.Nutritionist;
 import com.nimalsha.model.Nutritionistrequests;
 
@@ -17,5 +18,7 @@ public interface NutritionistService {
     
      
      List<NutritionistDto> getAllNutritionist();
+     public List<NutritionistrequestDto> getAllNutritionistRequests();
+       public byte[] getDocumentByRequestId(Long requestId);
   
 }

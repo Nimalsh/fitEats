@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.nimalsha.dto.NutritionistDto;
+import com.nimalsha.dto.NutritionistrequestDto;
 
 @RestController
 @RequestMapping("api/nutritionists")
@@ -36,6 +37,26 @@ public class NutritionistController {
         List<NutritionistDto> nutritionists = nutritionistService.getAllNutritionist();
         return ResponseEntity.ok(nutritionists);
     }
+
+    @GetMapping("/admin/requests/all")
+    public ResponseEntity<List<NutritionistrequestDto>> getAllNRequests() {
+        List<NutritionistrequestDto> nutritionistRequests = nutritionistService.getAllNutritionistRequests();
+        return ResponseEntity.ok(nutritionistRequests);
+    }
+    @CrossOrigin(origins = "http://localhost:3000") 
+    @GetMapping("/{requestId}/document")
+     public ResponseEntity<byte[]> getDocument(@PathVariable Long requestId) {
+    byte[] document = nutritionistService.getDocumentByRequestId(requestId);
+    
+    if (document == null) {
+        return ResponseEntity.notFound().build();
+    }
+    
+    return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=document-" + requestId + ".pdf")
+            .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+            .body(document);
+}
 
 
 }

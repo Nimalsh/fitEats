@@ -31,10 +31,12 @@ export const loginUser=(reqData)=>async(dispatch)=>{
   try{
     const {data} =await  axios.post(`${API_URL}/auth/signin`,reqData.userData)
     if(data.jwt)localStorage.setItem("jwt",data.jwt);
-    if(data.role==="ROLE_RESTAURANT_OWNER"){
-      reqData.navigate("/admin/restaurant")
-    }else{
-      reqData.navigate("/my-profile/dashboard")
+    if (data.role === "ROLE_RESTAURANT_OWNER") {
+      reqData.navigate("/admin/restaurant");
+    } else if (data.role === "ROLE_NUTRITION") {
+      reqData.navigate("/nutri"); // Add the appropriate route for nutritionists
+    } else {
+      reqData.navigate("/my-profile/dashboard");
     }
     dispatch({type:LOGIN_SUCCESS,payload:data.jwt})
     console.log("login success",data)

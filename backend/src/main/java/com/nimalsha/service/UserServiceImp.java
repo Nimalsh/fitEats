@@ -76,6 +76,7 @@ public class UserServiceImp implements  UserService{
         request.setActivityLevel(req.getActivityLevel());
         request.setMealsPerDay(req.getMealsPerDay());
         request.setRequestDate(LocalDate.now());
+        request.setNutritionistName(req.getNutritionistName());
         // Save the request to the repository
         return requestRepository.save(request);
     }
@@ -103,6 +104,8 @@ public class UserServiceImp implements  UserService{
         request.setActivityLevel(req.getActivityLevel());
         request.setMealsPerDay(req.getMealsPerDay());
         request.setRequestDate(LocalDate.now());
+        request.setNutritionistName(req.getNutritionistName());
+        
         
         // Save the request to the repository
         return requestRepository.save(request);

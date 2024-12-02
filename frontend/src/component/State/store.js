@@ -54,7 +54,7 @@ const rootReducer =combineReducers({
   nutrion:NutrionReducer,
   complaint:complaintReducer,
 
-  event:eventReducer
+  event:eventReducer,
 
   payment:paymentReducer
 

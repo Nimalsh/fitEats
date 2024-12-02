@@ -41,10 +41,11 @@ const NutritionistSelection = () => {
       alert("Something went wrong. Please start again.");
       return;
     }
-  
+    
     const updatedRequestData = {
       ...storedRequestData,
       nutritionistId: nutritionist.id,
+      nutritionistName:nutritionist.fullName,
     };
   
     // Save the updated requestData back to localStorage
@@ -103,7 +104,7 @@ const NutritionistSelection = () => {
                   top: "50%",
                   transform: "translateY(-50%)",
                 }}
-                onClick={() => handleArrowClick(nutritionist.id)} // Pass the nutritionist ID
+                onClick={() => handleArrowClick(nutritionist)} // Pass the nutritionist ID
               >
                 <ArrowForwardIcon />
               </IconButton>
