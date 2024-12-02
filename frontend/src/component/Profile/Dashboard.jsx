@@ -254,7 +254,7 @@ const Dashboard = () => {
               <TableCell>{order.id}</TableCell>
               <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
               <TableCell>{order.orderStatus}</TableCell>
-              <TableCell>${(order.totalPrice / 100).toFixed(2)}</TableCell>
+              <TableCell>RS.{(order.totalPrice / 100).toFixed(2)}</TableCell>
               <TableCell>
                 <ul>
                   {order.items.map((item) => (
