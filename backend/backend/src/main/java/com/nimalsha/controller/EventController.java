@@ -70,7 +70,9 @@ public class EventController {
         res.setMessage("event delted successfully");
         return new ResponseEntity<>(res, HttpStatus.CREATED);
                                                        }
-    
+
+
+
 
 }
         

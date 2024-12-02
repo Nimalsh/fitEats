@@ -57,6 +57,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,5 +91,16 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    private LocalDate signUpDate;
+
+    // Getters and setters
+    public LocalDate getSignUpDate() {
+        return signUpDate;
+    }
+
+    public void setSignUpDate(LocalDate signUpDate) {
+        this.signUpDate = signUpDate;
     }
 }

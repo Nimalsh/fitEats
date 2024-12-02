@@ -2,6 +2,8 @@ package com.nimalsha.request;
 
 import com.nimalsha.model.Category;
 import com.nimalsha.model.IngredientsItem;
+import com.nimalsha.model.Restaurant;
+
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +15,8 @@ public class CreateFoodRequest {
     private String description;
     private Long price;
 
-    private Long categoryId;  // Store only the category ID
+
+    private Category category;
     private List<String> images;
 
     private Long restaurantId;
