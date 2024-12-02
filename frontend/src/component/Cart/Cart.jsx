@@ -1,133 +1,182 @@
-import { Box, Button, Card, Divider, Grid, Modal, TextField, Typography } from "@mui/material";
-import React, { useEffect } from "react";
-import CartItem from "./CartItem";
-import { AddressCard } from "./AddressCard";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Card,
+  Divider,
+  Grid,
+  Modal,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { useDispatch, useSelector } from "react-redux";
-import { store } from "../State/store";
+import { useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { createOrder } from "../State/Order/Action";
 import { clearCartAction, findCart } from "../State/Cart/Action";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { startPayment } from "../State/Payment/Action";
+import { getUser } from "../State/Authentication/Action";
+import CartItem from "./CartItem";
+import { AddressCard } from "./AddressCard";
 
-
-const items = [1, 1];
-
-export const style = {
+const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 600,  // Increased width for more space
+  height: 600,  // Height adjusts to content
+  maxHeight: "80vh",  // Limit the height to 80% of the viewport height
   bgcolor: "background.paper",
-  outline: "none",
+  borderRadius: "16px",  // Rounded corners
   boxShadow: 24,
   p: 4,
+  overflowY: "auto",  // Enables scrolling if content exceeds maxHeight
 };
 
-// Initial values for the address form
-const initialValues = {
+const style2 = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 300,
+  bgcolor: "background.paper",
+  borderRadius: "16px",  // Rounded corners
+  boxShadow: 24,
+  p: 4,
+  maxHeight: "90vh",
+  overflowY: "auto",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+const initialAddressValues = {
   streetAddress: "",
   state: "",
   pincode: "",
   city: "",
 };
 
-// Validation function
-const validateForm = (values) => {
-  const errors = {};
-  if (!values.streetAddress) {
-    errors.streetAddress = "Street address is required";
-  }
-  if (!values.state) {
-    errors.state = "State is required";
-  }
-  if (!values.city) {
-    errors.city = "City is required";
-  }
-  if (!values.pincode) {
-    errors.pincode = "Postal code is required";
-  }
-  return errors;
-};
-
 const Cart = () => {
   const { cart, auth } = useSelector((store) => store);
+  const { user, isLoading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!cart.id) {
-      dispatch(findCart(auth.jwt));
-    }
-  }, [cart.id, dispatch, auth.jwt]);
-
-  console.log("Cart Object:", cart);
-
-  const handleSubmit = async (values, { resetForm }) => {
-    const data = {
-      jwt: localStorage.getItem("jwt"),
-      order: {
-        deliveryAddress: {
-          streetAddress: values.streetAddress || "",
-          city: values.city || "",
-          state: values.state || "",
-          postalCode: values.pincode || "",
-        },
-      },
-    };
-
-    try {
-      await dispatch(createOrder(data)); // Create order
-      await dispatch(clearCartAction()); // Clear cart
-      resetForm(); // Clear form fields
-      setOpen(false); // Close modal
-      console.log("Order created and cart cleared successfully.");
-    } catch (error) {
-      console.error("Error in creating order or clearing cart:", error);
-    }
-  };
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpenAddressModel = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
+  const [openAddressModal, setOpenAddressModal] = useState(false);
+  const [openPaymentModal, setOpenPaymentModal] = useState(false);
 
   const itemTotal = cart.cartItems.reduce((total, item) => total + item.totalPrice, 0);
   const deliveryFee = 100;
   const gstAndCharges = 500;
   const totalPay = itemTotal + deliveryFee + gstAndCharges;
 
+  const initialPaymentValues = {
+    firstName: user?.fullName || "",
+    lastName: "",
+    email: user?.email || "",
+    phone: "",
+    address: "",
+    city: "",
+    country: "Sri Lanka",
+  };
+
+  useEffect(() => {
+    if (!cart.id) {
+      dispatch(findCart(auth.jwt));
+    }
+    if (auth.jwt) {
+      dispatch(getUser(auth.jwt)); // Fetch user details
+    }
+  }, [cart.cartItems, dispatch, auth.jwt]);
+
+  const handleAddressSubmit = async (values, { resetForm }) => {
+    if (!cart.cartItems || cart.cartItems.length === 0) {
+      console.error("Cart is empty!");
+      return;
+    }
+
+    const data = {
+      jwt: localStorage.getItem("jwt"),
+      order: {
+        deliveryAddress: {
+          streetAddress: values.streetAddress,
+          city: values.city,
+          state: values.state,
+          postalCode: values.pincode,
+        },
+        items: cart.cartItems, // Ensure cartItems is populated correctly
+      },
+    };
+
+    try {
+      await dispatch(createOrder(data));
+      resetForm();
+      setOpenAddressModal(false);
+      setOpenPaymentModal(true); // Open the payment modal after address form submission
+    } catch (error) {
+      console.error("Error in creating order:", error);
+    }
+  };
+
+  const handlePaymentSubmit = async (values) => {
+    const jwt = localStorage.getItem("jwt");
+    try {
+      await dispatch(startPayment(jwt, { ...values, amount: totalPay }));
+      navigate("/my-profile/payment-success");
+    } catch (error) {
+      console.error("Payment failed:", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex justify-center items-center text-center text-red-500">
+        <p>Failed to load user details: {error.message || error}</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <main className="lg:flex justify-between">
-        {/* Cart Items Section */}
-        <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-          {cart.cartItems?.map((item) => (
+      
+      <main className="lg:flex justify-between p-4 mb-10 mt-4">
+        {/* Cart Section */}
+        <section className="lg:w-[30%] space-y-4">
+          {cart.cartItems && cart.cartItems.map((item) => (
             <CartItem key={item.id} item={item} />
           ))}
-
           <Divider />
-          <div className="billDetails px-5 text-sm">
-            <p className="font-extralight py-5">Bill Details</p>
-            <div className="space-y-3">
-              <div className="flex justify-between text-gray-400">
+          <div className="px-4 text-sm">
+            <Typography variant="h6">Bill Details</Typography>
+            <div className="space-y-2 text-gray-600">
+              <div className="flex justify-between">
                 <p>Item Total</p>
                 <p>LKR {itemTotal}</p>
               </div>
-
-              <div className="flex justify-between text-gray-400">
+              <div className="flex justify-between">
                 <p>Delivery Fee</p>
                 <p>LKR {deliveryFee}</p>
               </div>
-
-              <div className="flex justify-between text-gray-400">
-                <p>GST and Restaurant charges</p>
+              <div className="flex justify-between">
+                <p>GST and Charges</p>
                 <p>LKR {gstAndCharges}</p>
               </div>
               <Divider />
-            </div>
-            <div className="flex justify-between text-gray-400">
-              <p>Total Pay</p>
-              <p>LKR {totalPay}</p>
+              <div className="flex justify-between font-bold">
+                <p>Total Pay</p>
+                <p>LKR {totalPay}</p>
+              </div>
             </div>
           </div>
         </section>
@@ -135,33 +184,16 @@ const Cart = () => {
         <Divider orientation="vertical" flexItem />
 
         {/* Address Section */}
-        <section className="lg:w-[70%] flex flex-col items-center px-5 pb-10 lg:pb-0">
-          <div className="text-center font-semibold text-2xl py-10">
-            Choose Delivery Address
-          </div>
-          <div className="flex gap-5 flex-wrap justify-center">
-            {[1].map((item, index) => (
-              <AddressCard
-                handleSelectAddress={() => {}}
-                key={index}
-                item={item}
-                showButton={true}
-              />
-            ))}
-
-            <Card className="flex gap-5 w-64 h-64 p-5">
+        <section className="lg:w-[70%] flex flex-col items-center space-y-6">
+          <Typography variant="h6">Choose Delivery Address</Typography>
+          <div className="flex gap-4 flex-wrap justify-center">
+            <AddressCard item={initialPaymentValues} showButton={false} />
+            <Card className="flex gap-3 w-64 h-64 p-4">
               <AddLocationIcon />
-              <div className="space-y-3 text-gray-500">
-                <h1 className="font-semibold text-lg text-white">
-                  Add New Address
-                </h1>
-
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={handleOpenAddressModel}
-                >
-                  Add
+              <div className="text-gray-500">
+                <Typography variant="subtitle1">Add New Address</Typography>
+                <Button variant="contained" fullWidth onClick={() => setOpenAddressModal(true)}>
+                  Add Address
                 </Button>
               </div>
             </Card>
@@ -169,68 +201,133 @@ const Cart = () => {
         </section>
       </main>
 
-      {/* Modal for adding new address */}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+   {/* Modal for adding new address */}
+<Modal open={openAddressModal} onClose={() => setOpenAddressModal(false)}>
+  <Box sx={{ ...style2, width: 600 }}>
+    {/* Heading for the Modal */}
+    <Typography variant="h6" gutterBottom align="center" sx={{ margintop: 12 }}>
+      Delivery Address
+    </Typography>
+
+    <Formik initialValues={initialAddressValues} onSubmit={handleAddressSubmit}>
+      <Form>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Field as={TextField} name="streetAddress" label="Street Address" fullWidth variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <Field as={TextField} name="state" label="State" fullWidth variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <Field as={TextField} name="city" label="City" fullWidth variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <Field as={TextField} name="pincode" label="Pincode" fullWidth variant="outlined" />
+          </Grid>
+          <Grid item xs={12}>
+            <Button fullWidth variant="contained" type="submit" color="primary">
+              Deliver Here
+            </Button>
+          </Grid>
+        </Grid>
+      </Form>
+    </Formik>
+  </Box>
+</Modal>
+
+
+   {/* Modal for payment */}
+   <Modal open={openPaymentModal} onClose={() => setOpenPaymentModal(false)}>
         <Box sx={style}>
-          <Formik
-            initialValues={initialValues}
-            validate={validateForm}
-            onSubmit={handleSubmit}
-          >
-            <Form>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Field
-                    as={TextField}
-                    name="streetAddress"
-                    label="Street Address"
-                    fullWidth
-                    variant="outlined"
-                    helperText={<ErrorMessage name="streetAddress" />}
-                  />
+          <Formik initialValues={initialPaymentValues} onSubmit={handlePaymentSubmit}>
+            {({ values, handleChange }) => (
+              <Form style={{ width: "100%" }}>
+                <Typography variant="h5" gutterBottom align="center" sx={{ fontWeight: "bold", color: "#3f51b5" }}>
+                  Payment Details
+                </Typography>
+                <Grid container spacing={3}> {/* Increased spacing */}
+                  <Grid item xs={12} >
+                    <Field
+                      as={TextField}
+                      name="firstName"
+                      label="First Name"
+                      fullWidth
+                      variant="outlined"
+                      value={values.firstName}
+                      onChange={handleChange}
+                      sx={{ borderRadius: "8px" }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} >
+                    <Field
+                      as={TextField}
+                      name="lastName"
+                      label="Last Name"
+                      fullWidth
+                      variant="outlined"
+                      value={values.lastName}
+                      onChange={handleChange}
+                      sx={{ borderRadius: "8px" }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} >
+                    <Field
+                      as={TextField}
+                      name="email"
+                      label="Email"
+                      fullWidth
+                      variant="outlined"
+                      value={values.email}
+                      onChange={handleChange}
+                      sx={{ borderRadius: "8px" }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} >
+                    <Field
+                      as={TextField}
+                      name="phone"
+                      label="Phone"
+                      fullWidth
+                      variant="outlined"
+                      value={values.phone}
+                      onChange={handleChange}
+                      sx={{ borderRadius: "8px" }}
+                    />
+                  </Grid>
                 </Grid>
+
+                <Divider className="my-3" />
+
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "#555" }}>
+                  Order Summary
+                </Typography>
                 <Grid item xs={12}>
-                  <Field
-                    as={TextField}
-                    name="state"
-                    label="State"
-                    fullWidth
-                    variant="outlined"
-                    helperText={<ErrorMessage name="state" />}
-                  />
+                  {cart.cartItems && cart.cartItems.length > 0 ? (
+                    cart.cartItems.map((item) => (
+                      <div key={item.id} className="flex justify-between my-1">
+                        <p>{item.food.name}</p>
+                        <p>LKR {item.totalPrice}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No items to display</p>
+                  )}
                 </Grid>
-                <Grid item xs={12}>
-                  <Field
-                    as={TextField}
-                    name="city"
-                    label="City"
-                    fullWidth
-                    variant="outlined"
-                    helperText={<ErrorMessage name="city" />}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Field
-                    as={TextField}
-                    name="pincode"
-                    label="Pincode"
-                    fullWidth
-                    variant="outlined"
-                    helperText={<ErrorMessage name="pincode" />}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button fullWidth variant="contained" type="submit" color="primary">
-                    Deliver Here
-                  </Button>
-                </Grid>
-              </Grid>
-            </Form>
+
+                <Divider className="my-3" />
+
+                <div className="flex justify-between font-bold mt-2 mb-3">
+                  <p>Total Pay</p>
+                  <p>LKR {totalPay}</p>
+                </div>
+
+                <Divider className="my-3" />
+
+                <Button variant="contained" fullWidth type="submit" sx={{ borderRadius: "8px" }}>
+                  Pay Now
+                </Button>
+              </Form>
+            )}
           </Formik>
         </Box>
       </Modal>

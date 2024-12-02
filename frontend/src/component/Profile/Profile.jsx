@@ -46,6 +46,7 @@ import ComplaintHistory from './ComplaintHistory';
 
 import EditProfile from './EditProfile';
 import Cart from '../Cart/Cart';
+import Paymentssandbox from './Paymentssandbox';
 
 import Paymentssandbox from './Paymentssandbox';
 
