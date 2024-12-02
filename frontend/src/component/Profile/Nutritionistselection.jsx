@@ -33,8 +33,8 @@ const NutritionistSelection = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const handleArrowClick = (nutritionistId) => {
-    console.log("Selected Nutritionist ID:", nutritionistId);
+  const handleArrowClick = (nutritionist) => {
+    console.log("Selected Nutritionist ID:", nutritionist);
   
     if (!storedRequestData) {
       console.error("No request data found in localStorage.");
@@ -44,14 +44,14 @@ const NutritionistSelection = () => {
   
     const updatedRequestData = {
       ...storedRequestData,
-      nutritionistId,
+      nutritionistId: nutritionist.id,
     };
   
     // Save the updated requestData back to localStorage
     localStorage.setItem("requestData", JSON.stringify(updatedRequestData));
     console.log("Updated Request Data:", updatedRequestData);
   
-    dispatch(createRequest(updatedRequestData, token))
+    dispatch(createRequest(updatedRequestData, nutritionist,token))
       .then(() => {
         // Clear requestData from local storage
         localStorage.removeItem("requestData");

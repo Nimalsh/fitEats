@@ -13,6 +13,8 @@ import com.nimalsha.request.UserdetailsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nimalsha.request.CreateRequestRequest;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import com.nimalsha.request.CreateothergoalRequest;
@@ -72,7 +74,7 @@ public class UserServiceImp implements  UserService{
         request.setDietaryRestrictions(req.getDietaryRestrictions());
         request.setActivityLevel(req.getActivityLevel());
         request.setMealsPerDay(req.getMealsPerDay());
-    
+        request.setRequestDate(LocalDate.now());
         // Save the request to the repository
         return requestRepository.save(request);
     }
@@ -99,7 +101,8 @@ public class UserServiceImp implements  UserService{
         request.setDietaryRestrictions(req.getDietaryRestrictions());
         request.setActivityLevel(req.getActivityLevel());
         request.setMealsPerDay(req.getMealsPerDay());
-    
+        request.setRequestDate(LocalDate.now());
+        
         // Save the request to the repository
         return requestRepository.save(request);
     }
