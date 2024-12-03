@@ -35,10 +35,12 @@ public class Request {
     private String description;
     private String reply;
     private String comments;
+   
 
 
     // Newly added fields
     private LocalDate completedDate; // To store the date when the request was completed
     private LocalDate startedDate;   // To store the date when the request was started
     private LocalDate repliedDate;   // To store the date when the request was replied
+    private LocalDate requestDate;
 }

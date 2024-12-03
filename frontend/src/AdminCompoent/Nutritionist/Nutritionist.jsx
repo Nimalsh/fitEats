@@ -1,85 +1,100 @@
-import React from 'react'
-import { Card, Col, Row } from 'antd';
+import {React,useEffect} from 'react'
+import { Card, Col, Row,Table,Button } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
-import { Table } from 'antd';
 import AdminTable from '../Admin/Table/Table';
+import { useDispatch, useSelector } from "react-redux";
+import { getAllRequests,getDocumentByRequestId} from "../../component/State/Nutritionist/Action";
 
-const nutritionistData = [
-  {
-    id: "N001",
-    name: "Dr. Ayesha Perera",
-    slmcRegistration: "SLMC12345",
-    email: "ayesha.perera@nutrition.lk",
-    contact: "0712345678",
-    signupDate: "2023-03-15",
-  },
-  {
-    id: "N002",
-    name: "Dr. Malith Silva",
-    slmcRegistration: "SLMC54321",
-    email: "malith.silva@nutrition.lk",
-    contact: "0723456789",
-    signupDate: "2023-06-12",
-  },
-  {
-    id: "N003",
-    name: "Dr. Nirosha Fernando",
-    slmcRegistration: "SLMC98765",
-    email: "nirosha.fernando@nutrition.lk",
-    contact: "0761234567",
-    signupDate: "2023-08-22",
-  },
-  {
-    id: "N004",
-    name: "Dr. Kusal Jayawardene",
-    slmcRegistration: "SLMC11223",
-    email: "kusal.jayawardene@nutrition.lk",
-    contact: "0776543210",
-    signupDate: "2023-09-05",
-  },
-  {
-    id: "N005",
-    name: "Dr. Shanika Rajapakse",
-    slmcRegistration: "SLMC33211",
-    email: "shanika.rajapakse@nutrition.lk",
-    contact: "0789876543",
-    signupDate: "2023-11-01",
-  },
-];
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'SLMC Registration',
-    dataIndex: 'slmcRegistration',
-    key: 'slmcRegistration',
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
-  },
-  {
-    title: 'Contact',
-    dataIndex: 'contact',
-    key: 'contact',
-  },
-  {
-    title: 'Signup Date',
-    dataIndex: 'signupDate',
-    key: 'signupDate',
-  },
-];
-
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
 
 export const Nutritionist = () => {
+  const columns = [
+    {
+      title: "Full Name",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+   
+    {
+      title: "Specializations",
+      dataIndex: "specializations",
+      key: "specializations",
+    },
+    {
+      title: "Experience (Years)",
+      dataIndex: "experience",
+      key: "experience",
+    },
+    {
+      title: "Qualifications",
+      dataIndex: "qualifications",
+      key: "qualifications",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <span
+          style={{
+            color: status === "PENDING" ? "orange" : status === "APPROVED" ? "green" : "red",
+          }}
+        >
+          {status}
+        </span>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Button type="primary" onClick={() => handleViewClick(record)}>
+          View
+        </Button>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Button type="primary" >
+         Confirm
+        </Button>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Button type="primary">
+          Decline
+        </Button>
+      ),
+    },
+  ];
+   const dispatch = useDispatch();
+  const nutritionistRequests = useSelector(
+    (state) => state.nutritionist.nutritionistRequest // Assuming `nutritionist.requests` contains the fetched data
+  );
+  const loading = useSelector((state) => state.nutritionist.loading);
+  const error = useSelector((state) => state.nutritionist.error);
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      dispatch(getAllRequests (token));
+      
+    }
+  }, [dispatch]);
+  
+  const handleViewClick = (requestId) => {
+    const token = localStorage.getItem("jwt");
+   
+    if (token) {
+      dispatch(getDocumentByRequestId(requestId.id, token)); // Dispatch the action to get the document
+    }
+  };
+
+  
   return (
     <Row gutter={[16, 16]}>
       <StatCard title={"Nutritionist Count"} value={"5"} change={"-1"} icon="UserOutlined"></StatCard>
@@ -92,7 +107,25 @@ export const Nutritionist = () => {
         xl={32}
       >
         <Card style={{ height: '100%' }}>
-          <AdminTable title={"Nutritionist"} columns={columns} data={nutritionistData} />
+        <Row gutter={[16, 16]}>
+      <Col span={24}>
+        <Card style={{ marginBottom: 16 }}>
+          <h2>Nutritionist Requests</h2>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p style={{ color: "red" }}>Error: {error}</p>
+          ) : (
+            <Table
+              dataSource={nutritionistRequests || []}
+              columns={columns}
+              rowKey={(record) => record.id} // Use a unique key field from your data
+              pagination={{ pageSize: 5 }}
+            />
+          )}
+        </Card>
+      </Col>
+    </Row>
         </Card>
       </Col>
     </Row>

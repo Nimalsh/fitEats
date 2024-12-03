@@ -56,6 +56,9 @@ const rootReducer =combineReducers({
   complaint:complaintReducer,
 
   event:eventReducer,
+
+
+
   payment:paymentReducer
 
 

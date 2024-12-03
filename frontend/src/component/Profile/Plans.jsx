@@ -62,6 +62,9 @@ const Plans = () => {
           
             case 2: // Replied
                 return orders.filter(order => order.status === 'Completed');
+
+            case 3: // Replied
+                return orders.filter(order => order.status === 'Pending');
             default:
                 return orders;
         }
@@ -93,6 +96,7 @@ const Plans = () => {
                     <Tab label="Completed" />
                   
                     <Tab label="Replied" />
+                    <Tab label="Pending" />
                 </Tabs>
 
                 <TableContainer component={Paper}>
@@ -111,6 +115,8 @@ const Plans = () => {
                                             
                                             case 2: // Replied
                                                 return "Replied Date";
+                                            case 3: // Replied
+                                                return "Request Date";
                                             default:
                                                 return "Request Date"; // Default case
                                         }
@@ -146,6 +152,8 @@ const Plans = () => {
                                             row.startedDate
                                         ) : row.status === "Completed" && row.repliedDate ? (
                                             row.repliedDate
+                                        ) : row.status === "Pending" && row.requestDate ? (
+                                            row.requestDate
                                         ) : (
                                             "N/A"
                                         )}

@@ -30,7 +30,8 @@ const Paidweightlossform = () => {
       dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
       activityLevel: activityLevel,
       mealsPerDay: parseInt(mealsPerDay) || 0,
-      nutritionistId:0
+      nutritionistId:0,
+      nutritionistName:"",
     };
   
     localStorage.setItem('requestData', JSON.stringify(requestData));
