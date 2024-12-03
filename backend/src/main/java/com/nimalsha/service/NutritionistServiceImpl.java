@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nimalsha.model.Nutritionist;
 import com.nimalsha.dto.NutritionistDto;
+import com.nimalsha.dto.NutritionistrequestDto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -134,6 +135,41 @@ public List<NutritionistDto> getAllNutritionist() {
             nutritionist.getQualifications()
         )).collect(Collectors.toList());
     }
+
+    @Override
+    public List<NutritionistrequestDto> getAllNutritionistRequests() {
+        List<Nutritionistrequests> requests = nutritionistRequestRepository.findAll();
+        return requests.stream()
+                .map(this::convertToDto)  // Convert each Nutritionistrequests to NutritionistRequestDto
+                .collect(Collectors.toList());
+    }
+
+    // Helper method to convert Nutritionistrequests entity to NutritionistRequestDto
+    private NutritionistrequestDto convertToDto(Nutritionistrequests request) {
+        NutritionistrequestDto dto = new NutritionistrequestDto();
+        dto.setId(request.getId());
+        dto.setFullName(request.getFullName());
+        dto.setEmail(request.getEmail());
+        dto.setSpecializations(request.getSpecializations());
+        dto.setExperience(request.getExperience());
+        dto.setQualifications(request.getQualifications());
+        dto.setStatus(request.getStatus());
+      
+        return dto;
+    }
+
+    @Override
+    public byte[] getDocumentByRequestId(Long requestId) {
+        return nutritionistRequestRepository.findById(requestId)
+                .map(Nutritionistrequests::getDocuments) // Fetch the document bytes
+                .orElse(null); // Return null if the request is not found
+    }
+
+
+   
+
+
+    
 
  
 }

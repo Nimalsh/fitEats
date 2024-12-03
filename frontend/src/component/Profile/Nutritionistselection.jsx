@@ -33,25 +33,26 @@ const NutritionistSelection = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const handleArrowClick = (nutritionistId) => {
-    console.log("Selected Nutritionist ID:", nutritionistId);
+  const handleArrowClick = (nutritionist) => {
+    console.log("Selected Nutritionist ID:", nutritionist);
   
     if (!storedRequestData) {
       console.error("No request data found in localStorage.");
       alert("Something went wrong. Please start again.");
       return;
     }
-  
+    
     const updatedRequestData = {
       ...storedRequestData,
-      nutritionistId,
+      nutritionistId: nutritionist.id,
+      nutritionistName:nutritionist.fullName,
     };
   
     // Save the updated requestData back to localStorage
     localStorage.setItem("requestData", JSON.stringify(updatedRequestData));
     console.log("Updated Request Data:", updatedRequestData);
   
-    dispatch(createRequest(updatedRequestData, token))
+    dispatch(createRequest(updatedRequestData, nutritionist,token))
       .then(() => {
         // Clear requestData from local storage
         localStorage.removeItem("requestData");
@@ -103,7 +104,7 @@ const NutritionistSelection = () => {
                   top: "50%",
                   transform: "translateY(-50%)",
                 }}
-                onClick={() => handleArrowClick(nutritionist.id)} // Pass the nutritionist ID
+                onClick={() => handleArrowClick(nutritionist)} // Pass the nutritionist ID
               >
                 <ArrowForwardIcon />
               </IconButton>

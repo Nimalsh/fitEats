@@ -18,5 +18,6 @@ public class CreateRequestRequest {
     private String dietaryRestrictions;
     private String activityLevel;
     private int mealsPerDay;
+    private String nutritionistName;
 }
 

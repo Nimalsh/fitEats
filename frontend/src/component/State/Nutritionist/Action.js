@@ -15,6 +15,12 @@ import {
   GET_ALL_NUTRITIONISTS_REQUEST,
   GET_ALL_NUTRITIONISTS_SUCCESS,
   GET_ALL_NUTRITIONISTS_FAILURE,
+  GET_ALL_NUTRITIONIST_REQUESTS_REQUEST,
+  GET_ALL_NUTRITIONIST_REQUESTS_SUCCESS,
+  GET_ALL_NUTRITIONIST_REQUESTS_FAILURE,
+  GET_DOCUMENT_REQUEST,
+  GET_DOCUMENT_SUCCESS,
+  GET_DOCUMENT_FAILURE,
 } from "./ActionType";
 
 export const createNutritionistRequest = (requestData) => {
@@ -114,6 +120,58 @@ export const checkNutritionistRequestByEmail = (email) => {
         console.error("Error fetching all nutritionist requests:", error);
         dispatch({
           type: GET_ALL_NUTRITIONISTS_FAILURE,
+          payload: error.message,
+        });
+      }
+    };
+  };
+  
+  export const getDocumentByRequestId = (requestId, token) => {
+    return async (dispatch) => {
+      dispatch({ type: GET_DOCUMENT_REQUEST });
+  
+      try {
+        const response = await api.get(`/api/nutritionists/${requestId}/document`, {
+          responseType: "blob", // Ensures the response is treated as binary data
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token to the headers
+          },
+        });
+  
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `document-${requestId}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+  
+        dispatch({ type: GET_DOCUMENT_SUCCESS });
+      } catch (error) {
+        dispatch({ type: GET_DOCUMENT_FAILURE, payload: error.message });
+      }
+    };
+  };
+
+  export const getAllRequests = (token) => {
+    return async (dispatch) => {
+      dispatch({ type: GET_ALL_NUTRITIONIST_REQUESTS_REQUEST });
+      console.log("disaptching");
+      try {
+        const response = await api.get("/api/nutritionists/admin/requests/all", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token to the headers
+          },
+        });
+        dispatch({
+          type: GET_ALL_NUTRITIONIST_REQUESTS_SUCCESS,
+          payload: response.data,
+          
+        });
+
+        console.log("disaptching",response.data);
+      } catch (error) {
+        dispatch({
+          type: GET_ALL_NUTRITIONIST_REQUESTS_FAILURE,
           payload: error.message,
         });
       }
