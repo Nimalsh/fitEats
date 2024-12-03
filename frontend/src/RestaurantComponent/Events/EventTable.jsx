@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, Modal, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Divider, Grid, Modal, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEventAction, getRestaurantsEvents } from '../../component/State/Restaurant/Action';
@@ -19,51 +19,53 @@ export const EventTable = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
 
-  const { restaurant, event } = useSelector((store) => store);
+  const { restaurant, restaurantsEvents } = useSelector((state) => state.restaurant);  // Make sure the selector matches the state structure
 
-  const [open, setOpen] = useState (false);
+  const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    if (restaurant.usersRestaurant) {
+    console.log("Restaurant state:", restaurant);
+    if (restaurant && restaurant.usersRestaurant) {
+      console.log("Dispatching getRestaurantsEvents with ID:", restaurant.usersRestaurant.id);
       dispatch(getRestaurantsEvents({
         restaurantId: restaurant.usersRestaurant.id,
         jwt,
       }));
+    } else {
+      console.log("No usersRestaurant available in restaurant state");
     }
-  }, [dispatch, jwt, restaurant.usersRestaurant]);
+  }, [dispatch, jwt, restaurant]);
 
   const handleDeleteEvent = (eventId) => {
+    console.log("Deleting event with ID:", eventId);
     dispatch(deleteEventAction({ eventId, jwt }));
   };
 
   const handleViewDetails = (event) => {
+    console.log("Viewing details for event:", event);
     setSelectedEvent(event);
     setOpen(true);
   };
- 
+
   const handleClose = () => {
+    console.log("Closing modal for event:", selectedEvent);
     setOpen(false);
     setSelectedEvent(null);
   };
 
+  console.log("Events state from store:", restaurantsEvents);  // Log events from the store
+
   return (
     <Box>
-      {/* <Card className='mt-2'>
-        <CardHeader
-          title={"Events and Offers"}
-          sx={{ pt: 2, alignItems: "center" }}
-        />
-      </Card> */}
-
       <Grid container spacing={2} sx={{ marginTop: 2 }}>
-        {event.restaurantsEvents && event.restaurantsEvents.length > 0 ? (
-          event.restaurantsEvents.map((item) => (
+        {restaurantsEvents && restaurantsEvents.length > 0 ? (
+          restaurantsEvents.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
               <Card style={{ background: "#555555" }}>
                 <CardContent>
                   <Box display="flex" justifyContent="center">
-                    <img src={item.images} style={{ width: 200, height: 180, marginBottom: '10px' }} />
+                    <img src={item.images} style={{ width: 200, height: 180, marginBottom: '10px' }} alt={item.name} />
                   </Box>
                   <Typography variant="h6" align="center" gutterBottom>
                     {item.name}
@@ -79,18 +81,18 @@ export const EventTable = () => {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: 'center' }}>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    sx={{ fontWeight: 'bold' }} 
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ fontWeight: 'bold' }}
                     onClick={() => handleViewDetails(item)}
                   >
                     View Details
                   </Button>
-                  <Button 
-                    variant="contained" 
-                    color="error" 
-                    sx={{ fontWeight: 'bold' }} 
+                  <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ fontWeight: 'bold' }}
                     onClick={() => handleDeleteEvent(item.id)}
                   >
                     Delete
@@ -117,12 +119,12 @@ export const EventTable = () => {
         <Box sx={modalStyle}>
           {selectedEvent && (
             <>
-               <Divider sx={{ my: 2, bgcolor: '#FDDA0D' }} />
-              <Typography id="modal-title" variant="h6" component="h2" sx={{textAlign:'center', color:'#FDDA0D' , fontWeight:'bold'}}>
+              <Divider sx={{ my: 2, bgcolor: '#FDDA0D' }} />
+              <Typography id="modal-title" variant="h6" component="h2" sx={{ textAlign: 'center', color: '#FDDA0D', fontWeight: 'bold' }}>
                 {selectedEvent.name}
-              </Typography> 
+              </Typography>
               <Box display="flex" justifyContent="center" mt={2}>
-                <img src={selectedEvent.images} style={{ width: 350, height: 250 }} />
+                <img src={selectedEvent.images} style={{ width: 350, height: 250 }} alt={selectedEvent.name} />
               </Box>
               <Typography id="modal-description" sx={{ mt: 2 }}>
                 {selectedEvent.description}

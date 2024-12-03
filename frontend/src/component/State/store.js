@@ -39,7 +39,7 @@ const rootReducer =combineReducers({
   foodItems:restaurantReducer,
 
   nutrion:NutrionReducer,
-  event:restaurantReducer,
+  restaurantsEvents:restaurantReducer,
   foodDetails:menuItemReducer,
   plan: planReducer, 
   request:requestReducer,
