@@ -57,8 +57,6 @@ const rootReducer =combineReducers({
 
   event:eventReducer,
 
-
-
   payment:paymentReducer
 
 
