@@ -52,7 +52,7 @@ export const startPayment = (jwt, paymentData) => {
 
         setTimeout(() => {
           dispatch(clearCartAction());
-        }, 10000);
+        }, 1000);
 
       } catch (error) {
         dispatch({
