@@ -50,7 +50,7 @@ class LandingPage extends StatelessWidget {
                       // Navigate to MyOrdersPage when clicked
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyOrderPage()),
+                        MaterialPageRoute(builder: (context) => MyOrderPage(jwtToken: '',)),
                       );
                     }),
                     buildInfoCard('Meal Articles', '85', Icons.restaurant, () {
@@ -58,7 +58,7 @@ class LandingPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MealArticlePage()),
+                            builder: (context) => MealArticleScreen()),
                       );
                     }),
                     buildInfoCard('Personal Meal Plan', '3', Icons.note, () {

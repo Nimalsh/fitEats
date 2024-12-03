@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import '../models/userdetails.dart';
+import '../services/userservices.dart';
 
-class MyProfilePage extends StatelessWidget {
-  final Map<String, dynamic> profileDetails = {
-    'subscription': 'Premium',
-    'age': 28,
-    'gender': 'Female',
-    'height': '5\'6" (167 cm)',
-    'weight_loss': '5 kg',
-    'goal': 'Weight Loss',
-    'duration': '8 weeks',
-    'deadline': '2023-12-31',
-    'activity_level': 'Moderately active',
-    'dietary_preference': ['Vegetarian', 'Low Carb'],
-    'meals_per_day': 3,
-  };
+class MyProfilePage extends StatefulWidget {
+  final String jwt; // Pass JWT token from the parent widget or context
+
+  MyProfilePage({required this.jwt, required String jwtToken});
+
+  @override
+  _MyProfilePageState createState() => _MyProfilePageState();
+}
+
+class _MyProfilePageState extends State<MyProfilePage> {
+  late Future<UserDetails> _userDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    _userDetails = UserService().fetchUserDetails(widget.jwt);
+  }
 
   Widget _buildProfileDetail(String title, String detail) {
     return Padding(
@@ -50,41 +55,45 @@ class MyProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Profile'),
-        
       ),
-      body:SingleChildScrollView(
-      
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/image/profile.jpg'),
+      body: FutureBuilder<UserDetails>(
+        future: _userDetails,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            final user = snapshot.data!;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage('assets/image/profile.jpg'),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  _buildProfileDetail('Username', user.username),
+                  _buildProfileDetail('Age', user.age.toString()),
+                  _buildProfileDetail('Gender', user.gender),
+                  _buildProfileDetail('Height', '${user.height} cm'),
+                  _buildProfileDetail('Current Weight', '${user.currentWeight} kg'),
+                  _buildProfileDetail('BMI', user.bmi.toStringAsFixed(1)),
+                  _buildProfileDetail('Activity Level', user.activityLevel),
+                  _buildProfileDetail('Dietary Preferences', user.dietaryPreferences),
+                  _buildProfileDetail('Dietary Restrictions', user.dietaryRestrictions),
+                  _buildProfileDetail('Specials', user.specials),
+                ],
               ),
-            ),
-            SizedBox(height: 16),
-            _buildProfileDetail('Subscription', profileDetails['subscription']),
-            _buildProfileDetail('Age', profileDetails['age'].toString()),
-            _buildProfileDetail('Gender', profileDetails['gender']),
-            _buildProfileDetail('Height', profileDetails['height']),
-            _buildProfileDetail('Weight Loss', profileDetails['weight_loss']),
-            _buildProfileDetail('Goal', profileDetails['goal']),
-            _buildProfileDetail('Duration', profileDetails['duration']),
-            _buildProfileDetail('Deadline', profileDetails['deadline']),
-            _buildProfileDetail('Activity Level', profileDetails['activity_level']),
-            _buildProfileDetail(
-              'Dietary Preference',
-              profileDetails['dietary_preference'].join(', '),
-            ),
-            _buildProfileDetail(
-              'Number of Meals per Day',
-              profileDetails['meals_per_day'].toString(),
-            ),
-          ],
-        
-      ),
+            );
+          } else {
+            return Center(child: Text('No data found.'));
+          }
+        },
       ),
     );
   }

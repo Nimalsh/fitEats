@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../models/login_request.dart';
 
+import '../services/authservice.dart';
 import 'profile.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,9 +12,43 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
+
+  final AuthService _authService = AuthService(baseUrl: 'http://10.0.3.2:5454');
+ 
+
+  void _handleLogin() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email and Password are required')),
+      );
+      return;
+    }
+
+    final loginRequest = LoginRequest(email: email, password: password);
+
+    try {
+      final authResponse = await _authService.login(loginRequest);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(authResponse.message)),
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage(jwt: authResponse.jwt)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +79,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    controller: _usernameController,
+                    controller: _emailController,
                     decoration: InputDecoration(
-                      hintText: 'Username',
+                      hintText: 'Email',
                       hintStyle: const TextStyle(color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.3),
@@ -84,17 +120,8 @@ class _LoginPageState extends State<LoginPage> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 20),
-
-
-                  
                   ElevatedButton(
-                    onPressed: () {
-                       Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
-                );
-                      // Handle login action
-                    },
+                    onPressed: _handleLogin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       shape: RoundedRectangleBorder(
