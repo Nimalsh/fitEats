@@ -41,25 +41,10 @@ import {
   FINISH_REQUEST_BY_PLAN_ID_SUCCESS,
   FINISH_REQUEST_BY_PLAN_ID_FAILURE,
 } from './ActionType';
+import { startPayment } from '../Payment/Action';
 
 // Action to create a new request
-export const createRequest = (requestData, token) => {
-  return async (dispatch) => {
-    dispatch({ type: CREATE_REQUEST_REQUEST });
-    try {
-      const { data } = await api.post('/api/users/requests', requestData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      dispatch({ type: CREATE_REQUEST_SUCCESS, payload: data });
-      console.log("Request created", data);
-    } catch (error) {
-      console.error("Error creating request", error);
-      dispatch({ type: CREATE_REQUEST_FAILURE, payload: error.message });
-    }
-  };
-};
+
 
 // Action to get requests by nutritionist ID
 export const getRequestsByNutritionistId = (token) => {
@@ -292,7 +277,41 @@ export const finishRequestByPlanId = (planId, token) => {
   };
 };
 
+export const createRequest = (requestData, nutritionist, token,) => {
+  return async (dispatch) => {
+    dispatch({ type: CREATE_REQUEST_REQUEST });
+   console.log("starting hhhh");
+    // Define paymentData object
+    const paymentData = {
+      items:  nutritionist.fullName,
+      amount: 1000.00,
+      firstName: 'Saman',
+      lastName: 'Perera',
+      email: 'samanp@gmail.com',
+      phone: '0771234567',
+      address: 'No.1, Galle Road',
+      city: 'Colombo',
+      country: 'Sri Lanka',
+    };
 
+    try {
+      // First, call startPayment with the payment data
+      await dispatch(startPayment(token, paymentData));
 
+      // Proceed with creating the request after the payment
+      const { data } = await api.post('/api/users/requests', requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  
+      // Dispatch success action for request creation
+      dispatch({ type: CREATE_REQUEST_SUCCESS, payload: data });
+      console.log("Request created", data);
+      
+    } catch (error) {
+      console.error("Error creating request or processing payment", error);
+      dispatch({ type: CREATE_REQUEST_FAILURE, payload: error.message });
+    }
+  };
+};

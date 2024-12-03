@@ -14,10 +14,16 @@ import {
   GET_ALL_NUTRITIONISTS_REQUEST,
   GET_ALL_NUTRITIONISTS_SUCCESS,
   GET_ALL_NUTRITIONISTS_FAILURE,
+  GET_ALL_NUTRITIONIST_REQUESTS_REQUEST,
+  GET_ALL_NUTRITIONIST_REQUESTS_SUCCESS,
+  GET_ALL_NUTRITIONIST_REQUESTS_FAILURE,
+  GET_DOCUMENT_REQUEST,
+  GET_DOCUMENT_SUCCESS,
+  GET_DOCUMENT_FAILURE,
 } from "./ActionType";
 
 const initialState = {
-  nutritionistRequest: null,
+  nutritionistRequest: [],
   loading: false,
   error: null,
   successMessage: null,
@@ -34,6 +40,9 @@ const nutritionistReducer = (state = initialState, action) => {
     case CHECK_NUTRITIONIST_REQUEST_CONFIRMED:
     case GET_NUTRITIONIST_BY_ID_REQUEST:
       case GET_ALL_NUTRITIONISTS_REQUEST:
+        case GET_ALL_NUTRITIONIST_REQUESTS_REQUEST:
+          case GET_DOCUMENT_REQUEST:
+
       return {
         ...state,
         loading: true,
@@ -76,12 +85,18 @@ const nutritionistReducer = (state = initialState, action) => {
           loading: false,
           allNutritionists: action.payload,
         };
+        case GET_ALL_NUTRITIONIST_REQUESTS_SUCCESS:
+          return { ...state, loading: false, nutritionistRequest: action.payload };
+          case GET_DOCUMENT_SUCCESS:
+            return { ...state,loading: false, documentDownloading: false };
 
     case CREATE_NUTRITIONIST_FAILURE:
     case CHECK_NUTRITIONIST_REQUEST_FAILURE:
     case CHECK_NUTRITIONIST_REQUEST_CONFIRMED_FAILURE:
     case GET_NUTRITIONIST_BY_ID_FAILURE:
     case GET_ALL_NUTRITIONISTS_FAILURE:
+      case GET_ALL_NUTRITIONIST_REQUESTS_FAILURE:
+        case GET_DOCUMENT_FAILURE:
       return {
         ...state,
         loading: false,
