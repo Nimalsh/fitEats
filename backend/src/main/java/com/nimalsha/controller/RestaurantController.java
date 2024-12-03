@@ -21,6 +21,7 @@ public class RestaurantController {
     @Autowired
     private UserService userService;
 
+    @PutMapping("/update")
     public ResponseEntity<Restaurant> updateRestaurant(@RequestBody Restaurant restaurant) {
         Restaurant _restaurant = restaurantService.updateRestaurantAllFields(restaurant);
 
@@ -40,12 +41,9 @@ public class RestaurantController {
     }
 
 
-    @GetMapping()
+    @GetMapping("/all")
     private ResponseEntity<List<Restaurant>> getAllRestaurant(
-            @RequestHeader("Authorization") String jwt
     )throws Exception{
-        User user=userService.findUserByJwtToken(jwt);
-
         List<Restaurant> restaurant=restaurantService.getAllRestaurant();
 
         return new ResponseEntity<>(restaurant, HttpStatus.OK);

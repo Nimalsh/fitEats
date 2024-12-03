@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Col, Row, Table, Button, Space, Divider, Popconfirm, Modal } from 'antd';
+import axios from 'axios';
 
 const RequestTable = ({ title, pendingData, actionData }) => {
   const [pendingRequests, setPendingRequests] = useState(pendingData);
@@ -167,6 +168,50 @@ const actionData = [
 ];
 
 export const UserApprovals = () => {
+const fetchUserApprovals = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/user-approvals/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      pendingData.length = 0;
+      if (response.status === 200) {
+        let i = 0;
+        for (const user of response.data) {
+          i++;
+          if (user.waiting) {
+          pendingData.push({
+               id: user.requestId,
+    userType: user.userType,
+    userName: user.userName,
+    requestDate: user.requestDate,
+    actionDate: "2024-10-25",
+    fullName: user.fullName,
+    sex: user.sex,
+    address: user.address, 
+          })
+          } else {
+          actionData.push({
+               id: user.requestId,
+    userType: user.userType,
+    userName: user.userName,
+    requestDate: user.requestDate,
+    actionDate: "2024-10-25",
+    action: "Resolved",
+    fullName: user.fullName,
+    sex: user.sex,
+    address: user.address, 
+          })
+          }
+        }
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
   return (
     <Row gutter={[16, 16]}>
       <Col xs={20} md={24} xl={32}>

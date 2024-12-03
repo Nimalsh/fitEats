@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, DatePicker, Button, Select } from 'antd';
 import { Typography, Table } from 'antd';
 import { jsPDF } from 'jspdf';
@@ -173,6 +173,33 @@ export const Transactions = () => {
       </Card>
     );
   };
+
+  const fetchTransactions = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/transactions/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    // Assuming response.data is an array of objects
+    if (response.status === 200) {
+      initialData.length = 0;
+    response.data.forEach(item => {
+      item.transactionId = `TXN${item.transactionId}`;
+      initialData.push(item);
+    });
+  }
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+  }
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
   return (
     <Row gutter={[16, 16]}>

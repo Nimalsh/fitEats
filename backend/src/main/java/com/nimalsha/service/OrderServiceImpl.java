@@ -53,6 +53,11 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
     public Order createOrder(OrderRequest order, User user) throws Exception {
 
         Address shippAddress = order.getDeliveryAddress();

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Button, Input, Space, Popconfirm, Divider } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const AdminTable = ({ title, columns, data, keyField = "id" }) => {
     const [searchText, setSearchText] = useState("");
@@ -14,8 +15,61 @@ const AdminTable = ({ title, columns, data, keyField = "id" }) => {
         )
     );
 
+const jwtToken = 'your_jwt_token_here';
+    const blockUserFromServer = async (payload) => {
+await axios.put('http://localhost:5454/api/users/update', payload, {
+  headers: {
+    'Authorization': `Bearer ${jwtToken}`,
+    'Content-Type': 'application/json'
+  }
+})
+  .then(response => console.log(response.data))
+  .catch(error => console.error('Error:', error));
+
+    }
+
+    const blockRestaurantFromServer = async (payload) => {
+await axios.put('http://localhost:5454/api/restaurant/update', payload, {
+  headers: {
+    'Authorization': `Bearer ${jwtToken}`,
+    'Content-Type': 'application/json'
+  }
+})
+  .then(response => console.log(response.data))
+  .catch(error => console.error('Error:', error));
+
+    }
+
+    const blockDriverFromServer = async (payload) => {
+await axios.put('http://localhost:5454/api/delivery/update', payload, {
+  headers: {
+    'Authorization': `Bearer ${jwtToken}`,
+    'Content-Type': 'application/json'
+  }
+})
+  .then(response => console.log(response.data))
+  .catch(error => console.error('Error:', error));
+
+    }
+
+    const blockNutritionistFromServer = async (payload) => {
+        const nutritionistId = parseInt(payload.replace("N"));
+await axios.patch(`http://localhost:5454/api/nutritionist/update/${nutritionistId}`, payload, {
+  headers: {
+    'Authorization': `Bearer ${jwtToken}`,
+    'Content-Type': 'application/json'
+  }
+})
+  .then(response => console.log(response.data))
+  .catch(error => console.error('Error:', error));
+
+    }
+
     // Block logic using keyField
-    const handleBlock = (keyValue) => {
+    const handleBlock = (keyValue, record) => {
+        record.blocked = true;
+        // ???
+        blockUserFromServer(record);
         const itemToBlock = activeData.find((item) => item[keyField] === keyValue);
         if (itemToBlock) {
             setBlockedData([
@@ -27,7 +81,10 @@ const AdminTable = ({ title, columns, data, keyField = "id" }) => {
     };
 
     // Unblock logic using keyField
-    const handleUnblock = (keyValue) => {
+    const handleUnblock = (keyValue, record) => {
+        record.blocked = false;
+        // ???
+        blockUserFromServer(record);
         const itemToUnblock = blockedData.find((item) => item[keyField] === keyValue);
         if (itemToUnblock) {
             setActiveData([
@@ -59,7 +116,7 @@ const AdminTable = ({ title, columns, data, keyField = "id" }) => {
                         render: (text, record) => (
                             <Popconfirm
                                 title={`Are you sure to block this ${title.toLowerCase()}?`}
-                                onConfirm={() => handleBlock(record[keyField])}
+                                onConfirm={() => handleBlock(record[keyField], record)}
                                 okText="Yes"
                                 cancelText="No"
                             >
@@ -90,7 +147,7 @@ const AdminTable = ({ title, columns, data, keyField = "id" }) => {
                         render: (text, record) => (
                             <Popconfirm
                                 title={`Are you sure to unblock this ${title.toLowerCase()}?`}
-                                onConfirm={() => handleUnblock(record[keyField])}
+                                onConfirm={() => handleUnblock(record[keyField], record)}
                                 okText="Yes"
                                 cancelText="No"
                             >

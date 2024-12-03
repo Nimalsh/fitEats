@@ -17,14 +17,15 @@ public class NutritionistServiceImpl implements NutritionistService {
     }
 
     @Override
-    public Nutritionist updateNutritionist(String id, Nutritionist nutritionist) {
-        Optional<Nutritionist> _nutritionist = nutritionistRepository.findById(id);
-
-        if (_nutritionist.isPresent()) {
-            return nutritionistRepository.save(nutritionist);
-        }
-
-        return null;
+    public Nutritionist updateNutritionist(String id, Nutritionist updatedNutritionist) {
+            return nutritionistRepository.findById(id).map(existingNutritionist -> {
+        existingNutritionist.setNutritionistName(updatedNutritionist.getNutritionistName());
+        existingNutritionist.setSLMCregistration(updatedNutritionist.getSLMCregistration());
+        existingNutritionist.setEmail(updatedNutritionist.getEmail());
+        existingNutritionist.setContactNo(updatedNutritionist.getContactNo());
+        existingNutritionist.setBlocked(updatedNutritionist.getBlocked());
+        return nutritionistRepository.save(existingNutritionist);
+    }).get();
     }
 
     @Override

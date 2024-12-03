@@ -89,6 +89,7 @@ const completeAppointments = [
 ];
 
 export const NutritionistChanneling = () => {
+
   return (
     <Row gutter={[16, 16]}>
       <Col

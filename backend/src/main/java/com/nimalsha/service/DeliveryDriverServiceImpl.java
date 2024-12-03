@@ -28,7 +28,14 @@ public class DeliveryDriverServiceImpl implements DeliveryDriverService {
     }
 
     @Override
-    public DeliveryDriver updatDeliveryDriver(DeliveryDriver driver) {
-        return deliveryDriverRepository.save(driver);
+    public DeliveryDriver updatDeliveryDriver(DeliveryDriver updatedDriver) {
+        return deliveryDriverRepository.findById(updatedDriver.getDeliveryId()).map(existingDriver -> {
+            existingDriver.setDeliveryName(updatedDriver.getDeliveryName());
+            existingDriver.setVehicleNumber(updatedDriver.getVehicleNumber());
+            existingDriver.setEmail(updatedDriver.getEmail());
+            existingDriver.setContactNumber(updatedDriver.getContactNumber());
+            existingDriver.setBlocked(updatedDriver.getBlocked());
+            return deliveryDriverRepository.save(existingDriver);
+        }).get();
     }
 }

@@ -24,4 +24,18 @@ public class UserApprovalsServiceImpl implements UserApprovalsService {
 
         return approval;
     }
+
+    @Override
+    public UserApproval updateApproval(String id, UserApproval updatedRequest) {
+            return userApprovalsRepository.findById(id).map(existingRequest -> {
+        existingRequest.setUserType(updatedRequest.getUserType());
+        existingRequest.setUserName(updatedRequest.getUserName());
+        existingRequest.setRequestDate(updatedRequest.getRequestDate());
+        existingRequest.setFullName(updatedRequest.getFullName());
+        existingRequest.setSex(updatedRequest.getSex());
+        existingRequest.setAddress(updatedRequest.getAddress());
+        existingRequest.setWaiting(updatedRequest.getWaiting());
+        return userApprovalsRepository.save(existingRequest);
+            }).get();
+    }
 }

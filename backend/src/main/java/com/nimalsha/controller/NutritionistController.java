@@ -17,24 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/api")
+@RequestMapping("/api/nutritionist")
 public class NutritionistController {
 
     private NutritionistService nutritionistService;
 
-    @GetMapping("/nutritionist")
+    @GetMapping("/all")
     public ResponseEntity<List<Nutritionist>> getAllNutritionists() {
         return new ResponseEntity<>(nutritionistService.getAll(), HttpStatus.OK);
     }
 
-    @PostMapping("/nutritionist")
+    @PostMapping("/new")
     public ResponseEntity<Nutritionist> createNutritionist(@RequestBody Nutritionist nutritionist) {
         Nutritionist _nutritionist = nutritionistService.createNutritionist(nutritionist);
 
         return new ResponseEntity<>(_nutritionist, HttpStatus.OK);
     }
 
-    @PatchMapping("/nutritionist/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<Nutritionist> updateNutritionist(@PathVariable String id, @RequestBody Nutritionist nutritionist) {
         Nutritionist _nutritionist = nutritionistService.updateNutritionist(id, nutritionist);
 

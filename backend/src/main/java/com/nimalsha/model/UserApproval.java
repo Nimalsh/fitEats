@@ -1,5 +1,6 @@
 package com.nimalsha.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -17,6 +18,9 @@ public class UserApproval {
     private String requestId; 
     private String userType;
     private String userName;
-    private Date requestDate;
+    private LocalDate requestDate;
+    private String fullName;
+    private String sex;
+    private String address;
     private Boolean waiting;
 }

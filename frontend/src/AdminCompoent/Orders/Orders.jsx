@@ -6,6 +6,7 @@ import {Segmented,  } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import { color } from '@mui/system';
 import { Table } from 'antd';
+import { useEffect } from 'react';
 
 const { Title } = Typography;
 
@@ -106,6 +107,37 @@ const onChange = (pagination, filters, sorter, extra) => {
 };
 
 export const Orders = () => {
+
+  const fetchOrders = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/orders/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (response.status === 200) {
+        data.length = 0;
+        let i = 0;
+        for (const order of response.data) {
+          i++;
+          data.push({
+              key: i,
+              name: order.customer.fullName,
+              age: 0,
+              address: order.customer.deliveryAddress, 
+          });
+        }
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+useEffect(() => {
+  fetchOrders();
+}, []);
+
   return (
     <Row gutter={[16, 16]}>
       <StatCard title={"Total Income for the Day"} value={"Rs.1,200"} change={"-31"} icon="WalletTwoTone"></StatCard>

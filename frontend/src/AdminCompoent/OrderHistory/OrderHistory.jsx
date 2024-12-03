@@ -7,6 +7,8 @@ import StatCard from '../Admin/Components/StatCard';
 import { color } from '@mui/system';
 import { Table } from 'antd';
 import ReusableTable from '../Admin/Components/ReusableTable';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const { Title } = Typography;
 
@@ -101,6 +103,53 @@ const onChange = (pagination, filters, sorter, extra) => {
 };
 
 export const OrderHistory = () => {
+
+const fetchOrders = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/orders/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if (response.status === 200) {
+      completeOrders.length = 0;
+      pendingOrders.length = 0;
+      let i = 0;
+      for (const order of response.data) {
+        i++;
+        if (order.orderStatus === "complete") {
+          completeOrders.push({
+            key: i,
+            orderId: order.id,
+            userId: order.customer.id,
+            restaurantId: order.restaurant.id,
+            deliveryDriverId: order.deliveryDriver.id,
+            orderDate: order.createdDate,
+            transactionId: "",
+            transactionAmount: order.totalPrice
+          })
+        } else if (order.orderStatus === "pending") {
+          pendingOrders.push({
+            key: i,
+            orderId: order.id,
+            userId: order.customer.id,
+            restaurantId: order.restaurant.id,
+            deliveryDriverId: order.deliveryDriver.id,
+            orderDate: order.createdDate,
+            transactionId: "",
+            transactionAmount: order.totalPrice
+        });
+      }
+      }
+    }
+  });
+}
+
+useEffect(() => {
+  fetchOrders();
+}, []);
+
   return (
     <Row gutter={[16, 16]}>
       <Col

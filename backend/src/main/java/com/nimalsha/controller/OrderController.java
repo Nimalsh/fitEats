@@ -50,6 +50,11 @@ public class OrderController {
 
     }
 
+    @GetMapping("/orders/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
+    }
+
     @PutMapping("/order")
     public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
         Order _order = null;

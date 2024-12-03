@@ -20,6 +20,8 @@ public interface OrderService {
 
     public Order findOrderById(Long orderId) throws Exception;
 
+    public List<Order> getAllOrders();
+
 
     
 }

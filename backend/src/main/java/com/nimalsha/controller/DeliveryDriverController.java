@@ -29,14 +29,14 @@ public class DeliveryDriverController {
         return new ResponseEntity<>(driver, HttpStatus.OK);
     }
 
-    @GetMapping("/delivery-drivers")
+    @GetMapping("/all")
     public ResponseEntity<List<DeliveryDriver>> getAllDeliveryDrivers() {
         List<DeliveryDriver> drivers = deliveryDriverService.getAllDeliveryDrivers();
 
         return new ResponseEntity<>(drivers, HttpStatus.OK);
     }
 
-    @PutMapping("/delivery-driver")
+    @PutMapping("/update")
     public ResponseEntity<DeliveryDriver> updateDeliveryDriver(@RequestBody DeliveryDriver deliveryDriver) {
         DeliveryDriver driver = deliveryDriverService.updatDeliveryDriver(deliveryDriver);
 

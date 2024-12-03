@@ -2,6 +2,8 @@ import React from 'react'
 import { Card, Col, Row } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import AdminTable from '../Admin/Table/Table';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 const columns = [
   { title: "Restaurant ID", dataIndex: "id", key: "id" },
@@ -35,6 +37,44 @@ const initialData = [
 ];
 
 export const Restaurant = () => {
+
+const fetchRestaurants = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/restaurant/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    // Assuming response.data is an array of objects
+    if (response.status === 200) {
+      initialData.length = 0;
+    response.data.forEach(item => {
+      const convertedItem = {
+        id: item.id.toString(), // Convert ID to string
+        name: item.name || "", // Set default name if null
+        location: "", // Set default location
+        owner: item.owner || "", // Set default owner if null
+        contact: item.contactInformation && item.contactInformation.mobile, // Set default contact number
+        email: item.contactInformation && item.contactInformation.email, // Set default email
+        signupDate: item.registrationDate // Set default signup date
+      };
+
+      // Push the converted item to the array
+      initialData.push(convertedItem);
+    });
+  }
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+}
+
+  useEffect(() => {
+    fetchRestaurants();
+  }, []);
+
   return (
     <Row gutter={[16, 16]}>
       <StatCard title={"Restaurant Count"} value={"15"} change={"0"} icon="ShopOutlined"></StatCard>

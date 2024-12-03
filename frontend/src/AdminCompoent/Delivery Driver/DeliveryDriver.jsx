@@ -3,6 +3,8 @@ import { Card, Col, Row, Table, Typography, Input, Button } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import { Admin } from '../Admin/Admin';
 import AdminTable from '../Admin/Table/Table';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const { Title } = Typography;
 
@@ -125,6 +127,55 @@ const handleUnblockDriver = (driverId) => {
 };
 
 export const DeliveryDriver = () => {
+const fetchDrivers = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/delivery/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (response.status === 200) {
+        // Remove existing data
+        activeDriversData.length = 0;
+        blockedDriversData.length = 0;
+        // Adding new data
+        let i = 0;
+        for (const driver of response.data) {
+          i++;
+
+          if (driver.blocked) {
+            blockedDriversData.push({
+              key: i,
+              driverId: `D${driver.driveryId}`,
+              name: driver.deliveryName,
+              vehicleNumber: driver.vehicleNumber,
+              email: driver.email,
+              contactNumber: driver.contactNumber,
+              blockedDate: "",
+            })
+          } else {
+            activeDriversData.push({
+              key: i,
+              driverId: `D${driver.driveryId}`,
+              name: driver.deliveryName,
+              vehicleNumber: driver.vehicleNumber,
+              email: driver.email,
+              contactNumber: driver.contactNumber,
+              blockedDate: "",
+          });
+        }
+      }
+    }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+useEffect(() => {
+  fetchDrivers();
+}, []);
+
   return (
     <Row gutter={[16, 16]}>
       {/* Top metrics */}

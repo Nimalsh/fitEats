@@ -10,4 +10,6 @@ public interface UserApprovalsService {
 
     UserApproval addUserApproval(UserApproval userApproval);
 
+    UserApproval updateApproval(String id, UserApproval userApproval);
+
 }

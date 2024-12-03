@@ -3,6 +3,7 @@ import { Card, Col, Row } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import { Table } from 'antd';
 import AdminTable from '../Admin/Table/Table';
+import axios from 'axios';
 
 const nutritionistData = [
   {
@@ -80,6 +81,33 @@ const onChange = (pagination, filters, sorter, extra) => {
 };
 
 export const Nutritionist = () => {
+
+const fetchNutritionists = async () => {
+  const jwtToken = "";
+    await axios.get('http://localhost:5454/api/nutritionist/all', {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (response.status === 200) {
+        nutritionistData.length = 0;
+        for (const nutritionist of response.data) {
+          nutritionistData.push({
+                id: `N${nutritionist.nutritionistID}`,
+    name: nutritionist.nutritionistName,
+    slmcRegistration: nutritionist.SLMCRegistration,
+    email: nutritionist.email,
+    contact: nutritionist.contactNo,
+    signupDate: nutritionist.signUpDate,
+          })
+        }
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
   return (
     <Row gutter={[16, 16]}>
       <StatCard title={"Nutritionist Count"} value={"5"} change={"0"} icon="UserOutlined"></StatCard>
