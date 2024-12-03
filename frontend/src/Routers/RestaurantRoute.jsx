@@ -10,7 +10,7 @@ import { UpdateEvent } from '../RestaurantComponent/Events/UpdateEvent';
 import { UpdateFoodItem } from '../RestaurantComponent/FoodCategory/UpdateFoodItem';
 import { Drivers } from '../RestaurantComponent/IncomingOrders/Drivers'; 
 import { CreateIngredientCategoryForm } from '../RestaurantComponent/Ingredients/CreateIngredientCategoryForm'; 
-import { IncomeReport } from '../RestaurantComponent/Dashboard/IncomeReport'; 
+import { IncomeReport } from '../RestaurantComponent/Dashboard/IncomeReport';  
 export const RestaurantRoute = () => {
   const { restaurant } = useSelector(store => store);
 
@@ -26,7 +26,7 @@ export const RestaurantRoute = () => {
         <Route path="/ingredientcategory/add" element={<CreateIngredientCategoryForm />} /> 
         {/* <Route path="/admin/restaurant/menu/food-details/:id" element={<FoodDetails />} /> */}
         <Route path="/ingredient-report" element={<IngredientReport/>}/>
-        <Route path="/income-report" element={<IncomeReport/>}/> 
+        <Route path="/income-report" element={<IncomeReport/>}/>  
       </Routes>
     </div>
   );

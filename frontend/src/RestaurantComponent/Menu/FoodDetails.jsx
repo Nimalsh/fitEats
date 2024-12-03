@@ -149,43 +149,44 @@ export const FoodDetails = () => {
             ))}
           </Box>
 
-          <Box display="flex" gap={1} mt={3}>
-            {/* Left: Nutrition Details */}
-            <Box flex={1}>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Nutrition Details
-              </Typography>
-              <Typography>Calories: {totalNutrition.calories}</Typography>
-              <Typography>Protein: {totalNutrition.protein} g</Typography>
-              <Typography>Carbohydrates: {totalNutrition.carbohydrates} g</Typography>
-              <Typography>Fat: {totalNutrition.fat} g</Typography>
-              <Typography>Total Sugar: {totalNutrition.totalSugar} g</Typography>
-              <Typography>Total Iron: {totalNutrition.totalIron} mg</Typography>
-              <Typography>Total Vitamins: 10 mg</Typography>
-            </Box>
+          <Box display="flex" gap={5} mt={3} maxWidth="800px" margin="40px"  >
+  {/* Left: Nutrition Details */}
+  <Box flex={0.6}>
+    <Typography variant="h6" sx={{ mb: 2 }}>
+      Nutrition Details
+    </Typography>
+    <Typography>Calories: {totalNutrition.calories}</Typography>
+    <Typography>Protein: {totalNutrition.protein} g</Typography>
+    <Typography>Carbohydrates: {totalNutrition.carbohydrates} g</Typography>
+    <Typography>Fat: {totalNutrition.fat} g</Typography>
+    <Typography>Total Sugar: {totalNutrition.totalSugar} g</Typography>
+    <Typography>Total Iron: {totalNutrition.totalIron} mg</Typography>
+    <Typography>Total Vitamins: 10 mg</Typography>
+  </Box>
 
-            {/* Right: Pie Chart */}
-            <Box flex={1} display="flex" justifyContent="center" alignItems="center">
-              <PieChart width={300} height={300}>
-                <Pie
-                  data={nutritionData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  fill="#8884d8"
-                  label
-                >
-                  {nutritionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </Box>
-          </Box>
+  {/* Right: Pie Chart */}
+  <Box flex={0.4} display="flex" justifyContent="center" alignItems="center">
+    <PieChart width={250} height={250}>
+      <Pie
+        data={nutritionData}
+        dataKey="value"
+        nameKey="name"
+        cx="50%"
+        cy="50%"
+        outerRadius={90}
+        fill="#8884d8"
+        label
+      >
+        {nutritionData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Pie>
+      <Tooltip />
+      <Legend />
+    </PieChart>
+  </Box>
+</Box>
+
 
           {/* Modal for Nutrition Information */}
           <Modal
