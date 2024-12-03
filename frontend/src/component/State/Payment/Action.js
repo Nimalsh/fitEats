@@ -50,10 +50,6 @@ export const startPayment = (jwt, paymentData) => {
   
         dispatch({ type: START_PAYMENT_SUCCESS, payload: data });
 
-        setTimeout(() => {
-          dispatch(clearCartAction());
-        }, 10000);
-
       } catch (error) {
         dispatch({
           type: START_PAYMENT_FAILURE,
