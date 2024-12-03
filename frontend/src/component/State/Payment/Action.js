@@ -49,7 +49,7 @@ export const startPayment = (jwt, paymentData) => {
         });
   
         dispatch({ type: START_PAYMENT_SUCCESS, payload: data });
-      
+
       } catch (error) {
         dispatch({
           type: START_PAYMENT_FAILURE,

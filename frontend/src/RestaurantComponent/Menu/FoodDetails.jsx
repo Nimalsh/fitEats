@@ -2,6 +2,7 @@ import { Box, Chip, CircularProgress, Modal, Paper, Typography } from '@mui/mate
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { getFoodDetails } from '../../component/State/Menu/Action';
 
 const modalStyle = {
@@ -15,6 +16,8 @@ const modalStyle = {
   boxShadow: 24,
   p: 4,
 };
+
+const COLORS = ['#FF8042', '#0088FE', '#00C49F', '#FFBB28', '#FF4560'];
 
 export const FoodDetails = () => {
   const { id } = useParams();
@@ -71,8 +74,21 @@ export const FoodDetails = () => {
 
   const totalNutrition = calculateTotalNutrition();
 
+  const nutritionData = [
+    { name: 'Protein', value: totalNutrition.protein },
+    { name: 'Carbohydrates', value: totalNutrition.carbohydrates },
+    { name: 'Fat', value: totalNutrition.fat },
+    { name: 'Total Sugar', value: totalNutrition.totalSugar },
+    { name: 'Total Iron', value: totalNutrition.totalIron },
+    { name: 'Total Vitamin', value: totalNutrition.totalIron },
+  ];
+
   if (loading) {
-    return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
@@ -83,21 +99,44 @@ export const FoodDetails = () => {
     <Box sx={{ padding: 3 }}>
       {foodDetails ? (
         <Paper elevation={3} sx={{ padding: 2 }}>
-          <Typography variant="h4" align="center" gutterBottom>{foodDetails.name}</Typography>
-          <Box display="flex" justifyContent="center" mb={2}>
-            <img 
-              src={foodDetails.images[0]} 
-              alt={foodDetails.name} 
-              style={{ width: 300, height: 200, borderRadius: '10%' }} 
-            />
+          <Box display="flex" gap={2}>
+            {/* Left Column */}
+            <Box flex={1} display="flex" flexDirection="column" alignItems="center">
+              <Typography variant="h4" align="center" gutterBottom>
+                {foodDetails.name}
+              </Typography>
+              <Box display="flex" justifyContent="center" mb={2}>
+                <img
+                  src={foodDetails.images[0]}
+                  alt={foodDetails.name}
+                  style={{ width: 300, height: 200, borderRadius: '10%' }}
+                />
+              </Box>
+            </Box>
+
+            {/* Right Column */}
+            <Box flex={1}>
+              <Typography variant="h6" sx={{ color: "#FFFF00" }}>
+                <b>Price :</b> Rs. {foodDetails.price}.00
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                <b>Description</b>
+              </Typography>
+              <Typography variant="body1">{foodDetails.description}</Typography>
+              <br />
+              <Typography variant="body1">
+                <b>Food Category</b>: {foodDetails.foodCategory.name}
+              </Typography>
+              <Typography variant="body1">
+                <b>Vegetarian : </b>
+                {foodDetails.vegetarian ? 'Yes' : 'No'}
+              </Typography>
+              <Typography variant="body1">
+                <b>Seasonal : </b>
+                {foodDetails.seasonal ? 'Yes' : 'No'}
+              </Typography>
+            </Box>
           </Box>
-          <Typography variant="h6" gutterBottom>Description</Typography>
-          <Typography variant="body1">{foodDetails.description}</Typography>
-          <Typography variant="h6" gutterBottom>Price</Typography>
-          <Typography variant="body1">Rs. {foodDetails.price}/=</Typography>
-          <Typography variant="body1">{foodDetails.foodCategory.name}</Typography>  
-          <Typography variant="body1">Vegetarian: {foodDetails.vegetarian ? 'Yes' : 'No'}</Typography> 
-          <Typography variant="body1">Seasonal: {foodDetails.seasonal ? 'Yes' : 'No'}</Typography> 
 
           <Box display="flex" justifyContent="center" gap={1} flexWrap="wrap">
             {foodDetails.ingredients.map((ingredient, index) => (
@@ -110,16 +149,43 @@ export const FoodDetails = () => {
             ))}
           </Box>
 
-          <div>
-            <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>Nutrition Details</Typography>
-            <Typography>Calories: {totalNutrition.calories}</Typography>
-            <Typography>Protein: {totalNutrition.protein}g</Typography>
-            <Typography>Carbohydrates: {totalNutrition.carbohydrates}g</Typography>
-            <Typography>Fat: {totalNutrition.fat}g</Typography>
-            <Typography>Total Sugar: {totalNutrition.totalSugar}g</Typography>
-            <Typography>Total Iron: {totalNutrition.totalIron}mg</Typography>
-            <Typography>Total Vitamins: {totalNutrition.totalVitamins}mg</Typography>
-          </div>
+          <Box display="flex" gap={1} mt={3}>
+            {/* Left: Nutrition Details */}
+            <Box flex={1}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Nutrition Details
+              </Typography>
+              <Typography>Calories: {totalNutrition.calories}</Typography>
+              <Typography>Protein: {totalNutrition.protein} g</Typography>
+              <Typography>Carbohydrates: {totalNutrition.carbohydrates} g</Typography>
+              <Typography>Fat: {totalNutrition.fat} g</Typography>
+              <Typography>Total Sugar: {totalNutrition.totalSugar} g</Typography>
+              <Typography>Total Iron: {totalNutrition.totalIron} mg</Typography>
+              <Typography>Total Vitamins: 10 mg</Typography>
+            </Box>
+
+            {/* Right: Pie Chart */}
+            <Box flex={1} display="flex" justifyContent="center" alignItems="center">
+              <PieChart width={300} height={300}>
+                <Pie
+                  data={nutritionData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#8884d8"
+                  label
+                >
+                  {nutritionData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </Box>
+          </Box>
 
           {/* Modal for Nutrition Information */}
           <Modal
