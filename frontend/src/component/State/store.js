@@ -24,9 +24,7 @@ import articlesReducer from "./Articles/Reducer";
 import complaintReducer from "./complain/Reducer";
 
 import { eventReducer } from "./event/Reducer";
-import paymentReducer from "./Payment/Reducer";
-
-import paymentReducer from "./Payment/Reducer";
+import paymentReducer from "./Payment/Reducer"; 
 
 
 const rootReducer =combineReducers({
