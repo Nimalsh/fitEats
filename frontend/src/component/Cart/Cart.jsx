@@ -97,7 +97,14 @@ const Cart = () => {
       console.error("Cart is empty!");
       return;
     }
-
+    const defaultPizzaItem = {
+      id: "default-pizza-id",  // Set a unique id for the default item
+      food: {
+        name: "Pizza",  // Default food name
+        description: "Delicious pizza with cheese and toppings",  // Optional description
+      },
+      totalPrice: 500,  // Default price for the pizza
+    };
     const data = {
       jwt: localStorage.getItem("jwt"),
       order: {
@@ -107,7 +114,7 @@ const Cart = () => {
           state: values.state,
           postalCode: values.pincode,
         },
-        items: cart.cartItems, // Ensure cartItems is populated correctly
+        items: cart.cartItems && cart.cartItems.length > 0 ? cart.cartItems : [defaultPizzaItem], 
       },
     };
 
@@ -125,6 +132,7 @@ const Cart = () => {
     const jwt = localStorage.getItem("jwt");
     try {
       await dispatch(startPayment(jwt, { ...values, amount: totalPay }));
+      await dispatch(clearCartAction());
       navigate("/my-profile/payment-success");
     } catch (error) {
       console.error("Payment failed:", error);
