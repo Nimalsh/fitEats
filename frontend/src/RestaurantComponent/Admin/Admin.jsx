@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { fetchRestaurantsOrder } from '../../component/State/Restaurant Order/Action';
 import { getRestaurantsCategory } from '../../component/State/Restaurant/Action';
-import ComplaintPage from '../Complains/ComplaintForm';
+import {ComplaintPage} from '../Complains/ComplaintPage';
+import {ComplaintHistory} from '../Complains/ComplaintHistory'
 import { Dashboard } from '../Dashboard/Dashboard';
 // import { IngredientReport } from '../Dashboard/IngredientReport';
 import { Events } from '../Events/Events';
@@ -16,7 +17,8 @@ import { Orders } from '../Orders/Orders';
 import { OrderDetails} from '../Orders/OrderDetails';
 import { AdminSideBar } from './AdminSideBar';
 import { Navbar } from './Navbar/Navbar';
-import { RestuarantDetails } from './RestuarantDetails';
+import { RestuarantDetails } from './RestuarantDetails'; 
+import ComplaintForm from '../Complains/ComplaintForm';
 
 export const Admin = () => {
   const dispatch = useDispatch();
@@ -51,12 +53,11 @@ export const Admin = () => {
             <Route path='/ingredients' element={<Ingredients />} />
             <Route path='/events' element={<Events />} />
             <Route path='/details' element={<RestuarantDetails />} />
-            <Route path='/complains' element={<ComplaintPage />} />
+            <Route path='/complains' element={<ComplaintPage />} /> 
             <Route path='/add-menu' element={<CreateMenuForm />} />
             <Route path="/menu/food-details/:id" element={<FoodDetails />} />  
             <Route path="/orders/order-details/:orderId" element={<OrderDetails />} />
-            
-
+            <Route path="/complains/complain-history" element={<ComplaintHistory />} />
           </Routes>
         </div>
       </div>

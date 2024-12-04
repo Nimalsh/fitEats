@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserComplaints } from "../../component/State/complain/Action";;
+import { addComplaintfet, fetchUserComplaints } from "../../component/State/complain/Action"; 
 import React, { useEffect } from "react";
 import {
   Paper,
@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const ComplaintHistory = () => {
+export const ComplaintHistory = () => {
   const dispatch = useDispatch();
   const { complaints, loading, error } = useSelector((state) => state.complaint);
   const auth = useSelector((state) => state.auth);
@@ -63,5 +63,4 @@ const ComplaintHistory = () => {
     </Paper>
   );
 };
-
-export default ComplaintHistory;
+ 

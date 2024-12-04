@@ -1,27 +1,24 @@
+ 
 import React, { useState } from "react";
 import {
   Paper,
   Typography,
   TextField,
   Button,
-  Snackbar,
-  CircularProgress,
 } from "@mui/material";
-import { addComplaint } from "../../component/State/complain/Action";
+import { addComplaint } from "../../component/State/complain/Action"; 
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ComplaintForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     complaint: "",
   });
-  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize navigate hook
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,12 +27,6 @@ const ComplaintForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.complaint) {
-      setSnackbar({ open: true, message: "Both fields are required!" });
-      return;
-    }
-
-    setLoading(true);
     const payload = {
       ...formData,
       jwt: auth.jwt || localStorage.getItem("jwt"),
@@ -43,19 +34,12 @@ const ComplaintForm = () => {
 
     dispatch(addComplaint(payload))
       .then(() => {
-        setSnackbar({ open: true, message: "Complaint submitted successfully!" });
-        setLoading(false);
-        navigate("/Complains/complain-history");
+        // Redirect to the complaint history page after successful submission
+        navigate("/admin/restaurant/complains/complain-history");
       })
       .catch((error) => {
-        setSnackbar({ open: true, message: "Error submitting complaint." });
         console.error("Error submitting complaint:", error);
-        setLoading(false);
       });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ open: false, message: "" });
   };
 
   return (
@@ -93,27 +77,11 @@ const ComplaintForm = () => {
         <Button
           type="submit"
           variant="contained"
-          style={{
-            marginTop: "20px",
-            backgroundColor: "#979533",
-            color: "#fff",
-            position: "relative",
-          }}
-          disabled={loading}
+          style={{ marginTop: "20px", backgroundColor: "#979533", color: "#fff" }}
         >
-          {loading ? (
-            <CircularProgress size={24} style={{ color: "#fff" }} />
-          ) : (
-            "Submit"
-          )}
+          Submit
         </Button>
       </form>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        message={snackbar.message}
-        onClose={handleCloseSnackbar}
-      />
     </Paper>
   );
 };
