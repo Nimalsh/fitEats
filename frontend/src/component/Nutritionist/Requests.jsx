@@ -40,7 +40,7 @@ function Requests() {
     const lowerCaseTitle = title.toLowerCase();
     
     if (status === 'Finished' || status === 'Completed') {
-      if (lowerCaseTitle === 'other' || lowerCaseTitle === 'others') {
+      if (lowerCaseTitle === 'other' || lowerCaseTitle === 'others'||lowerCaseTitle === 'other goal') {
         if (planId) {
           navigate(`/nutri/weightloss/view/proceed/${planId}/${duration}`);
         } else {
@@ -57,6 +57,7 @@ function Requests() {
         case 'weight gain':
           navigate(`/nutri/weightgain/view/${requestId}`);
           break;
+        case 'other goal':
         case 'other':
         case 'others':
           navigate(`/nutri/other/view/${requestId}`);

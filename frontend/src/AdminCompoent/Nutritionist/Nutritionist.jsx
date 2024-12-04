@@ -3,7 +3,7 @@ import { Card, Col, Row,Table,Button } from 'antd';
 import StatCard from '../Admin/Components/StatCard';
 import AdminTable from '../Admin/Table/Table';
 import { useDispatch, useSelector } from "react-redux";
-import { getAllRequests,getDocumentByRequestId} from "../../component/State/Nutritionist/Action";
+import { getAllRequests,getDocumentByRequestId,updateRequestStatus} from "../../component/State/Nutritionist/Action";
 
 
 export const Nutritionist = () => {
@@ -56,7 +56,7 @@ export const Nutritionist = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button type="primary" >
+        <Button type="primary"onClick={() => handleUpdateStatus(record, "confirmed")} >
          Confirm
         </Button>
       ),
@@ -65,7 +65,7 @@ export const Nutritionist = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button type="primary">
+        <Button type="primary" onClick={() => handleUpdateStatus(record, "Declined")}>
           Decline
         </Button>
       ),
@@ -93,6 +93,13 @@ export const Nutritionist = () => {
       dispatch(getDocumentByRequestId(requestId.id, token)); // Dispatch the action to get the document
     }
   };
+  const handleUpdateStatus = (requestId,newStatus) => {
+    const Id=requestId.id;
+    const token = localStorage.getItem("jwt");
+
+    dispatch(updateRequestStatus({Id, newStatus, token }));
+  };
+
 
   
   return (

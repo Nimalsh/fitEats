@@ -101,8 +101,7 @@ private void sendStatusUpdateEmail(String email, Long requestId, String status) 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Nutritionist Request Status Update");
-        message.setText("Dear User,\n\nYour nutritionist request with ID " + requestId +
-                " has been updated to the following status: " + status + ".\n\nThank you.");
+        message.setText("Dear User,\n\nYour nutritionist request has been confirmed Now you can proceed with registration Thank you.");
 
         mailSender.send(message);
     } catch (Exception e) {
@@ -128,6 +127,7 @@ public List<NutritionistDto> getAllNutritionist() {
         // Convert to DTOs
         return nutritionists.stream().map(nutritionist -> new NutritionistDto(
             nutritionist.getId(),
+            nutritionist.getUserid(),
             nutritionist.getFullName(),
             nutritionist.getEmail(),
             nutritionist.getSpecializations(),

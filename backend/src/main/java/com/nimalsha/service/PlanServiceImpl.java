@@ -291,9 +291,11 @@ public void updateRequestDescriptionAndComplete(Long requestId, String descripti
 
     // Update the description field
     request.setReply(description);
+    request.setReply(description);
 
     // Set the status to "Completed"
     request.setStatus("Completed");
+    request.setRequestDate(LocalDate.now());
 
     // Save the updated request
     requestRepository.save(request);

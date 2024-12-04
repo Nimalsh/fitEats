@@ -5,6 +5,7 @@ import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, Title } from
 import { useNavigate,useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createRequest } from '../State/Autoplans/Action';
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
@@ -12,10 +13,11 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, Title);
 const Freeweightlossform = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const handleProceed = () => {
     const token = localStorage.getItem('jwt'); // Or wherever your token is stored
-    
+    setLoading(true);
     // Create a requestData object with all the form data
     const requestData = {
       title, // Example static title, replace if needed
@@ -28,7 +30,7 @@ const Freeweightlossform = () => {
       dietaryPreferences: dietaryPreferences.join(', '), // Convert array to comma-separated string
       dietaryRestrictions: dietaryRestrictions.join(', '), // Convert array to comma-separated string
       activitylevel: activityLevel,
-      target: type === 'weightLoss' 
+      target: type === 'weightloss' 
           ? (parseFloat(currentWeight) - parseFloat(targetWeightLoss) || 0) 
           : (parseFloat(currentWeight) + parseFloat(targetWeightLoss) || 0),
       bmi: height > 0 
@@ -39,20 +41,21 @@ const Freeweightlossform = () => {
   
     // Dispatch the createRequest action with requestData and token
     dispatch(createRequest(requestData, token))
-    .then((data) => {
-      // Use planId and duration from the response to navigate
-      const { planId, duration } = data;  // Assuming these are in the response
-      console.log("dataa",data);
-      navigate(`/my-profile/autoplan/view/${planId}/${duration}`);
-    })
-    .catch((error) => {
-      console.error("Error creating request", error);
-    });
-  };
+      .then((data) => {
+        setLoading(false); // Stop loading on success
+        const { planId, duration } = data;
+        console.log("dataa", data);
+        navigate(`/my-profile/autoplan/view/${planId}/${duration}`);
+      })
+      .catch((error) => {
+        setLoading(false); // Stop loading on error
+        console.error("Error creating request", error);
+      });
+  }
 
   
   
-
+  
   const [currentWeight, setCurrentWeight] = useState('');
   const [targetWeightLoss, setTargetWeightLoss] = useState('');
   const [duration, setDuration] = useState('');
@@ -279,7 +282,7 @@ const Freeweightlossform = () => {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <FormControl component="fieldset">
-                    <FormLabel component="legend">Height</FormLabel>
+                    <FormLabel component="legend">Height(cm)</FormLabel>
                     <TextField
                       fullWidth
                       margin="normal"
@@ -730,8 +733,10 @@ const Freeweightlossform = () => {
                     marginLeft: '400px',
                     marginTop: '30px',
                   }}
-                  onClick={handleProceed}  >
-                  Proceed
+                  onClick={handleProceed}
+                  disabled={loading}
+                  >
+                 {loading ? <CircularProgress size={24} /> : "Proceed"}
                 </Button>
               </Grid>
             </Paper>

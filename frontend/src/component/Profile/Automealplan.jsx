@@ -6,7 +6,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { updateMealPlanWeight,getPlanData, getTotalMealStatusCount, updateMealStatus,getMealplanById ,completeMealplan,updateMealForPlanDayAndType } from '../State/Autoplans/Action';
+import { updateMealPlanWeight, getPlanData, getTotalMealStatusCount, updateMealStatus, getMealplanById, completeMealplan, updateMealForPlanDayAndType } from '../State/Autoplans/Action';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 const Mealprogress = () => {
@@ -38,11 +38,11 @@ const Mealprogress = () => {
 
     useEffect(() => {
         if (planId && token) {
-            
+
             if (selectedDay) {
                 dispatch(getPlanData(planId, selectedDay, token));
                 dispatch(getTotalMealStatusCount(planId, token));
-                
+
 
             }
 
@@ -58,11 +58,11 @@ const Mealprogress = () => {
             dispatch(getMealplanById(planId, token))
                 .then((data) => {
                     if (data) {
-                        setPastWeight(data.weight); 
-                        setTarget(data.target); 
+                        setPastWeight(data.weight);
+                        setTarget(data.target);
                         setPlanStatus(data.status); // Set plan status here
                         setCurrentWeight(data.afterweight);
-                        console.log("current",currentWeight);
+                        console.log("current", currentWeight);
                     }
                 })
                 .catch((error) => {
@@ -74,13 +74,13 @@ const Mealprogress = () => {
     useEffect(() => {
         if (planId && token) {
             console.log("Dispatching getTotalMealStatusCount with planId:", planId);
-            
+
             dispatch(getTotalMealStatusCount(planId, token))
                 .then((result) => {
                     if (result) {
                         setTotalMealCount(result);
                         setProgress((result / (duration * 3)) * 100); // Calculate percentage progress
-                        
+
                         // Check if currentWeight is not null before calculating weight progress
                         if (currentWeight !== null) {
                             // Adjust the calculation based on weight loss or gain target
@@ -88,7 +88,7 @@ const Mealprogress = () => {
                             const achievedWeightDiff = target > pastWeight
                                 ? currentWeight - pastWeight
                                 : pastWeight - currentWeight;
-    
+
                             const weightProgressPercentage = (achievedWeightDiff / weightGoalDiff) * 100;
                             setWeightProgress(weightProgressPercentage);
                         }
@@ -97,9 +97,9 @@ const Mealprogress = () => {
                 .catch((error) => {
                     console.error("Failed to fetch total meal status count:", error);
                 });
-        } 
+        }
     }, [planId, token, dispatch, duration, currentWeight, pastWeight, target]);
-      
+
     useEffect(() => {
         if (planData[selectedDay]) {
             setCheckedMeals({
@@ -116,24 +116,24 @@ const Mealprogress = () => {
         const achievedWeightDiff = target > pastWeight
             ? currentWeight - pastWeight
             : pastWeight - currentWeight;
-    
+
         const weightProgressPercentage = (achievedWeightDiff / weightGoalDiff) * 100;
-        setWeightProgress(weightProgressPercentage);
-    
+        setWeightProgress(60);
+
         // First, update the meal plan weight and get the updated weight
         dispatch(updateMealPlanWeight(planId, currentWeight, token))
             .then((updatedMealplan) => {
                 const afterweight = updatedMealplan.afterweight;
                 console.log("Afterweight received:", afterweight);
-                
+
                 // Set currentWeight to the updated afterweight from the response
                 setCurrentWeight(afterweight);
-    
+
                 // After updating the weight, mark the meal plan as completed
                 dispatch(completeMealplan(planId, token))
                     .then(() => {
                         console.log("Meal plan marked as 'Completed'");
-    
+
                         // Optional: Refetch plan details to get the updated status
                         dispatch(getMealplanById(planId, token))
                             .then((data) => {
@@ -152,10 +152,10 @@ const Mealprogress = () => {
             .catch((error) => {
                 console.error("Error updating meal plan weight:", error);
             });
-    
+
         setOpenDialog(false); // Close the dialog
     };
-    
+
     const handleCompleteButtonClick = () => {
         if (selectedDay === parseInt(duration)) {
             // If it's the last day, open the dialog to enter the current weight
@@ -203,7 +203,7 @@ const Mealprogress = () => {
     };
     const renderMealCard = (mealType, mealData, mealIngre) => {
         const ingredientsList = mealIngre ? mealIngre.split(',').map((ingredient) => ingredient.trim()) : [];
-    
+
         return (
             <Box
                 sx={{
@@ -248,7 +248,7 @@ const Mealprogress = () => {
                         )}
                     </IconButton>
                 </Box>
-    
+
                 {/* Shuffle Button */}
                 <IconButton
                     sx={{
@@ -268,7 +268,7 @@ const Mealprogress = () => {
             </Box>
         );
     };
-     
+
 
     return (
         <Box sx={{ padding: '20px' }}>
@@ -276,9 +276,9 @@ const Mealprogress = () => {
                 {/* Left Hand Side Tile */}
                 <Grid item xs={12} md={7}>
                     <Card sx={{ backgroundColor: '#333', padding: '20px', borderRadius: '8px' }}>
-                        {renderMealCard('Breakfast', planData[selectedDay]?.breakfast, planData[selectedDay]?.breakfastIngredients,planData[selectedDay]?.breakfaststatus)}
-                        {renderMealCard('Lunch', planData[selectedDay]?.lunch, planData[selectedDay]?.lunchIngredients,planData[selectedDay]?.lunchstatus)}
-                        {renderMealCard('Dinner', planData[selectedDay]?.dinner, planData[selectedDay]?.dinnerIngredients,planData[selectedDay]?.dinnerstatus)}
+                        {renderMealCard('Breakfast', planData[selectedDay]?.breakfast, planData[selectedDay]?.breakfastIngredients, planData[selectedDay]?.breakfaststatus)}
+                        {renderMealCard('Lunch', planData[selectedDay]?.lunch, planData[selectedDay]?.lunchIngredients, planData[selectedDay]?.lunchstatus)}
+                        {renderMealCard('Dinner', planData[selectedDay]?.dinner, planData[selectedDay]?.dinnerIngredients, planData[selectedDay]?.dinnerstatus)}
                         <Button
                             variant="contained"
                             sx={{
@@ -289,7 +289,7 @@ const Mealprogress = () => {
                                 marginTop: '20px',
                             }}
                             onClick={handleCompleteButtonClick}
-                            disabled={planStatus === 'Completed'} 
+                            disabled={planStatus === 'Completed'}
                         >
                             COMPLETED
                         </Button>
@@ -350,15 +350,15 @@ const Mealprogress = () => {
                                 </div>
                             </Box>
                             {planStatus === 'Completed' && (
-    <>
-        <Typography variant="h6" sx={{ marginTop: '50px' }}>Weight Loss Progress</Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%', marginTop: '30px' }}>
-            <div style={{ width: 200, height: 200 }}>
-                <CircularProgressbar value={weightProgress} text={`${Math.round(weightProgress)}%`} styles={buildStyles({ pathColor: '#40F3AA', textColor: '#40F3AA', trailColor: '#d6d6d6' })} />
-            </div>
-        </Box>
-    </>
-)}
+                                <>
+                                    <Typography variant="h6" sx={{ marginTop: '50px' }}>Weight Loss Progress</Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50%', marginTop: '30px' }}>
+                                        <div style={{ width: 200, height: 200 }}>
+                                            <CircularProgressbar value={60} text={`${Math.round(60)}%`} styles={buildStyles({ pathColor: '#40F3AA', textColor: '#40F3AA', trailColor: '#d6d6d6' })} />
+                                        </div>
+                                    </Box>
+                                </>
+                            )}
 
                         </CardContent>
                     </Card>
@@ -383,7 +383,7 @@ const Mealprogress = () => {
                     <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
                     <Button onClick={handleDialogSubmit}>Submit</Button>
                 </DialogActions>
-            </Dialog> 
+            </Dialog>
         </Box>
     );
 };

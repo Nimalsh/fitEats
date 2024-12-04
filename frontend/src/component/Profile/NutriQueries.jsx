@@ -8,7 +8,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {getUserQueries,createQuery } from '../State/Queries/Action';
+import {getQueries,createQuery } from '../State/Queries/Action';
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -40,7 +40,7 @@ function NutriQueries() {
 
   
   useEffect(() => {
-    dispatch(getUserQueries(token)); // Replace with actual JWT token
+    dispatch(getQueries(token)); // Replace with actual JWT token
   }, [dispatch]);
   
   const handleSearchChange = (event) => {
@@ -90,7 +90,7 @@ function NutriQueries() {
         // Dispatch the createQuery action
         await dispatch(createQuery(token, description));
         // Fetch updated user queries
-        dispatch(getUserQueries(token));
+        dispatch(getQueries(token));
         setDescription("");
         setOpenQueryDialog(false);
       } catch (error) {

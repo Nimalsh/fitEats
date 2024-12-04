@@ -3,9 +3,10 @@ import { Box, Typography, Button, Grid, Card, CardContent, Dialog, DialogTitle, 
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateWeightAndHeight, fetchMealsForDay, addMealToDay, fetchNutritionData, updateNutritionValues, getNutritionValues, fetchBmiplanByPlanId } from '../State/Bmi/Action';
-
+import { useNavigate } from 'react-router-dom';
 const Calorytrack = () => {
   const { duration, planId } = useParams();
+  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
   const [mealType, setMealType] = useState('');
@@ -43,9 +44,11 @@ const Calorytrack = () => {
 
 
   const handleCalculateBMI = () => {
+   
     const heightInMeters = height / 100; // Convert height from cm to meters
     const bmiValue = weight / (heightInMeters * heightInMeters); // BMI formula
     setBmi(bmiValue.toFixed(1)); // Set BMI state to formatted value
+   
 
     // Determine BMI condition and provide specific messages
     let condition = '';
@@ -65,8 +68,9 @@ const Calorytrack = () => {
   const handleSet = () => {
     dispatch(updateWeightAndHeight(jwt, weight, height, planId));
     setOpenFinishDialog(false); // Close the dialog after dispatching
+    navigate("/my-profile/BMI");; // Replace "/target-page" with your desired route
   };
-
+  
   const calculatePercentage = (consumed, total) => {
     return total > 0 ? (consumed / total) * 100 : 0;
   };

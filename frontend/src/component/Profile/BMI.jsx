@@ -1,53 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { Card, CardContent, Typography, Box, TextField, Button,MenuItem,Select } from '@mui/material';
+import { Card, CardContent, Typography, Box, TextField, Button, MenuItem, Select } from '@mui/material';
 import correctbmi from './BMIimage.jpg';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch,useSelector  } from 'react-redux'; // Import useDispatch
-import { createBmiplan,fetchUserDetailsByToken,fetchActiveBmiPlans } from '../State/Bmi/Action'; // Update with the correct path
+import { useDispatch, useSelector } from 'react-redux'; // Import useDispatch
+import { createBmiplan, fetchUserDetailsByToken, fetchActiveBmiPlans } from '../State/Bmi/Action'; // Update with the correct path
 
 const BMI = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch(); // Initialize useDispatch
-  
 
-  const [currentWeight, setCurrentWeight] = useState(70); // kg
-  const [currentHeight, setCurrentHeight] = useState(1.75); // meters
-  const [age, setAge] = useState(70); // kg
+
+  const [currentWeight, setCurrentWeight] = useState(null); // kg
+  const [currentHeight, setCurrentHeight] = useState(null); // meters
+  const [age, setAge] = useState(null); // kg
   const [activityLevel, setActivityLevel] = useState(""); // meters
   const [gender, setGender] = useState(""); // kg
-  const [bmi, setBmi] = useState(23.44);
-  const [targetWeight, setTargetWeight] = useState(0); 
-  const [durationWeeks, setDurationWeeks] = useState(7);
-  const [duration, setDuration] = useState(7);
+  const [bmi, setBmi] = useState(null);
+  const [targetWeight, setTargetWeight] = useState(0);
+  const [durationWeeks, setDurationWeeks] = useState(null);
+  const [duration, setDuration] = useState(null);
   const [weightProgress, setWeightProgress] = useState([]);
   const [plotDaily, setPlotDaily] = useState(false);
-  const token = localStorage.getItem('jwt'); 
-   
+  const token = localStorage.getItem('jwt');
 
-  
+
+
   useEffect(() => {
     if (token) {
       dispatch(fetchUserDetailsByToken(token));
       dispatch(fetchActiveBmiPlans(token));
     }
   }, [dispatch, token]);
-  
+
   const userDetails = useSelector((state) => state.bmi.userDetails);
   const planDetails = useSelector((state) => state.bmi.activePlans);
-  
+
   useEffect(() => {
     if (planDetails && planDetails.length > 0 && planDetails[0]) {
       // If plan details exist, prioritize setting current weight and height from planDetails[0]
       setCurrentWeight(planDetails[0].weight);
       setCurrentHeight(planDetails[0].height); // Convert height from cm to meters
       setTargetWeight(planDetails[0].target); // Use target weight from plan details if available
-      setDurationWeeks(planDetails[0].duration); 
+      setDurationWeeks(planDetails[0].duration);
       setAge(planDetails[0].age);
       setActivityLevel(planDetails[0].activitylevel); // Convert height from cm to meters
       setGender(planDetails[0].gender);
-      setDurationWeeks(planDetails[0].duration/7);
+      setDurationWeeks(planDetails[0].duration / 7);
     } else if (userDetails) {
       // If plan details are empty or not available, fallback to user details
       setCurrentWeight(userDetails.currentWeight);
@@ -55,33 +55,33 @@ const BMI = () => {
       setAge(userDetails.age);
       setActivityLevel(userDetails.activityLevel); // Convert height from cm to meters
       setGender(userDetails.gender);
-      
-     
+
+
     }
   }, [planDetails, userDetails]);
-  
+
   useEffect(() => {
     const calculateDurationWeeks = (currentWeight, targetWeight) => {
       // Round currentWeight and targetWeight to the nearest whole numbers
       const roundedCurrentWeight = Math.round(currentWeight);
-      
+
       const roundedTargetWeight = Math.round(targetWeight);
-      console.log("rounded target",roundedTargetWeight);
+      console.log("rounded target", roundedTargetWeight);
       const weightDifference = roundedCurrentWeight - roundedTargetWeight;
       const weeklyLoss = 1; // kg per week
       return (weightDifference / weeklyLoss);
     };
-  
+
     const newDurationWeeks = calculateDurationWeeks(currentWeight, targetWeight);
     setDurationWeeks(newDurationWeeks);
     setDuration(newDurationWeeks * 7);
     console.log("dura", duration);
   }, [currentWeight, targetWeight]);
-  
 
-  
 
-  
+
+
+
   useEffect(() => {
     const daysInWeek = 7;
     const totalDays = durationWeeks * daysInWeek;
@@ -225,15 +225,17 @@ const BMI = () => {
   const handleWeightChange = (e) => {
     const newWeight = parseFloat(e.target.value);
     setCurrentWeight(newWeight);
-    setBmi(newWeight / (currentHeight * currentHeight));
+    if (newWeight > 0 && currentHeight > 0) {
+      setBmi(newWeight / (currentHeight * currentHeight));
+    }
   };
-
   const handleHeightChange = (e) => {
     const newHeight = parseFloat(e.target.value);
     setCurrentHeight(newHeight);
-    setBmi(currentWeight / (newHeight * newHeight));
+    if (currentWeight > 0 && newHeight > 0) {
+      setBmi(currentWeight / (newHeight * newHeight));
+    }
   };
-
   const handleDurationWeeksChange = (e) => {
     setDurationWeeks(parseInt(e.target.value, 10));
   };
@@ -247,7 +249,7 @@ const BMI = () => {
       console.error("No plan details available");
     }
   };
-  
+
 
   let pointerLeft = '0%';
 
@@ -269,17 +271,17 @@ const BMI = () => {
   }
 
   const handleProceed = () => {
-   
-      
-      dispatch(createBmiplan( duration, currentWeight, currentHeight, bmi, targetWeight,age,activityLevel,gender,token, navigate));
-   
+
+
+    dispatch(createBmiplan(duration, currentWeight, currentHeight, bmi, targetWeight, age, activityLevel, gender, token, navigate));
+
   }
   return (
     <Box sx={styles.dashboard}>
       <Card sx={{ flex: 2, padding: '20px' }}>
         <CardContent>
           <Box sx={styles.flexRow}>
-            <Typography variant="h6">Current Weight:</Typography>
+            <Typography variant="h6">Current Weight(kg):</Typography>
             <TextField
               sx={styles.valueBox}
               type="number"
@@ -290,7 +292,7 @@ const BMI = () => {
             />
           </Box>
           <Box sx={styles.flexRow}>
-            <Typography variant="h6">Current Height:</Typography>
+            <Typography variant="h6">Current Height(meters):</Typography>
             <TextField
               sx={styles.valueBox}
               type="number"
@@ -303,16 +305,22 @@ const BMI = () => {
           <Box sx={styles.flexRow}>
             <Typography variant="h6">BMI:</Typography>
             <Box sx={styles.valueBox}>
-              <Typography variant="h6">{bmi.toFixed(2)}</Typography>
+              <Typography variant="h6">
+                {bmi !== null && !isNaN(bmi) ? bmi.toFixed(2) : 'N/A'}
+              </Typography>
             </Box>
           </Box>
           <div style={styles.bmiChart}>
             <div style={{ ...styles.bmiPointer, left: pointerLeft }}>
-              {bmi.toFixed(2)}
+              {bmi !== null && !isNaN(bmi) ? bmi.toFixed(2) : 'N/A'}
             </div>
           </div>
           <Typography variant="body1" sx={{ marginTop: '50px' }}>
-            {bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Healthy BMI' : bmi < 30 ? 'Overweight' : 'Obese'}
+            {bmi !== null && !isNaN(bmi) ? (
+              bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Healthy BMI' : bmi < 30 ? 'Overweight' : 'Obese'
+            ) : (
+              'BMI not available'
+            )}
           </Typography>
           <Box sx={styles.legendContainer}>
             <div style={styles.legendItem}>
@@ -345,106 +353,106 @@ const BMI = () => {
             </Box>
           ) : (
             <>
-             <Box sx={styles.flexRow}>
-                 <Typography variant="h6">Target Weight:</Typography>
-                 <TextField
-                     sx={styles.valueBox}
-                     type="number"
-                     value={targetWeight.toFixed(1)}
-                     InputProps={{ readOnly: true }} // Make the field read-only
-                   
-    
-                 />
-             </Box>  
-
-                <Box sx={styles.flexRow}>
-                  <Typography variant="h6">Duration:</Typography>
-                  <TextField
-                    sx={styles.valueBox}
-                    type="number"
-                    value={durationWeeks}
-                    InputProps={{ readOnly: true }} // Make the field read-only
-                  />
-                </Box>
+              <Box sx={styles.flexRow}>
+                <Typography variant="h6">Target Weight:</Typography>
+                <TextField
+                  sx={styles.valueBox}
+                  type="number"
+                  value={targetWeight.toFixed(1)}
+                  InputProps={{ readOnly: true }} // Make the field read-only
 
 
-                {!planDetails[0] && (
-                  <>
-                    <Box sx={styles.flexRow}>
-                      <Typography variant="h6">Age:</Typography>
-                      <TextField
-                        sx={styles.valueBox}
-                        type="number"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                      />
-                    </Box>
+                />
+              </Box>
 
-                    <Box sx={styles.flexRow}>
-                      <Typography variant="h6">Activity Level:</Typography>
-                      <Select
-                        sx={styles.valueBox}
-                        value={activityLevel}
-                        onChange={(e) => setActivityLevel(e.target.value)} // Update state on selection
-                        displayEmpty
-                      >
-                        <MenuItem value="" disabled>
+              <Box sx={styles.flexRow}>
+                <Typography variant="h6">Duration In Weeks:</Typography>
+                <TextField
+                  sx={styles.valueBox}
+                  type="number"
+                  value={durationWeeks}
+                  InputProps={{ readOnly: true }} // Make the field read-only
+                />
+              </Box>
 
-                        </MenuItem>
-                        <MenuItem value="sedentary">sedentary</MenuItem>
-                        <MenuItem value="light">light</MenuItem>
-                        <MenuItem value="moderate">moderate</MenuItem>
-                        <MenuItem value="active">active</MenuItem>
-                        <MenuItem value="very active">very active</MenuItem>
-                      </Select>
-                    </Box>
 
-                    <Box sx={styles.flexRow}>
-                      <Typography variant="h6">Gender:</Typography>
-                      <Select
-                        sx={styles.valueBox}
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)} // Update state on selection
-                        displayEmpty
-                      >
-                        <MenuItem value="" disabled>
+              {!planDetails[0] && (
+                <>
+                  <Box sx={styles.flexRow}>
+                    <Typography variant="h6">Age:</Typography>
+                    <TextField
+                      sx={styles.valueBox}
+                      type="number"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                    />
+                  </Box>
 
-                        </MenuItem>
-                        <MenuItem value="male">male</MenuItem>
-                        <MenuItem value="female">female</MenuItem>
-                      </Select>
-                    </Box>
-                  </>
-                )}
+                  <Box sx={styles.flexRow}>
+                    <Typography variant="h6">Activity Level:</Typography>
+                    <Select
+                      sx={styles.valueBox}
+                      value={activityLevel}
+                      onChange={(e) => setActivityLevel(e.target.value)} // Update state on selection
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>
+
+                      </MenuItem>
+                      <MenuItem value="sedentary">sedentary</MenuItem>
+                      <MenuItem value="light">light</MenuItem>
+                      <MenuItem value="moderate">moderate</MenuItem>
+                      <MenuItem value="active">active</MenuItem>
+                      <MenuItem value="very active">very active</MenuItem>
+                    </Select>
+                  </Box>
+
+                  <Box sx={styles.flexRow}>
+                    <Typography variant="h6">Gender:</Typography>
+                    <Select
+                      sx={styles.valueBox}
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)} // Update state on selection
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>
+
+                      </MenuItem>
+                      <MenuItem value="male">male</MenuItem>
+                      <MenuItem value="female">female</MenuItem>
+                    </Select>
+                  </Box>
+                </>
+              )}
 
 
               <Box style={styles.chartContainer}>
                 <Line data={data} options={options} />
               </Box>
               <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '10px' }}>
-                Target Weight loss or gain: {targetWeight.toFixed(1 )} kg
+                Target Weight loss or gain: {targetWeight.toFixed(1)} kg
               </Typography>
               <Box sx={{ marginLeft: '450px', marginTop: '20px' }}>
-              {planDetails && planDetails.length > 0 ? (
-               <Button
-               variant="contained"
-               color="primary"
-               onClick={handleCaloryMonitor}
-               sx={{
-                 whiteSpace: 'nowrap',  // Prevents text from wrapping
-                 overflow: 'hidden',    // Hides overflow text if it overflows the button width
-                 textOverflow: 'ellipsis'  // Adds ellipsis if text overflows
-               }}
-             >
-               Calory Monitor
-             </Button>
-             
-          ) : (
-            <Button variant="contained" color="primary" onClick={handleProceed}>
-              Let's Proceed
-            </Button>
-          )}
-              </Box>
+  {planDetails && planDetails.length > 0 && planDetails[0].status !== "finished" ? (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={handleCaloryMonitor}
+      sx={{
+        whiteSpace: 'nowrap',  // Prevents text from wrapping
+        overflow: 'hidden',    // Hides overflow text if it overflows the button width
+        textOverflow: 'ellipsis'  // Adds ellipsis if text overflows
+      }}
+    >
+      Calory Monitor
+    </Button>
+  ) : (
+    <Button variant="contained" color="primary" onClick={handleProceed}>
+      Let's Proceed
+    </Button>
+  )}
+</Box>
+
             </>
           )}
         </CardContent>

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NutritionistDto {
     private Long id;
+    private Long userid;
     private String fullName;
     private String email;
     private String specializations;

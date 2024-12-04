@@ -21,6 +21,9 @@ import {
   GET_DOCUMENT_REQUEST,
   GET_DOCUMENT_SUCCESS,
   GET_DOCUMENT_FAILURE,
+  UPDATE_REQUEST_STATUS_REQUEST,
+  UPDATE_REQUEST_STATUS_SUCCESS,
+  UPDATE_REQUEST_STATUS_FAILURE,
 } from "./ActionType";
 
 export const createNutritionistRequest = (requestData) => {
@@ -174,6 +177,27 @@ export const checkNutritionistRequestByEmail = (email) => {
           type: GET_ALL_NUTRITIONIST_REQUESTS_FAILURE,
           payload: error.message,
         });
+      }
+    };
+  };
+  export const updateRequestStatus = ({ Id, newStatus,token}) => {
+    return async (dispatch) => {
+      dispatch({ type: UPDATE_REQUEST_STATUS_REQUEST });
+      try {
+        const response = await api.put(
+          `admin/nutritionist-request/${Id}/status`,
+          null,
+          {
+            params: { newStatus },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        dispatch({ type: UPDATE_REQUEST_STATUS_SUCCESS, payload: response.data });
+      } catch (error) {
+        dispatch({ type: UPDATE_REQUEST_STATUS_FAILURE, payload: error.message });
+        console.log("Error:", error);
       }
     };
   };

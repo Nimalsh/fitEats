@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.nimalsha.model.Mealplandata;
 import com.nimalsha.model.Request;
 import com.nimalsha.model.User;
+import com.nimalsha.model.Autoplanextra;
 import com.nimalsha.model.Mealplan;
 import com.nimalsha.repository.BmidataRepository;
 import com.nimalsha.repository.BmiplanRepository;
@@ -20,6 +21,7 @@ import com.nimalsha.repository.MealplandataRepository;
 import com.nimalsha.request.CreatemealplanRequest;
 import com.nimalsha.service.EdamamServiceImpl;
 import com.nimalsha.service.UserServiceImp;
+import com.nimalsha.repository.AutoplanextrarRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 @Service
@@ -37,6 +39,9 @@ public class MealplanServiceImpl implements MealplanService {
 
     @Autowired
     private UserServiceImp userservice;
+
+    @Autowired
+    private AutoplanextrarRepository autoplanextraRepository;
 
 
 
@@ -72,32 +77,77 @@ public class MealplanServiceImpl implements MealplanService {
     
         // Save meal plan
         mealPlan = mealplanRepository.save(mealPlan);
-    
+      
         // Generate daily meal data
         double dailyCalories = calories / 3;
-        List<Map<String, Object>> breakfastMeals = edamamService.getMealsForCalorieRangeAndMealType(dailyCalories, "breakfast", request.getDietaryPreferences(), request.getDietaryRestrictions(), request.getDuration());
-        List<Map<String, Object>> lunchMeals = edamamService.getMealsForCalorieRangeAndMealType(dailyCalories, "lunch", request.getDietaryPreferences(), request.getDietaryRestrictions(), request.getDuration());
-        List<Map<String, Object>> dinnerMeals = edamamService.getMealsForCalorieRangeAndMealType(dailyCalories, "dinner", request.getDietaryPreferences(), request.getDietaryRestrictions(), request.getDuration());
+        
+            // Fallback: Fetch meals from DB if API call fails
+            try {
+                List<Map<String, Object>> breakfastMeals = edamamService.getMealsForCalorieRangeAndMealType(dailyCalories, "breakfast", request.getDietaryPreferences(), request.getDietaryRestrictions(), request.getDuration());
+                List<Map<String, Object>> lunchMeals = edamamService.getMealsForCalorieRangeAndMealType(dailyCalories, "lunch", request.getDietaryPreferences(), request.getDietaryRestrictions(), request.getDuration());
+                List<Map<String, Object>> dinnerMeals = edamamService.getMealsForCalorieRangeAndMealType(dailyCalories, "dinner", request.getDietaryPreferences(), request.getDietaryRestrictions(), request.getDuration());
+            
+                if (breakfastMeals.size() < request.getDuration() || lunchMeals.size() < request.getDuration() || dinnerMeals.size() < request.getDuration()) {
+                    throw new Exception("Insufficient meal data for the requested duration.");
+                }
+            
+                // Assign each day's meals from the fetched lists
+                for (int day = 1; day <= request.getDuration(); day++) {
+                    Mealplandata mealplandata = new Mealplandata();
+                    mealplandata.setPlanId(mealPlan.getPlanId());
+                    mealplandata.setDaysId(day);
+            
+                    // Set data for each meal using helper method
+                    setMealData(mealplandata::setBreakfast, mealplandata::setBreakfastIngredients, mealplandata::setBreakfastImage, mealplandata::setBreakfastCalories, breakfastMeals.get(day - 1));
+                    setMealData(mealplandata::setLunch, mealplandata::setLunchIngredients, mealplandata::setLunchImage, mealplandata::setLunchCalories, lunchMeals.get(day - 1));
+                    setMealData(mealplandata::setDinner, mealplandata::setDinnerIngredients, mealplandata::setDinnerImage, mealplandata::setDinnerCalories, dinnerMeals.get(day - 1));
+            
+                    mealplandataRepository.save(mealplandata);
+                }
+                 } catch (Exception apiException) {
+                System.err.println("API error: " + apiException.getMessage());
+        
+                // Fallback: Fetch meals from DB if API call fails
+                List<Autoplanextra> autoplanextras = autoplanextraRepository.findAll();
+                if (autoplanextras.isEmpty()) {
+                    throw new Exception("No meal data available in the database.");
+                }
+        
+                // Assign DB meals to Mealplandata
+                assignMealsFromDatabase(mealPlan, request.getDuration(), autoplanextras);
+            }
+        
+                return mealPlan;
+            }
+        
+            private void assignMealsFromDatabase(Mealplan mealPlan, int duration, List<Autoplanextra> autoplanextras) {
+                for (int day = 1; day <= duration; day++) {
+                    Autoplanextra autoplanextra = autoplanextras.get((day - 1) % autoplanextras.size());
+                    Mealplandata mealplandata = new Mealplandata();
+                    mealplandata.setPlanId(mealPlan.getPlanId());
+                    mealplandata.setDaysId(day);
+            
+                    mealplandata.setBreakfast(autoplanextra.getBreakfast());
+                    mealplandata.setBreakfastIngredients(autoplanextra.getBreakfastIngredients());
+                    mealplandata.setBreakfastImage(autoplanextra.getBreakfastImage());
+                    mealplandata.setBreakfastCalories(autoplanextra.getLunchCalories());
+            
+                    mealplandata.setLunch(autoplanextra.getLunch());
+                    mealplandata.setLunchIngredients(autoplanextra.getLunchIngredients());
+                    mealplandata.setLunchImage(autoplanextra.getBreakfastImage());
+                    mealplandata.setLunchCalories(autoplanextra.getLunchCalories());
+            
+                    mealplandata.setDinner(autoplanextra.getDinner());
+                    mealplandata.setDinnerIngredients(autoplanextra.getDinnerIngredients());
+                    mealplandata.setDinnerImage(autoplanextra.getBreakfastImage());
+                    mealplandata.setDinnerCalories(autoplanextra.getLunchCalories());
+            
+                    mealplandataRepository.save(mealplandata);
+                }
+            }
     
-        if (breakfastMeals.size() < request.getDuration() || lunchMeals.size() < request.getDuration() || dinnerMeals.size() < request.getDuration()) {
-            throw new Exception("Insufficient meal data for the requested duration.");
-        }
+
     
-        // Assign each day's meals from the fetched lists
-        for (int day = 1; day <= request.getDuration(); day++) {
-            Mealplandata mealplandata = new Mealplandata();
-            mealplandata.setPlanId(mealPlan.getPlanId());
-            mealplandata.setDaysId(day);
-    
-            // Set data for each meal using helper method
-            setMealData(mealplandata::setBreakfast, mealplandata::setBreakfastIngredients, mealplandata::setBreakfastImage, mealplandata::setBreakfastCalories, breakfastMeals.get(day - 1));
-            setMealData(mealplandata::setLunch, mealplandata::setLunchIngredients, mealplandata::setLunchImage, mealplandata::setLunchCalories, lunchMeals.get(day - 1));
-            setMealData(mealplandata::setDinner, mealplandata::setDinnerIngredients, mealplandata::setDinnerImage, mealplandata::setDinnerCalories, dinnerMeals.get(day - 1));
-    
-            mealplandataRepository.save(mealplandata);
-        }
-        return mealPlan;
-    }
      
     private void setMealData(
         Consumer<String> labelSetter,

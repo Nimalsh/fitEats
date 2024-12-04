@@ -355,12 +355,12 @@ const Meallog = () => {
             <StyledCalendar value={date} onChange={handleDateChange} />
             <Button
               variant="contained"
-              color="secondary"
+              color="primary"
               sx={{ marginTop: '10px' }}
               onClick={handleLogFoodClick}
               style={{ display: meallogStatus === 'set' ? 'none' : 'block' }} // Conditional display
             >
-              LOG OUT
+             Start
             </Button>
 
 

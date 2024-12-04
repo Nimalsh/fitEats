@@ -44,7 +44,7 @@ const NutritionistSelection = () => {
     
     const updatedRequestData = {
       ...storedRequestData,
-      nutritionistId: nutritionist.id,
+      nutritionistId: nutritionist.userid,
       nutritionistName:nutritionist.fullName,
     };
   

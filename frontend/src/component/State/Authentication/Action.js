@@ -15,7 +15,10 @@ export const registerUser = (reqData) => async (dispatch) => {
       reqData.navigate("/admin/restaurant");
     } else if (data.role === "ROLE_NUTRITION") {
       reqData.navigate("/nutri");
-    } else {
+    }else if (data.role === "ROLE_ADMIN") {
+      reqData.navigate("/admin/admin/");
+    }
+   else {
       reqData.navigate("/my-profile/dashboard");
     }
     dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
@@ -35,7 +38,9 @@ export const loginUser=(reqData)=>async(dispatch)=>{
       reqData.navigate("/admin/restaurant");
     } else if (data.role === "ROLE_NUTRITION") {
       reqData.navigate("/nutri"); // Add the appropriate route for nutritionists
-    } else {
+    }else if (data.role === "ROLE_ADMIN") {
+      reqData.navigate("/admin/admin/");
+    }else {
       reqData.navigate("/my-profile/dashboard");
     }
     dispatch({type:LOGIN_SUCCESS,payload:data.jwt})
