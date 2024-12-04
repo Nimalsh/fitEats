@@ -126,6 +126,7 @@ const Cart = () => {
     try {
       await dispatch(startPayment(jwt, { ...values, amount: totalPay }));
       navigate("/my-profile/payment-success");
+      await dispatch(clearCartAction ());
     } catch (error) {
       console.error("Payment failed:", error);
     }
