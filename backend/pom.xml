@@ -14,7 +14,7 @@
 	<name>online-food-ordering</name>
 	<description>online food ordering system</description>
 	<properties>
-		<java.version>22</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+<!-- login page create with "not register yet now register" -->
+<!-- cart page go to the payment get a way eka -->
+<!-- setting walin profile page eka change,  -->
+<!-- restarant list eka desplay karaganna eka -->
+<!-- card payments separate karana aakarayata create karanna  -->

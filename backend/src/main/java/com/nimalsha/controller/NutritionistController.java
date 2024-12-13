@@ -13,6 +13,7 @@ import java.util.List;
 import com.nimalsha.dto.NutritionistDto;
 import com.nimalsha.dto.NutritionistrequestDto;
 
+
 @RestController
 @RequestMapping("api/nutritionists")
 public class NutritionistController {
